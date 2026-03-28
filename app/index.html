@@ -16,23 +16,8 @@
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
 body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#0f1724;color:#e4e8f0;font-size:18px}
 
-/* ── Animated Background ──────────────────────── */
-.bg-canvas{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(160deg,#0a0f1a 0%,#0f1724 30%,#111c2e 60%,#0d1520 100%)}
-.bg-canvas::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;background:
-  radial-gradient(ellipse 800px 800px at 10% 15%, rgba(52,211,153,.12) 0%, transparent 60%),
-  radial-gradient(ellipse 700px 700px at 90% 80%, rgba(6,182,212,.10) 0%, transparent 60%),
-  radial-gradient(ellipse 600px 600px at 50% 40%, rgba(167,139,250,.07) 0%, transparent 60%),
-  radial-gradient(ellipse 500px 500px at 70% 20%, rgba(52,211,153,.06) 0%, transparent 50%);
-  animation:ambientShift 30s ease-in-out infinite alternate}
-.bg-canvas::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 60L60 0' stroke='%2334d399' stroke-width='.5' opacity='.12'/%3E%3Cpath d='M30 0v60' stroke='%2306b6d4' stroke-width='.3' opacity='.06'/%3E%3Cpath d='M0 30h60' stroke='%23a78bfa' stroke-width='.2' opacity='.04'/%3E%3C/svg%3E");background-size:60px 60px}
-@keyframes ambientShift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-3%,2%) scale(1.02)}100%{transform:translate(2%,-1%) scale(1)}}
-.geo-shape{position:absolute;opacity:0;animation:gentleDrift linear infinite}
-@keyframes gentleDrift{
-  0%{opacity:0;transform:translate(0,0) scale(.8)}
-  10%{opacity:1}
-  90%{opacity:1}
-  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1)}
-}
+/* ── Background ──────────────────────────────── */
+.bg-canvas{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#0a0f1a 0%,#0f1724 30%,#111c2e 60%,#0d1520 100%)}
 
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -377,7 +362,6 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 /* ── Light Theme (Blue/White) ─────────────────── */
 body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .light-theme .bg-canvas{background:linear-gradient(160deg,#e8f0fa 0%,#dae4f8 30%,#eaf2ff 60%,#f0f4ff 100%)}
-.light-theme .geo-shape{opacity:.7}
 .light-theme .panel{background:#ffffffee;border-color:#3b82f608;color:#1a1a2e}
 .light-theme .panel-inner{background:#f5f8ff;border-color:#3b82f608}
 .light-theme textarea,.light-theme select,.light-theme input[type="text"]{
@@ -819,63 +803,11 @@ const FORMATS = {
 const JUDGE_TAGS = ['STRONG WARRANT','DROPPED ARG','GOOD TURN','NEW IN REBUTTAL','ASSERTION','KEY CLASH'];
 
 /* ═══════════════════════════════════════════════════
-   POLYHEDRON BACKGROUND
+   BACKGROUND
    ═══════════════════════════════════════════════════ */
 
 function PolyBackground() {
-  const shapes = useRef([]);
-  if (shapes.current.length === 0) {
-    // Clean geometric shapes - circles, rounded rects, rings
-    const palette = [
-      {bg:'rgba(52,211,153,.12)', border:'rgba(52,211,153,.25)'},
-      {bg:'rgba(6,182,212,.10)', border:'rgba(6,182,212,.22)'},
-      {bg:'rgba(167,139,250,.08)', border:'rgba(167,139,250,.18)'},
-      {bg:'rgba(255,255,255,.04)', border:'rgba(255,255,255,.10)'},
-      {bg:'rgba(52,211,153,.07)', border:'rgba(52,211,153,.16)'},
-      {bg:'rgba(6,182,212,.07)', border:'rgba(6,182,212,.15)'},
-    ];
-    for (let i = 0; i < 8; i++) {
-      const p = palette[i % palette.length];
-      const isRing = i % 3 === 0;
-      const isRect = i % 4 === 1;
-      const size = 60 + Math.random() * 200;
-      shapes.current.push({
-        id: i,
-        left: 5 + Math.random() * 85,
-        top: 5 + Math.random() * 85,
-        size: size,
-        duration: 50 + Math.random() * 40,
-        delay: -(Math.random() * 40),
-        bg: isRing ? 'transparent' : p.bg,
-        border: p.border,
-        borderWidth: isRing ? 1.5 : 1,
-        borderRadius: isRect ? (12 + Math.random() * 20) + 'px' : '50%',
-        dx: (-30 + Math.random() * 60) + 'px',
-        dy: (-40 + Math.random() * 80) + 'px',
-      });
-    }
-  }
-  return React.createElement('div',{className:'bg-canvas'},
-    shapes.current.map(s =>
-      React.createElement('div',{
-        className:'geo-shape',
-        key:s.id,
-        style:{
-          left:s.left+'%',
-          top:s.top+'%',
-          width:s.size,height:s.size,
-          background:s.bg,
-          border:s.borderWidth+'px solid '+s.border,
-          borderRadius:s.borderRadius,
-          animationDuration:s.duration+'s',
-          animationDelay:s.delay+'s',
-          '--dx':s.dx,
-          '--dy':s.dy,
-          backdropFilter:'blur(0.5px)',
-        }
-      })
-    )
-  );
+  return React.createElement('div',{className:'bg-canvas'});
 }
 
 /* ═══════════════════════════════════════════════════
