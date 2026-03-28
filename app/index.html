@@ -1004,9 +1004,9 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
    ═══════════════════════════════════════════════════ */
 
 const DEPTH_CONFIGS = {
-  quick: { label:'Quick', words:'~600', time:'3 min', desc:'Skeleton outline with key claims', maxTokens:1500 },
-  standard: { label:'Standard', words:'~1200', time:'5 min', desc:'Solid case with warrants', maxTokens:3000 },
-  competition: { label:'Competition', words:'~1800+', time:'7-8 min', desc:'Full case with deep warrants, A2 blocks, MG overview', maxTokens:6000 },
+  quick: { label:'Quick', words:'~600', time:'3 min', desc:'Skeleton outline with key claims', maxTokens:4000 },
+  standard: { label:'Standard', words:'~1200', time:'5 min', desc:'Solid case with warrants', maxTokens:8000 },
+  competition: { label:'Competition', words:'~1800+', time:'7-8 min', desc:'Full case with deep warrants, A2 blocks, MG overview', maxTokens:16000 },
 };
 
 function buildSystemPrompt(depth) {
@@ -1457,6 +1457,7 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     const expectedWords = depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600;
 
     try {
+      const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
       await callClaude(sysPrompt, userPrompt, (text) => {
         setOutput(text);
         if (outputRef.current) {
@@ -1464,7 +1465,7 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
           const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 150;
           if (isNearBottom) el.scrollTop = el.scrollHeight;
         }
-      }, { thinkBudget: 16000, maxTokens: 16000, expectedWords, onProgress: (p) => setProgress(p) });
+      }, { thinkBudget: 10000, maxTokens: depthMaxTokens, expectedWords, onProgress: (p) => setProgress(p) });
     } catch (err) {
       setError(err.message);
     }
@@ -1629,6 +1630,25 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
         },
         style:{ minWidth: 140 },
       }, '\uD83D\uDCCB Copy Text'),
+      React.createElement('button',{
+        className:'btn btn-secondary',
+        onClick:() => {
+          if (!output) return;
+          // Copy to clipboard first, then open new Google Doc
+          if (navigator.clipboard) navigator.clipboard.writeText(output);
+          // Create a downloadable .txt file the user can upload, or open blank doc
+          const blob = new Blob([output], {type: 'text/plain'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = (motion ? motion.substring(0, 50).replace(/[^a-zA-Z0-9 ]/g, '') : 'DebateOS Case') + '.txt';
+          a.click();
+          URL.revokeObjectURL(url);
+          // Also open Google Docs so they can paste
+          window.open('https://docs.google.com/document/create', '_blank');
+        },
+        style:{ minWidth: 160 },
+      }, 'Export to Google Docs'),
     )
   );
 }
@@ -1905,11 +1925,13 @@ function Resolutions() {
   const [bgText, setBgText] = useState(null);
   const [loadingBg, setLoadingBg] = useState(false);
   // Generate Motion state
-  const [genMode, setGenMode] = useState(null); // null = roller, 'motion' = plain, 'agent' = with background
+  const [genMode, setGenMode] = useState(null); // null = roller, 'motion' = plain, 'agent' = with background, 'current' = current events
   const [motionCategory, setMotionCategory] = useState('any');
   const [motionOutput, setMotionOutput] = useState(null);
   const [motionLoading, setMotionLoading] = useState(false);
   const [motionStreaming, setMotionStreaming] = useState(false);
+  const [newsContext, setNewsContext] = useState(null);
+  const [fetchingNews, setFetchingNews] = useState(false);
 
   const categoryGuides = {
     'any': 'Pick any topic area you find interesting. Surprise the debater with something they would not have thought of on their own.',
@@ -2051,6 +2073,61 @@ Keep it to 80-150 words. Be specific — use real facts, policies, and statistic
     setLoadingBg(false);
   };
 
+  const generateFromNews = async () => {
+    setMotionLoading(true);
+    setMotionStreaming(true);
+    setMotionOutput('');
+    setFetchingNews(true);
+
+    const picked = motionCategory === 'any' ? null : motionCategory;
+    const topicQuery = picked
+      ? `What are the most controversial and debatable ${picked} news stories and developments from the past week? Focus on stories with genuine ethical, policy, or philosophical tensions.`
+      : `What are the most controversial and debatable news stories from the past week across politics, technology, economics, social issues, and international affairs? Focus on stories with genuine ethical, policy, or philosophical tensions.`;
+
+    try {
+      const newsRes = await fetch('/api/perplexity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: topicQuery }),
+      });
+      const newsData = await newsRes.json();
+      if (!newsRes.ok) throw new Error(newsData.error || 'Failed to fetch news');
+      setNewsContext(newsData.text);
+      setFetchingNews(false);
+
+      const sysPrompt = `You are an elite APDA debate motion designer. You have been given a summary of current events. Your job is to turn one of these into a brilliant, well-scoped debate motion.
+
+Pick the story with the most genuine tension — where smart people would disagree about the right course of action. Then craft a motion that captures that tension precisely.
+
+The motion should be timely but not require debaters to know the specific news story — it should be debatable from general principles + the background you provide.
+
+Generate EXACTLY ONE motion. Provide:
+
+CURRENT EVENT: (1-2 sentences) What happened that inspired this motion.
+
+BACKGROUND: (80-150 words) Factual context grounding the motion. Include specific details from the current event but frame it broadly enough to debate.
+
+CASE STATEMENT: The formal APDA motion phrasing. Make it precise and well-scoped.
+
+GOV ANGLE: (2-3 sentences) The strongest government approach.
+
+OPP ANGLE: (2-3 sentences) The strongest opposition approach.
+
+DIFFICULTY: Novice / Intermediate / Advanced
+
+Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Use plain text with clear section labels.`;
+
+      const userPrompt = `Here are current events to draw from:\n\n${newsData.text}\n\n${picked ? 'Focus on ' + picked + ' angles.' : 'Pick the most debatable story.'}\n\nTurn this into one original APDA debate motion. The motion should be genuinely hard — the kind that splits a room.`;
+
+      await callClaude(sysPrompt, userPrompt, (text) => setMotionOutput(text), { thinkBudget: 10000, maxTokens: 8000 });
+    } catch(e) {
+      setMotionOutput('Error: ' + e.message);
+      setFetchingNews(false);
+    }
+    setMotionLoading(false);
+    setMotionStreaming(false);
+  };
+
   // Mode selector tabs
   const modeTab = (id, label) => el('button', {
     key:id,
@@ -2064,7 +2141,8 @@ Keep it to 80-150 words. Be specific — use real facts, policies, and statistic
     el('div',{style:{display:'flex',gap:10,marginBottom:20,flexWrap:'wrap',justifyContent:'center'}},
       modeTab(null, 'Random Roller'),
       modeTab('motion', 'Generate Motion'),
-      modeTab('agent', 'Generate Motion with Background'),
+      modeTab('agent', 'Generate with Background'),
+      modeTab('current', 'Current Events'),
     ),
 
     // === RANDOM ROLLER MODE ===
@@ -2108,11 +2186,13 @@ Keep it to 80-150 words. Be specific — use real facts, policies, and statistic
       )
     ),
 
-    // === GENERATE MOTION MODE (standard or agent) ===
+    // === GENERATE MOTION MODE (standard, agent, or current events) ===
     genMode !== null && el('div',null,
       el('p',{style:{color:'#888',fontSize:'.92rem',marginBottom:16,textAlign:'center'}},
         genMode === 'agent'
           ? 'Generate an agent case: a character in a specific situation with a vivid, cinematic background.'
+          : genMode === 'current'
+          ? 'Pull this week\'s news and turn the most debatable story into an APDA motion.'
           : 'Generate an original debate motion with AI. Pick a category for deeper, more specific results.'
       ),
 
@@ -2140,13 +2220,19 @@ Keep it to 80-150 words. Be specific — use real facts, policies, and statistic
       // Generate button
       el('div',{style:{textAlign:'center',marginTop:8}},
         el('button',{
-          className:'btn btn-purple',
-          onClick:()=>generateMotion(genMode === 'agent'),
+          className: genMode === 'current' ? 'btn btn-green' : 'btn btn-purple',
+          onClick:()=> genMode === 'current' ? generateFromNews() : generateMotion(genMode === 'agent'),
           disabled:motionLoading,
           style:{padding:'16px 40px',fontSize:'1rem',borderRadius:14}
         }, motionLoading
-          ? el('span',null,el('span',{className:'spinner'}), genMode === 'agent' ? ' Crafting scenario...' : ' Generating motion...')
-          : genMode === 'agent' ? 'Generate Agent Case' : 'Generate Motion'
+          ? el('span',null,el('span',{className:'spinner'}),
+              fetchingNews ? ' Scanning this week\'s news...' :
+              genMode === 'agent' ? ' Crafting scenario...' :
+              genMode === 'current' ? ' Building motion from news...' :
+              ' Generating motion...')
+          : genMode === 'agent' ? 'Generate Agent Case'
+          : genMode === 'current' ? 'Generate from Current Events'
+          : 'Generate Motion'
         )
       ),
 
@@ -2165,8 +2251,8 @@ Keep it to 80-150 words. Be specific — use real facts, policies, and statistic
         }
       },
         el('button',{
-          className:'btn btn-purple',
-          onClick:()=>generateMotion(genMode === 'agent'),
+          className: genMode === 'current' ? 'btn btn-green' : 'btn btn-purple',
+          onClick:()=> genMode === 'current' ? generateFromNews() : generateMotion(genMode === 'agent'),
           style:{minWidth:160},
         }, 'New Motion'),
         el('button',{
