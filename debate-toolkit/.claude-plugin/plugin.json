@@ -1,0 +1,9 @@
+{
+  "name": "debate-toolkit",
+  "version": "0.1.0",
+  "description": "APDA parliamentary debate toolkit: generate cases and rebuttals for competitive debate",
+  "author": {
+    "name": "Aidan Hollinger"
+  },
+  "keywords": ["debate", "APDA", "parliamentary", "argumentation", "case-prep", "rebuttal"]
+}
