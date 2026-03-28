@@ -1457,7 +1457,8 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     const expectedWords = depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600;
 
     try {
-      const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
+      const depthMaxTokens = depth === 'competition' ? 16000 : depth === 'standard' ? 10000 : 6000;
+      const depthThinkBudget = depth === 'competition' ? 5000 : depth === 'standard' ? 3000 : 2000;
       await callClaude(sysPrompt, userPrompt, (text) => {
         setOutput(text);
         if (outputRef.current) {
@@ -1465,7 +1466,7 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
           const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 150;
           if (isNearBottom) el.scrollTop = el.scrollHeight;
         }
-      }, { thinkBudget: 10000, maxTokens: depthMaxTokens, expectedWords, onProgress: (p) => setProgress(p) });
+      }, { thinkBudget: depthThinkBudget, maxTokens: depthMaxTokens, expectedWords, onProgress: (p) => setProgress(p) });
     } catch (err) {
       setError(err.message);
     }

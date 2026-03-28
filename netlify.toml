@@ -1,3 +1,14 @@
 [build]
   publish = "."
   functions = "netlify/functions"
+
+[functions]
+  external_node_modules = []
+  node_bundler = "esbuild"
+
+# Extend function timeout for streaming AI responses
+[functions."claude"]
+  timeout = 60
+
+[functions."perplexity"]
+  timeout = 30
