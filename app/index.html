@@ -4219,11 +4219,462 @@ function Forum({ user, onSignIn }) {
 }
 
 /* ═══════════════════════════════════════════════════
+   ROUND SIMULATOR — Full 6-speech debate simulation
+   ═══════════════════════════════════════════════════ */
+
+const ROUND_SPEECHES = [
+  { code:'PM', title:'Prime Minister Constructive', side:'gov', time:'7 min', player:true, order:0 },
+  { code:'LO', title:'Leader of Opposition', side:'opp', time:'8 min', player:false, order:1 },
+  { code:'MG', title:'Member of Government', side:'gov', time:'8 min', player:true, order:2 },
+  { code:'MO', title:'Member of Opposition', side:'opp', time:'8 min', player:false, order:3 },
+  { code:'LOR', title:'Leader of Opp Rebuttal', side:'opp', time:'4 min', player:false, order:4 },
+  { code:'PMR', title:'PM Rebuttal', side:'gov', time:'5 min', player:true, order:5 },
+];
+
+function RoundSimulator() {
+  const el = React.createElement;
+  const [motion, setMotion] = useState('');
+  const [side, setSide] = useState('gov');
+  const [roundStarted, setRoundStarted] = useState(false);
+  const [currentSpeech, setCurrentSpeech] = useState(0);
+  const [speeches, setSpeeches] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiStreaming, setAiStreaming] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [mediaRec, setMediaRec] = useState(null);
+  const [roundComplete, setRoundComplete] = useState(false);
+  const [error, setError] = useState(null);
+  const inputRef = useRef(null);
+  const streamRef = useRef(null);
+
+  const playerSpeechCodes = side === 'gov'
+    ? ['PM','MG','PMR']
+    : ['LO','MO','LOR'];
+
+  const isPlayerSpeech = (idx) => {
+    const speech = ROUND_SPEECHES[idx];
+    return (side === 'gov' && speech.side === 'gov') || (side === 'opp' && speech.side === 'opp');
+  };
+
+  // Mic recording with Web Speech API or MediaRecorder
+  const startRecording = async () => {
+    setError(null);
+    // Try Web Speech API first (real-time transcription)
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRec();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      let finalTranscript = inputText;
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        setInputText(finalTranscript + interim);
+      };
+      recognition.onerror = (e) => {
+        if (e.error !== 'no-speech') setError('Mic error: ' + e.error);
+        setRecording(false);
+      };
+      recognition.onend = () => setRecording(false);
+      recognition.start();
+      setMediaRec(recognition);
+      setRecording(true);
+    } else {
+      setError('Speech recognition not supported in this browser. Try Chrome.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRec) {
+      try { mediaRec.stop(); } catch(e) {}
+      setMediaRec(null);
+    }
+    setRecording(false);
+  };
+
+  const startRound = () => {
+    if (!motion.trim()) return;
+    setRoundStarted(true);
+    setCurrentSpeech(0);
+    setSpeeches([]);
+    setFeedback(null);
+    setRoundComplete(false);
+    setInputText('');
+
+    // If player is Opp, AI goes first with PM
+    if (side === 'opp') {
+      generateAISpeech(0, []);
+    }
+  };
+
+  const buildRoundContext = (speechesSoFar) => {
+    let ctx = `MOTION: ${motion}\n\n`;
+    ctx += `ROUND SO FAR:\n`;
+    speechesSoFar.forEach((s, i) => {
+      ctx += `\n--- ${ROUND_SPEECHES[i].code} (${ROUND_SPEECHES[i].title}) ---\n${s}\n`;
+    });
+    return ctx;
+  };
+
+  const generateAISpeech = async (speechIdx, speechesSoFar) => {
+    setAiLoading(true);
+    setAiStreaming(true);
+    setError(null);
+
+    const speech = ROUND_SPEECHES[speechIdx];
+    const aiSide = speech.side;
+    const isRebuttal = speech.code === 'LOR' || speech.code === 'PMR';
+
+    const sysPrompt = `You are an elite APDA debater playing the ${aiSide === 'gov' ? 'Government' : 'Opposition'} side in a live practice round. You are giving the ${speech.code} (${speech.title}).
+
+CRITICAL RULES:
+1. You are IN CHARACTER as a real debater. Sound like a person, not an AI. Be confident, strategic, passionate.
+2. Write your speech as it would actually be delivered. Use first person. Address the judge and opponents.
+3. ${isRebuttal ? 'This is a REBUTTAL speech. Summarize, weigh, and close. NO new arguments. Reference specific things said in previous speeches.' : 'Engage directly with what has been said so far. Reference specific arguments, warrants, and claims from previous speeches.'}
+4. ${speech.code === 'LO' ? 'As LO: Present an off-case (your own framework/arguments), then do on-case (rebut the PM point by point). Spend roughly 60% on off-case, 40% on on-case.' : ''}
+5. ${speech.code === 'MG' ? 'As MG: Respond to the LO\'s off-case, extend your strongest PM arguments with new depth, and do impact calculus.' : ''}
+6. ${speech.code === 'MO' ? 'As MO: Extend your LO\'s best arguments, respond to the MG, and crystallize why Opp is winning.' : ''}
+7. ${speech.code === 'LOR' ? 'As LOR: This is a 4-minute rebuttal. Identify the 2-3 key clash points, weigh them in Opp\'s favor, and tell the judge why Opp wins.' : ''}
+8. ${speech.code === 'PM' ? 'As PM: Deliver a full constructive. Framework, 2-3 arguments with deep warrants, strategic setup for later speeches.' : ''}
+9. ${speech.code === 'PMR' ? 'As PMR: This is a 5-minute rebuttal. Pull through your best arguments, weigh against everything Opp said, and close with your voting issue. No new arguments.' : ''}
+10. Speech should be ${isRebuttal ? '400-600' : '700-1100'} words, matching a ${speech.time} speech.
+11. Do NOT use markdown formatting (no **, no #, no *). Do not use em dashes or en dashes. Plain text only.
+12. All knowledge must be common knowledge an educated college student would know. No spec.
+13. Sound like a REAL debater: "Look, even if you buy everything they just said..." and "Here's what they completely dropped..." and "This is the most important thing in this round..."`;
+
+    const userPrompt = buildRoundContext(speechesSoFar) + `\n\nNow deliver the ${speech.code} speech (${speech.title}, ${speech.time}). Write it as a full speech:`;
+
+    let aiText = '';
+    try {
+      await callClaude(sysPrompt, userPrompt, (text) => {
+        aiText = text;
+        // Update the speeches array in real-time
+        setSpeeches(prev => {
+          const updated = [...prev];
+          updated[speechIdx] = text;
+          return updated;
+        });
+      }, { thinkBudget: 6000, maxTokens: 8000 });
+    } catch(e) {
+      setError('AI error: ' + e.message);
+    }
+
+    setAiLoading(false);
+    setAiStreaming(false);
+
+    // Check if round is complete
+    if (speechIdx === 5) {
+      setRoundComplete(true);
+      generateRoundFeedback([...speechesSoFar.slice(0, speechIdx), aiText]);
+    } else {
+      setCurrentSpeech(speechIdx + 1);
+      setInputText('');
+    }
+  };
+
+  const submitSpeech = () => {
+    if (!inputText.trim() || aiLoading) return;
+    if (recording) stopRecording();
+
+    const newSpeeches = [...speeches];
+    newSpeeches[currentSpeech] = inputText.trim();
+    setSpeeches(newSpeeches);
+
+    // Check if round complete
+    if (currentSpeech === 5) {
+      setRoundComplete(true);
+      setCurrentSpeech(6);
+      generateRoundFeedback(newSpeeches);
+      return;
+    }
+
+    // Advance to next speech
+    const nextIdx = currentSpeech + 1;
+    setCurrentSpeech(nextIdx);
+    setInputText('');
+
+    // If next speech is AI's, generate it
+    if (!isPlayerSpeech(nextIdx)) {
+      generateAISpeech(nextIdx, newSpeeches);
+    }
+  };
+
+  const generateRoundFeedback = async (allSpeeches) => {
+    setFeedbackLoading(true);
+    const sysPrompt = `You are an expert APDA debate judge and coach. You just watched a full practice round. Give detailed, actionable feedback.
+
+For EACH of the player's speeches, provide:
+1. SPEAKER SCORE (on the APDA 26-36 scale) with brief justification
+2. STRENGTHS: What worked well (be specific, reference actual arguments made)
+3. WEAKNESSES: What needed improvement (be specific and constructive)
+4. TACTICAL ADVICE: What they should have done differently strategically
+
+Then give an OVERALL ROUND ASSESSMENT:
+- Who won and why (be honest, even if the player lost)
+- The key clash points and how they were resolved
+- The single most important thing the player should practice next
+
+Be direct and honest. Don't sugarcoat. Good coaching is specific and sometimes uncomfortable.
+Do NOT use markdown formatting (no **, no #, no *). Do not use dashes as separators. Plain text only.`;
+
+    const userPrompt = `MOTION: ${motion}\nPLAYER SIDE: ${side === 'gov' ? 'Government' : 'Opposition'}\n\n` +
+      allSpeeches.map((s, i) => `--- ${ROUND_SPEECHES[i].code} (${isPlayerSpeech(i) ? 'PLAYER' : 'AI OPPONENT'}) ---\n${s || '(no speech given)'}`).join('\n\n') +
+      '\n\nProvide your judge feedback:';
+
+    let fbText = '';
+    try {
+      await callClaude(sysPrompt, userPrompt, (text) => {
+        fbText = text;
+        setFeedback(text);
+      }, { thinkBudget: 8000, maxTokens: 12000 });
+    } catch(e) {
+      setFeedback('Error generating feedback: ' + e.message);
+    }
+    setFeedbackLoading(false);
+  };
+
+  const resetRound = () => {
+    setRoundStarted(false);
+    setCurrentSpeech(0);
+    setSpeeches([]);
+    setInputText('');
+    setFeedback(null);
+    setRoundComplete(false);
+    setError(null);
+    if (recording) stopRecording();
+  };
+
+  // === RENDER ===
+
+  if (!roundStarted) {
+    return el('div',{className:'panel'},
+      el('p',{style:{color:'#7a8da4',marginBottom:20,lineHeight:1.7}},
+        'Simulate a full APDA round against an AI opponent. You deliver your speeches (type or speak into mic), the AI plays the other team. After all 6 speeches, get detailed judge feedback and speaker scores.'
+      ),
+      el('label',{className:'field-label'},'Motion'),
+      el('textarea',{
+        placeholder:'Enter a motion for the round...',
+        value:motion, onChange:e=>setMotion(e.target.value),
+        rows:3
+      }),
+      el('div',{style:{marginTop:20}},
+        el('label',{className:'field-label green'},'Your Side'),
+        el('div',{style:{display:'flex',gap:10,marginTop:8}},
+          el('button',{
+            className:'btn ' + (side==='gov'?'btn-primary':'btn-secondary'),
+            onClick:()=>setSide('gov'),
+            style:{flex:1}
+          },'Government'),
+          el('button',{
+            className:'btn ' + (side==='opp'?'btn-primary':'btn-secondary'),
+            onClick:()=>setSide('opp'),
+            style:{flex:1}
+          },'Opposition'),
+        )
+      ),
+      el('div',{style:{marginTop:24}},
+        el('button',{
+          className:'btn btn-orange',
+          onClick:startRound,
+          disabled:!motion.trim(),
+          style:{padding:'16px 48px',fontSize:'1.1rem',borderRadius:14,width:'100%'}
+        },'Start Round')
+      )
+    );
+  }
+
+  // Round in progress
+  const currentSpeechData = currentSpeech < 6 ? ROUND_SPEECHES[currentSpeech] : null;
+  const isMyTurn = currentSpeechData && isPlayerSpeech(currentSpeech);
+  const isAiTurn = currentSpeechData && !isPlayerSpeech(currentSpeech);
+
+  return el('div',{className:'panel panel-expanded'},
+    // Round header
+    el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}},
+      el('div',null,
+        el('div',{style:{fontSize:'.78rem',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'1px',fontWeight:700}},'Round Simulator'),
+        el('div',{style:{fontSize:'.88rem',color:'#e0e7ef',marginTop:4}}, motion.length > 80 ? motion.substring(0,80)+'...' : motion),
+      ),
+      el('button',{className:'btn btn-secondary btn-sm',onClick:resetRound},'End Round')
+    ),
+
+    // Speech progress bar
+    el('div',{style:{display:'flex',gap:4,marginBottom:24}},
+      ROUND_SPEECHES.map((s, i) => {
+        const isCompleted = speeches[i] && speeches[i].length > 0;
+        const isCurrent = i === currentSpeech;
+        const isPlayer = isPlayerSpeech(i);
+        return el('div',{
+          key:s.code,
+          style:{
+            flex:1, padding:'8px 4px', borderRadius:8, textAlign:'center',
+            fontSize:'.72rem', fontWeight:700, letterSpacing:'.5px',
+            background: isCurrent ? (isPlayer ? '#ef444425' : '#3b82f625') : isCompleted ? '#22c55e15' : '#ffffff06',
+            border: '1.5px solid ' + (isCurrent ? (isPlayer ? '#ef4444' : '#3b82f6') : isCompleted ? '#22c55e40' : '#ffffff10'),
+            color: isCurrent ? (isPlayer ? '#f87171' : '#60a5fa') : isCompleted ? '#4ade80' : '#566478',
+          }
+        },
+          el('div',null, s.code),
+          el('div',{style:{fontSize:'.6rem',fontWeight:400,marginTop:2,opacity:.7}},
+            isPlayer ? 'YOU' : 'AI'
+          )
+        );
+      })
+    ),
+
+    // Previous speeches (scrollable)
+    speeches.length > 0 && el('div',{style:{maxHeight:300,overflowY:'auto',marginBottom:20,borderRadius:12,border:'1px solid #ffffff0a'}},
+      speeches.map((text, i) => {
+        if (!text) return null;
+        const s = ROUND_SPEECHES[i];
+        const isP = isPlayerSpeech(i);
+        return el('div',{key:i,style:{
+          padding:'14px 18px', borderBottom:'1px solid #ffffff08',
+          background: i === currentSpeech - 1 ? '#ffffff04' : 'transparent',
+        }},
+          el('div',{style:{
+            display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6,
+          }},
+            el('span',{style:{
+              fontSize:'.75rem',fontWeight:700,letterSpacing:'.5px',
+              color: isP ? '#f87171' : '#60a5fa',
+            }}, s.code + ' ' + (isP ? '(You)' : '(AI)')),
+            el('span',{style:{fontSize:'.68rem',color:'#566478'}}, s.time),
+          ),
+          el('div',{style:{
+            fontSize:'.85rem',color:'#a0aec0',lineHeight:1.6,
+            maxHeight: i < currentSpeech - 1 ? 80 : 'none',
+            overflow: i < currentSpeech - 1 ? 'hidden' : 'visible',
+          }},
+            text.length > 500 && i < currentSpeech - 1 ? text.substring(0,500) + '...' : text
+          )
+        );
+      })
+    ),
+
+    // Current speech area
+    !roundComplete && currentSpeechData && el('div',{style:{marginBottom:20}},
+      el('div',{style:{
+        display:'flex',justifyContent:'space-between',alignItems:'center',
+        marginBottom:12,padding:'12px 18px',borderRadius:10,
+        background: isMyTurn ? '#ef444410' : '#3b82f610',
+        border:'1px solid ' + (isMyTurn ? '#ef444430' : '#3b82f630'),
+      }},
+        el('div',null,
+          el('div',{style:{fontSize:'1rem',fontWeight:800,color: isMyTurn ? '#f87171' : '#60a5fa'}},
+            isMyTurn ? 'Your Turn: ' + currentSpeechData.code : 'AI is speaking: ' + currentSpeechData.code
+          ),
+          el('div',{style:{fontSize:'.82rem',color:'#94a3b8',marginTop:2}},
+            currentSpeechData.title + ' (' + currentSpeechData.time + ')'
+          ),
+        ),
+        isMyTurn && el('div',{style:{display:'flex',gap:8}},
+          el('button',{
+            className: recording ? 'btn btn-record' : 'btn btn-secondary btn-sm',
+            onClick: recording ? stopRecording : startRecording,
+            style: recording ? {animation:'pulse 1.5s infinite'} : {},
+          }, recording ? '\u23F9 Stop Mic' : '\uD83C\uDF99\uFE0F Mic'),
+        )
+      ),
+
+      // AI generating indicator
+      aiLoading && el('div',{style:{padding:20,textAlign:'center'}},
+        el('div',{className:'spinner',style:{display:'inline-block',marginRight:10}}),
+        el('span',{style:{color:'#60a5fa',fontSize:'.92rem'}},'AI is preparing their ' + currentSpeechData.code + '...'),
+        aiStreaming && speeches[currentSpeech] && el('div',{
+          ref:streamRef,
+          style:{
+            marginTop:16,textAlign:'left',fontSize:'.85rem',color:'#a0aec0',lineHeight:1.6,
+            maxHeight:300,overflowY:'auto',padding:'14px 18px',
+            background:'#0a1018',borderRadius:12,border:'1px solid #ffffff0a',
+          }
+        }, speeches[currentSpeech])
+      ),
+
+      // Player input area
+      isMyTurn && !aiLoading && el('div',null,
+        el('textarea',{
+          ref:inputRef,
+          className:'practice-textarea',
+          placeholder: 'Type your ' + currentSpeechData.code + ' speech here, or use the mic button to speak...',
+          value:inputText,
+          onChange:e=>setInputText(e.target.value),
+          rows:10,
+          style:{minHeight:200},
+        }),
+        el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12}},
+          el('span',{style:{fontSize:'.78rem',color:'#566478'}},
+            (inputText.split(/\s+/).filter(w=>w).length) + ' words'
+          ),
+          el('button',{
+            className:'btn btn-primary',
+            onClick:submitSpeech,
+            disabled:!inputText.trim(),
+            style:{padding:'12px 32px'},
+          }, 'Submit ' + currentSpeechData.code)
+        )
+      ),
+    ),
+
+    // Error
+    error && el('div',{style:{padding:'12px 18px',background:'#ef444415',border:'1px solid #ef444440',borderRadius:10,color:'#fca5a5',fontSize:'.88rem',marginBottom:16}}, error),
+
+    // Round complete + feedback
+    roundComplete && el('div',null,
+      el('div',{style:{
+        textAlign:'center',padding:'24px',marginBottom:20,
+        background:'linear-gradient(145deg,#0e1620,#121c2c)',
+        border:'1px solid #22c55e30',borderRadius:16,
+      }},
+        el('div',{style:{fontSize:'1.2rem',fontWeight:800,color:'#4ade80'}},'Round Complete'),
+        el('div',{style:{fontSize:'.88rem',color:'#94a3b8',marginTop:6}},'All 6 speeches delivered. Judge feedback below.'),
+      ),
+
+      feedbackLoading && el('div',{style:{textAlign:'center',padding:30}},
+        el('div',{className:'spinner',style:{display:'inline-block',marginRight:10}}),
+        el('span',{style:{color:'#fbbf24'}},'Judge is deliberating...')
+      ),
+
+      feedback && el('div',{style:{
+        padding:'24px 28px',background:'linear-gradient(145deg,#0e1620,#121c2c)',
+        border:'1px solid #fbbf2430',borderRadius:16,lineHeight:1.7,
+        color:'#c8d5e3',fontSize:'.92rem',whiteSpace:'pre-wrap',
+      }},
+        el('div',{style:{fontSize:'.78rem',fontWeight:700,color:'#fbbf24',letterSpacing:'1px',textTransform:'uppercase',marginBottom:12}},'Judge Feedback'),
+        feedback
+      ),
+
+      el('div',{style:{display:'flex',gap:12,marginTop:20,justifyContent:'center'}},
+        el('button',{className:'btn btn-primary',onClick:resetRound},'New Round'),
+        el('button',{className:'btn btn-secondary',onClick:()=>{
+          if (navigator.clipboard) navigator.clipboard.writeText(
+            'MOTION: ' + motion + '\n\n' +
+            speeches.map((s,i) => '--- ' + ROUND_SPEECHES[i].code + ' ---\n' + (s||'')).join('\n\n') +
+            '\n\n--- JUDGE FEEDBACK ---\n' + (feedback || '')
+          );
+        }},'Copy Round Transcript'),
+      )
+    ),
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    TAB CONFIG
    ═══════════════════════════════════════════════════ */
 
 const TABS = [
   {id:'case',label:'Case Generator',color:'orange'},
+  {id:'simulator',label:'Round Sim',color:'orange'},
   {id:'feedback',label:'Case Feedback',color:'orange'},
   {id:'res',label:'Motions',color:'green'},
   {id:'vision',label:'Round Vision',color:'green'},
@@ -4368,6 +4819,7 @@ function App() {
       ),
       // All tabs rendered but only active one visible — preserves state across switches
       tabPane('case', React.createElement(CaseGenerator, { onSave: saveCase, loadedCase: loadedCase, onClearLoaded: () => setLoadedCase(null) })),
+      tabPane('simulator', React.createElement(RoundSimulator)),
       tabPane('feedback', React.createElement(CaseFeedback)),
       tabPane('res', React.createElement(Resolutions)),
       tabPane('vision', React.createElement(RoundVision)),
