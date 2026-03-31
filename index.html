@@ -21,21 +21,6 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 .bg-debate-side{position:fixed;top:0;bottom:0;width:120px;z-index:0;pointer-events:none;overflow:hidden}
 .bg-debate-left{left:0}
 .bg-debate-right{right:0}
-.bg-quote{position:absolute;font-size:72px;font-family:Georgia,serif;color:#ef4444;opacity:.06;animation:floatQuote 18s ease-in-out infinite}
-.bg-quote:nth-child(1){top:12%;left:15px;animation-delay:0s}
-.bg-quote:nth-child(2){top:42%;left:30px;animation-delay:-6s;font-size:56px;color:#fbbf24;opacity:.05}
-.bg-quote:nth-child(3){top:72%;left:10px;animation-delay:-12s;font-size:64px}
-.bg-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#ef444422,transparent);animation:driftLine 14s ease-in-out infinite}
-.bg-line:nth-child(4){left:40px;top:8%;height:140px;animation-delay:-2s}
-.bg-line:nth-child(5){left:70px;top:45%;height:100px;animation-delay:-7s}
-.bg-line:nth-child(6){left:20px;top:28%;height:120px;animation-delay:-11s}
-.bg-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:#ef4444;opacity:.10;animation:pulseDot 8s ease-in-out infinite}
-.bg-dot:nth-child(7){top:20%;left:60px;animation-delay:0s}
-.bg-dot:nth-child(8){top:55%;left:35px;animation-delay:-3s}
-.bg-dot:nth-child(9){top:85%;left:80px;animation-delay:-5s}
-@keyframes floatQuote{0%,100%{transform:translateY(0) rotate(-3deg);opacity:.06}50%{transform:translateY(-25px) rotate(3deg);opacity:.12}}
-@keyframes driftLine{0%,100%{transform:translateY(0);opacity:.08}50%{transform:translateY(-15px);opacity:.18}}
-@keyframes pulseDot{0%,100%{transform:scale(1);opacity:.08}50%{transform:scale(2.5);opacity:.2}}
 
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
@@ -885,28 +870,8 @@ function PolyBackground() {
   const el = React.createElement;
   return el(React.Fragment,null,
     el('div',{className:'bg-canvas'}),
-    el('div',{className:'bg-debate-side bg-debate-left'},
-      el('span',{className:'bg-quote'},'\u201C'),
-      el('span',{className:'bg-quote'},'\u201D'),
-      el('span',{className:'bg-quote'},'\u201C'),
-      el('div',{className:'bg-line'}),
-      el('div',{className:'bg-line'}),
-      el('div',{className:'bg-line'}),
-      el('div',{className:'bg-dot'}),
-      el('div',{className:'bg-dot'}),
-      el('div',{className:'bg-dot'})
-    ),
-    el('div',{className:'bg-debate-side bg-debate-right'},
-      el('span',{className:'bg-quote'},'\u201D'),
-      el('span',{className:'bg-quote'},'\u201C'),
-      el('span',{className:'bg-quote'},'\u201D'),
-      el('div',{className:'bg-line'}),
-      el('div',{className:'bg-line'}),
-      el('div',{className:'bg-line'}),
-      el('div',{className:'bg-dot'}),
-      el('div',{className:'bg-dot'}),
-      el('div',{className:'bg-dot'})
-    )
+    el('div',{className:'bg-debate-side bg-debate-left'}),
+    el('div',{className:'bg-debate-side bg-debate-right'})
   );
 }
 
@@ -1682,10 +1647,37 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     setStreaming(true);
     setProgress({ phase: 'thinking', percent: 0 });
 
+    // AUTO-GENERATE BACKGROUND WITH ACTOR if background is empty
+    let activeBg = background;
+    const bgCheck = (background || '').trim().toLowerCase();
+    if (!bgCheck || bgCheck === 'n/a' || bgCheck === 'na' || bgCheck === 'none') {
+      try {
+        const bgSys = `You are an elite APDA debate case architect. Given a motion, generate a vivid, specific BACKGROUND with an ACTOR for a debate case. Your background should:
+
+1. Choose a specific, interesting ACTOR for the case (a person, institution, government body, or character in a defined situation). Use "TH as [Actor]" framing when an actor makes sense, or "THBT/THW" for policy/value motions.
+2. Set the scene with cinematic specificity: time period, location, key context, stakes.
+3. Define the actor's constraints, incentives, and psychology if applicable.
+4. Keep it 60-120 words. Be concrete, not generic.
+5. Do NOT use markdown formatting. No **, no #, no *.
+6. Do NOT use em dashes or en dashes.
+
+Write ONLY the background text. No labels, no "Background:" header.`;
+        const bgUser = `Motion: ${motion.trim()}\nSide: ${side}\n\nGenerate a vivid background with actor:`;
+        let bgResult = '';
+        await callClaude(bgSys, bgUser, (text) => { bgResult = text; }, { thinkBudget: 3000, maxTokens: 2000 });
+        if (bgResult.trim()) {
+          activeBg = bgResult.trim();
+          setBackground(activeBg);
+        }
+      } catch(e) {
+        // If background generation fails, proceed without it
+      }
+    }
+
     const sysPrompt = buildSystemPrompt(depth);
     const userPrompt = genMode === 'case'
-      ? buildCasePrompt(motion, background, side, format, depth)
-      : buildTightblockPrompt(motion, background, side, format, depth);
+      ? buildCasePrompt(motion, activeBg, side, format, depth)
+      : buildTightblockPrompt(motion, activeBg, side, format, depth);
 
     const expectedWords = depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600;
 
@@ -1757,7 +1749,7 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
     // Background
     React.createElement('label',{className:'field-label'},'Background'),
     React.createElement('textarea',{
-      placeholder:'Provide context, constraints, actor details, or scenario setup. Type N/A if not applicable.',
+      placeholder:'Optional: provide context, constraints, actor details, or scenario. Leave blank and we\'ll generate one for you.',
       value:background, onChange:e=>setBackground(e.target.value),
       rows:2
     }),
