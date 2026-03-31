@@ -18,6 +18,19 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 
 /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#0a0f1a 0%,#0f1724 30%,#111c2e 60%,#0d1520 100%)}
+.bg-debate-side{position:fixed;top:0;bottom:0;width:80px;z-index:0;pointer-events:none;overflow:hidden;opacity:.06}
+.bg-debate-left{left:0}
+.bg-debate-right{right:0}
+.bg-quote{position:absolute;font-size:64px;font-family:Georgia,serif;color:#fff;animation:floatQuote 20s ease-in-out infinite}
+.bg-quote:nth-child(1){top:15%;left:10px;animation-delay:0s}
+.bg-quote:nth-child(2){top:45%;left:20px;animation-delay:-7s;font-size:48px}
+.bg-quote:nth-child(3){top:75%;left:5px;animation-delay:-14s;font-size:56px}
+.bg-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#ffffff44,transparent);animation:driftLine 15s ease-in-out infinite}
+.bg-line:nth-child(1){left:30px;top:10%;height:120px;animation-delay:-3s}
+.bg-line:nth-child(2){left:50px;top:50%;height:80px;animation-delay:-8s}
+.bg-line:nth-child(3){left:15px;top:30%;height:100px;animation-delay:-12s}
+@keyframes floatQuote{0%,100%{transform:translateY(0) rotate(-2deg);opacity:.5}50%{transform:translateY(-30px) rotate(2deg);opacity:1}}
+@keyframes driftLine{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-20px);opacity:.7}}
 
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -41,9 +54,9 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 
 /* ── Cards / Panels ───────────────────────────── */
 .panel{
-  width:100%;max-width:1100px;margin:28px auto 40px;
+  width:100%;max-width:1400px;margin:28px auto 40px;
   background:#1e2d44ee;border:1px solid #ffffff22;
-  border-radius:16px;padding:32px 36px;
+  border-radius:16px;padding:32px 42px;
   backdrop-filter:blur(12px);
   transition:max-width .4s ease, padding .3s ease;
 }
@@ -303,14 +316,17 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 /* ── Generated Output ─────────────────────────── */
 .output{
-  padding:20px 28px;white-space:pre-line;line-height:1.5;
-  font-size:1.02rem;max-height:80vh;overflow-y:auto;
+  padding:24px 32px;white-space:pre-line;line-height:1.65;
+  font-size:1.04rem;max-height:80vh;overflow-y:auto;
   min-height:300px;letter-spacing:-.01em;word-spacing:-.02em;
 }
 .output *{margin:0;padding:0}
-.output h3{color:#fbbf24;margin:10px 0 3px;font-size:1.08rem;line-height:1.3}
-.output h4{color:#5eead4;margin:8px 0 2px;font-size:1rem;line-height:1.3}
-.output .section{margin-bottom:8px}
+.output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422}
+.output h4{color:#5eead4;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
+.output .section{margin-bottom:12px}
+.phil-output{background:#141e30;border:1px solid #ffffff10;border-radius:12px;padding:28px 36px;margin-top:20px}
+.phil-output .output{padding:0;min-height:0;max-height:none;line-height:1.7;font-size:1.05rem}
+.phil-output .output h3{font-size:1.2rem;margin-top:28px}
 
 /* ── Case Feedback ───────────────────────────── */
 .fb-layout{display:flex;gap:0;min-height:500px;border:1px solid #ffffff10;border-radius:12px;overflow:hidden;background:#0f1724}
@@ -763,7 +779,7 @@ const RESOLUTIONS_DB = {
 
 const FORMATS = {
   'APDA': {
-    label: '2v2 (APDA)',
+    label: 'APDA (2v2)',
     speeches: [
       { code:'PM', title:'Prime Minister Constructive', time:'7 min', side:'gov' },
       { code:'LO', title:'Leader of Opposition', time:'8 min', side:'opp' },
@@ -771,31 +787,6 @@ const FORMATS = {
       { code:'MO', title:'Member of Opposition', time:'8 min', side:'opp' },
       { code:'LOR', title:'Leader of Opposition Rebuttal', time:'4 min', side:'opp' },
       { code:'PMR', title:'Prime Minister Rebuttal', time:'5 min', side:'gov' },
-    ]
-  },
-  'BP': {
-    label: '4-team British Parliamentary',
-    speeches: [
-      { code:'PM', title:'Prime Minister', time:'7 min', side:'og' },
-      { code:'LO', title:'Leader of Opposition', time:'7 min', side:'oo' },
-      { code:'DPM', title:'Deputy Prime Minister', time:'7 min', side:'og' },
-      { code:'DLO', title:'Deputy Leader of Opposition', time:'7 min', side:'oo' },
-      { code:'MG', title:'Member of Government', time:'7 min', side:'cg' },
-      { code:'MO', title:'Member of Opposition', time:'7 min', side:'co' },
-      { code:'GW', title:'Government Whip', time:'7 min', side:'cg' },
-      { code:'OW', title:'Opposition Whip', time:'7 min', side:'co' },
-    ]
-  },
-  'LD': {
-    label: '1v1 Lincoln-Douglas',
-    speeches: [
-      { code:'AC', title:'Affirmative Constructive', time:'6 min', side:'aff' },
-      { code:'CX1', title:'Cross-Examination', time:'3 min', side:'neg' },
-      { code:'NC', title:'Negative Constructive', time:'7 min', side:'neg' },
-      { code:'CX2', title:'Cross-Examination', time:'3 min', side:'aff' },
-      { code:'1AR', title:'First Affirmative Rebuttal', time:'4 min', side:'aff' },
-      { code:'NR', title:'Negative Rebuttal', time:'6 min', side:'neg' },
-      { code:'2AR', title:'Second Affirmative Rebuttal', time:'3 min', side:'aff' },
     ]
   },
 };
@@ -807,7 +798,26 @@ const JUDGE_TAGS = ['STRONG WARRANT','DROPPED ARG','GOOD TURN','NEW IN REBUTTAL'
    ═══════════════════════════════════════════════════ */
 
 function PolyBackground() {
-  return React.createElement('div',{className:'bg-canvas'});
+  const el = React.createElement;
+  return el(React.Fragment,null,
+    el('div',{className:'bg-canvas'}),
+    el('div',{className:'bg-debate-side bg-debate-left'},
+      el('span',{className:'bg-quote'},'\u201C'),
+      el('span',{className:'bg-quote'},'\u201D'),
+      el('span',{className:'bg-quote'},'\u201C'),
+      el('div',{className:'bg-line'}),
+      el('div',{className:'bg-line'}),
+      el('div',{className:'bg-line'})
+    ),
+    el('div',{className:'bg-debate-side bg-debate-right'},
+      el('span',{className:'bg-quote'},'\u201D'),
+      el('span',{className:'bg-quote'},'\u201C'),
+      el('span',{className:'bg-quote'},'\u201D'),
+      el('div',{className:'bg-line'}),
+      el('div',{className:'bg-line'}),
+      el('div',{className:'bg-line'})
+    )
+  );
 }
 
 /* ═══════════════════════════════════════════════════
@@ -824,6 +834,25 @@ function cleanOutput(text) {
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/\*([^*]+)\*/g, '$1')
     .replace(/^#{1,4}\s+/gm, '');
+}
+
+function SaveToDocsButton({text, filename}) {
+  if (!text) return null;
+  return React.createElement('button',{
+    className:'btn btn-secondary',
+    style:{marginTop:12,fontSize:'.85rem'},
+    onClick:() => {
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (filename || 'DebateOS Export') + '.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      window.open('https://docs.google.com/document/create','_blank');
+    }
+  },'Save to Google Docs');
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1036,6 +1065,8 @@ The single biggest failure mode of AI-generated debate cases is that they sound 
 
 10. THE "INTERESTING" TEST. After writing each warrant, ask: would a smart judge underline this and write "good" next to it? Would another debater steal this argument for their own case file? If not, the warrant is mediocre and you need to either make it more specific, more surprising, or more devastating. Mediocre warrants are worse than fewer, excellent warrants.
 
+11. NO DASHES IN YOUR OUTPUT. Do not use em dashes, en dashes, or hyphens as separators. Instead of "X — Y" write "X. Y" or "X, which means Y" or just restructure the sentence. Dashes are an AI writing tell. Real debaters use periods, colons, and natural connective phrases. This applies to the entire case: background, arguments, warrants, A2 blocks, everything.
+
 STRUCTURE — Your cases follow this exact format:
 
 Background (word count): Concise context paragraph. Establish the status quo with specific facts. Define key terms precisely.
@@ -1214,6 +1245,25 @@ The PM constructive is NOT just an opening speech. It is a BLUEPRINT for winning
      a) A clear "voting issue" — one sentence that captures why the judge should vote for you, even after 40 minutes of debate
      b) Pre-loaded weighing language: "At the end of this round, ask yourself: which side's impacts are more probable, more permanent, and affect more people?"
      c) A "fallback narrative" — if you lose 2 out of 3 arguments, what's the story that still wins the round?
+
+OPPONENT MODELING — THINK LIKE THE OTHER TEAM:
+
+Before writing each argument, run a mental simulation: "I am a smart opposition debater. I just heard this argument. What is my FIRST instinct?" If your first instinct response beats the argument, the argument is bad. Redesign it so the first-instinct response fails.
+
+For every A2 block, model three levels of opposition skill:
+1. NOVICE OPP: What will a first-year debater say? (Block this in the case itself.)
+2. COMPETENT OPP: What will a 3-4 breaking team say? (Pre-empt this in MG overview.)
+3. ELITE OPP: What will a Nationals finalist say? (Design your framework so even the elite response doesn't touch your core impact.)
+
+The case should be designed so that beating the novice and competent opposition is automatic, and beating the elite opposition requires only solid execution of the MG.
+
+EDUCATIONAL VALUE — TEACH WHILE YOU BUILD:
+
+Every case should make the debater smarter, not just give them words to read. Include brief coaching notes in parentheses throughout the case:
+
+For example: after a warrant, add "(This works because it gives the judge a concrete image to anchor the abstract principle)" or after a framing point, add "(Notice how this framing pre-empts their likely efficiency argument by making reversibility the evaluative standard)."
+
+These annotations help debaters understand WHY the case is structured this way, so they can apply the same thinking to future cases they write themselves. Include 3-5 of these per case, focused on the most instructive strategic decisions.
 
 APDA SPEAKER SCALE — WHAT JUDGES ARE ACTUALLY SCORING:
 
@@ -1514,12 +1564,6 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     // Format + Side row
     React.createElement('div',{className:'row',style:{marginTop:20}},
       React.createElement('div',null,
-        React.createElement('label',{className:'field-label green'},'Format'),
-        React.createElement('select',{value:format,onChange:e=>setFormat(e.target.value)},
-          Object.keys(FORMATS).map(f=>React.createElement('option',{key:f,value:f},f))
-        )
-      ),
-      React.createElement('div',null,
         React.createElement('label',{className:'field-label green'},'Side'),
         React.createElement('select',{value:side,onChange:e=>setSide(e.target.value)},
           ['Government','Opposition'].map(s=>React.createElement('option',{key:s,value:s},s))
@@ -1778,7 +1822,7 @@ function HighlightableOutput({output, outputRef, streaming, onRevise, motion, de
 4. Do NOT include any meta-commentary like "Here's the revised section" — just output the replacement text directly
 5. The replacement should flow naturally with the text before and after it
 
-Return ONLY the replacement text. Nothing else. Do not use markdown formatting — no **, no #, no *.`;
+Return ONLY the replacement text. Nothing else. Do not use markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators.`;
 
         const userPrompt = `Full case for context:\n\n${output}\n\n---\n\nHighlighted section to revise:\n"${highlight}"\n\nUser's instruction: ${userComment}\n\nWrite the replacement text:`;
 
@@ -1810,7 +1854,7 @@ Return ONLY the replacement text. Nothing else. Do not use markdown formatting �
 
       } else {
         // GENERAL REVISION: Rewrite the full case with the instruction
-        const sysPrompt = `You are a debate case editor. The user wants a general revision applied to their entire debate case. Apply their feedback while maintaining the APDA case format structure (numbered arguments, lettered sub-points, roman numeral warrants). Return ONLY the revised full case text — no meta-commentary. Do not use markdown formatting — no **, no #, no *.`;
+        const sysPrompt = `You are a debate case editor. The user wants a general revision applied to their entire debate case. Apply their feedback while maintaining the APDA case format structure (numbered arguments, lettered sub-points, roman numeral warrants). Return ONLY the revised full case text, no meta-commentary. Do not use markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators.`;
         const userPrompt = `Here is the current case:\n\n${output}\n\nUser's revision request: ${userComment}\n\nApply this revision and return the complete updated case.`;
 
         let revisedFull = '';
@@ -1998,19 +2042,23 @@ The background should be 150-250 words. It should set a vivid scene. Details mat
 
 The case statement should be in the form "This house, as [character name], would [action]" or "This house, as [character name], believes that [claim]."
 
+The dilemma MUST be genuinely balanced. Both sides need strong, distinct arguments. Apply the "coin flip test": a debater hearing this motion should not immediately know which side they'd prefer. The best agent cases create moral complexity where reasonable people disagree.
+
 Generate EXACTLY ONE motion. Provide:
 
 BACKGROUND: (150-250 words) The character's situation, written cinematically with specific details.
 
 CASE STATEMENT: The formal motion phrasing.
 
-GOV ANGLE: (2-3 sentences) Why the character should take this action.
+GOV ANGLE: (2-3 sentences) Why the character should take this action. This should feel winnable.
 
-OPP ANGLE: (2-3 sentences) Why the character should not.
+OPP ANGLE: (2-3 sentences) Why the character should not. This should feel equally winnable.
+
+FAIRNESS CHECK: (1 sentence) Why this dilemma is genuinely hard.
 
 DIFFICULTY: Novice / Intermediate / Advanced
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Use plain text with clear section labels.`;
+Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
 
       userPrompt = `Generate 1 original APDA agent case (character-based motion with detailed background).${picked ? ' Topic area: ' + picked + '.' : ' Pick any topic area.'}\n\nCATEGORY GUIDANCE: ${guide}\n\nMake the character feel like a real person with a real life. The dilemma should be genuinely hard — the kind where you change your mind about which side you'd rather be on while prepping.`;
     } else {
@@ -2024,21 +2072,27 @@ You can use any motion style:
 - Actor-based: "TH, as [actor], would [action]"
 - Supports/Opposes: "THS/O [phenomenon]"
 
-The motion should be well-scoped, debatable from both sides, and reward deep thinking. Smart people should disagree about which side is stronger.
+The motion MUST be genuinely fair to both sides. Apply the "coin flip test": if a debater heard this motion, they should not immediately know which side they'd rather be on. If one side is obviously stronger, the motion is bad. Avoid motions where Gov is clearly right or Opp is clearly right.
+
+Design motions that reward creative thinking over generic knowledge. The best motions create unexpected clash points, force debaters to grapple with genuine tradeoffs, and produce rounds where the judge actually has to think hard about who won.
+
+Avoid overused APDA topics: generic social media bans, standard drug legalization, basic UBI, "education is good." Find angles that feel fresh. Pull from behavioral economics, game theory, institutional design, historical counterfactuals, philosophy of mind, emerging technology, or niche policy areas that most debaters haven't encountered.
 
 Generate EXACTLY ONE motion. Provide:
 
 BACKGROUND: (50-100 words) Factual context grounding the motion in reality. Specific statistics, mechanisms, or recent developments that make this timely.
 
-CASE STATEMENT: The formal APDA motion phrasing. Make it precise.
+CASE STATEMENT: The formal APDA motion phrasing. Make it precise and well-scoped.
 
-GOV ANGLE: (2-3 sentences) The strongest government approach.
+GOV ANGLE: (2-3 sentences) The strongest government approach. This should feel winnable.
 
-OPP ANGLE: (2-3 sentences) The strongest opposition approach.
+OPP ANGLE: (2-3 sentences) The strongest opposition approach. This should feel equally winnable.
+
+FAIRNESS CHECK: (1 sentence) Why this motion is genuinely balanced.
 
 DIFFICULTY: Novice / Intermediate / Advanced
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Use plain text with clear section labels.`;
+Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
 
       userPrompt = `Generate 1 original APDA debate motion.${picked ? ' Topic area: ' + picked + '.' : ' Pick any topic area.'}\n\nCATEGORY GUIDANCE: ${guide}\n\nBe creative and unexpected. Avoid the most obvious take. The motion should reward depth of thinking.`;
     }
@@ -2061,11 +2115,11 @@ Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for i
       const sysPrompt = `You are a debate case writer. Write a concise BACKGROUND section for a debate motion. This should:
 
 1. Define key terms precisely (2-3 sentences)
-2. Establish the status quo — what's happening now that makes this motion relevant (2-3 sentences)
+2. Establish the status quo, what's happening now that makes this motion relevant (2-3 sentences)
 3. Identify the key stakeholders and their interests (1-2 sentences)
 4. Note any important caveats or scope limitations a government team should consider (1-2 sentences)
 
-Keep it to 80-150 words. Be specific — use real facts, policies, and statistics where relevant. Write in the style of a competitive APDA case background section. Do NOT use any markdown formatting.`;
+Keep it to 80-150 words. Be specific, use real facts, policies, and statistics where relevant. Write in the style of a competitive APDA case background section. Do NOT use any markdown formatting. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Motion: ${result}\n\nWrite the background section.`;
       await callClaude(sysPrompt, userPrompt, (text) => setBgText(text), { thinkBudget: 6000, maxTokens: 4000 });
     } catch(e) {
@@ -2098,9 +2152,11 @@ Keep it to 80-150 words. Be specific — use real facts, policies, and statistic
 
       const sysPrompt = `You are an elite APDA debate motion designer. You have been given a summary of current events. Your job is to turn one of these into a brilliant, well-scoped debate motion.
 
-Pick the story with the most genuine tension — where smart people would disagree about the right course of action. Then craft a motion that captures that tension precisely.
+Pick the story with the most genuine tension, where smart people would disagree about the right course of action. Then craft a motion that captures that tension precisely.
 
-The motion should be timely but not require debaters to know the specific news story — it should be debatable from general principles + the background you provide.
+The motion should be timely but not require debaters to know the specific news story. It should be debatable from general principles plus the background you provide.
+
+The motion MUST be fair to both sides. Apply the "coin flip test": a debater should not immediately know which side is stronger. Don't just pick the obvious policy angle from the news. Find the deeper structural tension, the philosophical fault line, or the counterintuitive angle that makes this motion interesting.
 
 Generate EXACTLY ONE motion. Provide:
 
@@ -2110,13 +2166,15 @@ BACKGROUND: (80-150 words) Factual context grounding the motion. Include specifi
 
 CASE STATEMENT: The formal APDA motion phrasing. Make it precise and well-scoped.
 
-GOV ANGLE: (2-3 sentences) The strongest government approach.
+GOV ANGLE: (2-3 sentences) The strongest government approach. Should feel winnable.
 
-OPP ANGLE: (2-3 sentences) The strongest opposition approach.
+OPP ANGLE: (2-3 sentences) The strongest opposition approach. Should feel equally winnable.
+
+FAIRNESS CHECK: (1 sentence) Why this motion is genuinely balanced.
 
 DIFFICULTY: Novice / Intermediate / Advanced
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Use plain text with clear section labels.`;
+Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
 
       const userPrompt = `Here are current events to draw from:\n\n${newsData.text}\n\n${picked ? 'Focus on ' + picked + ' angles.' : 'Pick the most debatable story.'}\n\nTurn this into one original APDA debate motion. The motion should be genuinely hard — the kind that splits a room.`;
 
@@ -2263,6 +2321,7 @@ Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for i
           },
           style:{minWidth:120},
         }, 'Copy'),
+        el(SaveToDocsButton,{text:motionOutput,filename:'DebateOS Motion'}),
       ),
     ),
   );
@@ -2393,17 +2452,17 @@ function RoundVision() {
 
     try {
       // Generate text analysis
-      const sysPrompt = `You are an elite APDA debate strategist. Analyze the given motion and predict the full strategic landscape of the round. Be specific and tactical — reference real argument structures, not generic advice.
+      const sysPrompt = `You are an elite APDA debate strategist. Analyze the given motion and predict the full strategic landscape of the round. Be specific and tactical. Reference real argument structures, not generic advice.
 
 Your analysis should cover:
 1. Most likely opposition case angles (rank by probability, explain the mechanism of each)
-2. Key clash points — where the round will be won or lost
-3. Framework battle — what frameworks each side wants and why
-4. Strategic recommendations — specific tactical advice for speech-by-speech execution
-5. Danger zones — traps to avoid and arguments that look good but lose rounds
-6. MG/MO strategy — what the extension speeches should focus on
+2. Key clash points: where the round will be won or lost
+3. Framework battle: what frameworks each side wants and why
+4. Strategic recommendations: specific tactical advice for speech-by-speech execution
+5. Danger zones: traps to avoid and arguments that look good but lose rounds
+6. MG/MO strategy: what the extension speeches should focus on
 
-Write in a direct, confident voice. Be the coach in the prep room 15 minutes before the round. Do NOT use any markdown formatting — no **, no #, no *. Use plain text with numbered sections and lettered sub-points.`;
+Write in a direct, confident voice. Be the coach in the prep room 15 minutes before the round. Do NOT use any markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators. Use plain text with numbered sections and lettered sub-points.`;
       const userPrompt = `Motion: ${motion}\nMy side: ${side}\n\nGive me the full round vision.`;
       await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 10000, maxTokens: 8000 });
     } catch(e) {
@@ -2483,8 +2542,11 @@ Rules:
     }, 'Argument map requires an API key. The map is being generated alongside your analysis.'),
 
     // Text output
-    view === 'text' && output && el('div',{className:'output'},
-      el('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output)}})
+    view === 'text' && output && el('div',null,
+      el('div',{className:'output'},
+        el('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output)}})
+      ),
+      !loading && el(SaveToDocsButton,{text:output,filename:'Round Vision ' + motion.substring(0,40)})
     )
   );
 }
@@ -2552,17 +2614,17 @@ function Casual() {
     try {
       const sysPrompt = `You are the strategic brain of the best APDA debater in the country. The user is telling you what the other team just argued. Think through this like you are sitting next to your partner between speeches, scribbling notes, whispering "okay here's what we do."
 
-Your personality: You are confident, occasionally cocky, genuinely excited when you spot a devastating turn, and openly dismissive of bad arguments. You say things like "this is a bad argument and here's why," "oh this is actually clever — here's how to handle it," "they're going to wish they never brought this up," and "look, just grant them this, it doesn't matter." You have OPINIONS about which arguments are good and which are garbage.
+Your personality: You are confident, occasionally cocky, genuinely excited when you spot a devastating turn, and openly dismissive of bad arguments. You say things like "this is a bad argument and here's why," "oh this is actually clever, here's how to handle it," "they're going to wish they never brought this up," and "look, just grant them this, it doesn't matter." You have OPINIONS about which arguments are good and which are garbage.
 
 For EACH argument the user describes, do ONE of these (always pick the strongest available move):
 
-ACKNOWLEDGE and REFRAME — "We actually agree — and that's exactly why we win." Show how their own argument, taken to its logical conclusion, proves your point. This is the most devastating move when available.
+ACKNOWLEDGE and REFRAME: "We actually agree, and that's exactly why we win." Show how their own argument, taken to its logical conclusion, proves your point. This is the most devastating move when available.
 
-CONCEDE and WEIGH — "Give them this. It doesn't matter." Grant the point entirely, then explain with specific weighing calculus (scope, probability, reversibility, timeframe) why it changes nothing. This knifes their case because they wasted time winning something irrelevant.
+CONCEDE and WEIGH: "Give them this. It doesn't matter." Grant the point entirely, then explain with specific weighing calculus (scope, probability, reversibility, timeframe) why it changes nothing. This knifes their case because they wasted time winning something irrelevant.
 
-DISPUTE at LINK LEVEL — "Their mechanism is broken. Here's where." Identify the exact link in their causal chain that fails. Provide a counter-warrant with a real-world example. Be specific about WHY the link breaks.
+DISPUTE at LINK LEVEL: "Their mechanism is broken. Here's where." Identify the exact link in their causal chain that fails. Provide a counter-warrant with a real-world example. Be specific about WHY the link breaks.
 
-TURN — "This actually proves our side." The nuclear option. Show how their own logic, evidence, or framework leads to YOUR conclusion. The best turns make the opposition wish they had never raised the argument.
+TURN: "This actually proves our side." The nuclear option. Show how their own logic, evidence, or framework leads to YOUR conclusion. The best turns make the opposition wish they had never raised the argument.
 
 How to write:
 - Start with a gut reaction: is this argument actually threatening, or is it noise? Be honest. "This is their best argument — take it seriously" or "This is weak, here's how to expose it."
@@ -2572,7 +2634,8 @@ How to write:
 - Be opinionated. If one response is clearly better than the others, say so: "Don't waste time disputing this — just concede and weigh. It's not worth the oxygen."
 - If the opponent's argument has an obvious flaw, be blunt: "They skipped a step in their causal chain and they don't even know it."
 - If the argument is genuinely strong, respect it: "Okay this is actually good. Here's the only clean answer..."
-- Keep it tight. Real in-round strategy is not an essay. Get to the point.`;
+- Keep it tight. Real in-round strategy is not an essay. Get to the point.
+- Never use em dashes, en dashes, or hyphens as separators. Use periods, commas, and natural phrasing instead.`;
       const apiMessages = newMsgs.slice(-10).map(m => ({
         role: m.role === 'assistant' ? 'assistant' : 'user',
         content: m.text
@@ -2830,8 +2893,11 @@ Do NOT use markdown formatting. Plain text only.`;
         'Build Framework'
       )
     ),
-    output && React.createElement('div',{className:'output'},
-      React.createElement('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output)}})
+    output && React.createElement('div',{className:'phil-output'},
+      React.createElement('div',{className:'output'},
+        React.createElement('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output)}})
+      ),
+      !loading && React.createElement(SaveToDocsButton,{text:output,filename:'Philosophy ' + philosopher})
     )
   );
 }
@@ -2902,7 +2968,7 @@ function CaseFeedback() {
 Your coaching voice:
 - Be direct. Say "This warrant is doing nothing" not "this could benefit from stronger development."
 - Be specific. Say "Any decent LO will point out that your causal chain skips from A to C without explaining B" not "the logic could be tighter."
-- Be honest about what is actually good. If a warrant is genuinely clever, say "This is good — a top team would struggle to answer this cleanly."
+- Be honest about what is actually good. If a warrant is genuinely clever, say "This is good. A top team would struggle to answer this cleanly."
 - Be strategic. Think about what a Nationals-caliber opposition team would do to each section. Your feedback should prepare the debater for the STRONGEST version of the attack.
 - Sound like a human coach, not a feedback bot. Use phrases like "This is bad," "Cut this entirely," "This is the best part of your case — protect it," "Any halfway decent opp will eat this alive," "This is where you win or lose the round."
 - Occasionally be encouraging when something is genuinely strong. Not everything needs to be negative. But NEVER be encouraging about mediocre work.
@@ -2916,7 +2982,9 @@ What to look for:
 6. IMPACT CALCULUS: Are impacts just stated or actually WEIGHED against likely opposition impacts?
 7. HUMAN VOICE: Does the case sound like a person who cares, or a machine that formatted arguments correctly?
 
-Return ONLY valid JSON in this exact format — no text before or after:
+FORMATTING: Do not use em dashes, en dashes, or hyphens as separators in your feedback. Use periods, commas, and natural sentence structure instead.
+
+Return ONLY valid JSON in this exact format, no text before or after:
 [
   {"excerpt": "exact verbatim text from the case", "feedback": "your brutally honest coaching feedback"},
   ...
@@ -3001,7 +3069,7 @@ Rules:
     ));
 
     try {
-      const sysPrompt = `You are an expert APDA debate case editor. The user has a specific section of their debate case that received feedback. They are now replying with instructions for how to improve it. Rewrite ONLY the highlighted section based on their instruction. Maintain the same style, tone, and format as the surrounding case. Return ONLY the rewritten text — nothing else. Do not use markdown formatting.`;
+      const sysPrompt = `You are an expert APDA debate case editor. The user has a specific section of their debate case that received feedback. They are now replying with instructions for how to improve it. Rewrite ONLY the highlighted section based on their instruction. Maintain the same style, tone, and format as the surrounding case. Return ONLY the rewritten text, nothing else. Do not use markdown formatting. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Full case for context:\n\n${caseText}\n\n---\nSection to revise:\n"${comment.excerpt}"\n\nOriginal feedback: ${comment.feedback}\n\nUser's instruction: ${userReply}\n\nRewrite this section:`;
 
       let revised = '';
@@ -3249,14 +3317,6 @@ function Judge() {
   };
 
   return React.createElement('div',{className:'panel'},
-    React.createElement('label',{className:'field-label green'},'Format'),
-    React.createElement('select',{
-      value:format,
-      onChange:e=>{setFormat(e.target.value);setNotes({});setTags({});setFeedback({})},
-      style:{marginBottom:20}
-    },
-      Object.entries(FORMATS).map(([k,v])=>React.createElement('option',{key:k,value:k},v.label))
-    ),
     speeches.map(speech =>
       React.createElement('div',{key:speech.code,className:'speech-card'},
         React.createElement('div',{className:'speech-header'},
@@ -3315,6 +3375,171 @@ function buildJudgeFeedback(speech, note, activeTags) {
 }
 
 /* ═══════════════════════════════════════════════════
+   TAB: PRACTICE
+   ═══════════════════════════════════════════════════ */
+
+function Practice() {
+  const el = React.createElement;
+  const SPEECHES = [
+    {code:'PMC',title:'Prime Minister Constructive',time:'7 min',side:'gov',desc:'Present your case: framework, background, and 2-3 arguments with warrants.'},
+    {code:'LOC',title:'Leader of Opposition Constructive',time:'8 min',side:'opp',desc:'Present Off-Case arguments then rebut Government\'s case On-Case.'},
+    {code:'MG',title:'Member of Government',time:'8 min',side:'gov',desc:'Respond to LOC attacks. Off-Case first, then On-Case defense.'},
+    {code:'MO',title:'Member of Opposition',time:'8 min',side:'opp',desc:'Respond to MG, extend Off-Case, address anything LO missed from PMC.'},
+    {code:'LOR',title:'Leader of Opposition Rebuttal',time:'4 min',side:'opp',desc:'Summarize Opp case, give ballots, weigh aggressively. No new arguments.'},
+    {code:'PMR',title:'Prime Minister Rebuttal',time:'5 min',side:'gov',desc:'Final word. Summarize, weigh, pull through drops. No new arguments.'},
+  ];
+
+  const [speechType, setSpeechType] = useState('PMC');
+  const [motion, setMotion] = useState('');
+  const [userSpeech, setUserSpeech] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [mode, setMode] = useState('write'); // 'write' or 'review'
+
+  const selectedSpeech = SPEECHES.find(s => s.code === speechType);
+
+  const submitForReview = async () => {
+    if (!userSpeech.trim()) return;
+    setLoading(true);
+    setFeedback('');
+    setMode('review');
+
+    const sysPrompt = `You are the best APDA debate coach in the country. A debater just practiced their ${selectedSpeech.title} (${selectedSpeech.time}) and you are reviewing it.
+
+You are reviewing a ${selectedSpeech.code} speech. Here is what this speech should accomplish: ${selectedSpeech.desc}
+
+Your review should be structured like a real coach's feedback after watching a practice speech:
+
+1. OVERALL IMPRESSION (2-3 sentences): Your gut reaction. Was this good? Was it weak? Be honest. "This is a solid speech that would win most rounds" or "This needs serious work before tournament."
+
+2. WHAT WORKED: Identify 2-3 specific things the speaker did well. Quote exact phrases from their speech. Explain why those moments were effective.
+
+3. WHAT DIDN'T WORK: Identify 2-4 specific problems. Be brutally specific. "Your second warrant about economic growth is doing nothing because you never explain the causal mechanism" not "some warrants could be stronger."
+
+4. STRATEGIC GAPS: What did they forget to do? For a PMC, did they set up a framework? For an MG, did they cover Off-Case before On-Case? For a PMR, did they weigh? Point out structural mistakes.
+
+5. SPEAKER POINTS ESTIMATE: Give a realistic APDA speaker point estimate (20-30 scale, 28 is varsity average) with a one-sentence justification.
+
+6. ONE THING TO FIX: If they could only change one thing before their next round, what should it be?
+
+Write like a coach who genuinely wants this debater to improve. Be tough but constructive. Do not use em dashes or markdown formatting. Use plain conversational prose.`;
+
+    const userPrompt = `Motion: ${motion || '(no motion provided)'}\nSpeech type: ${selectedSpeech.code} (${selectedSpeech.title})\n\nHere is the speech:\n\n${userSpeech}`;
+
+    try {
+      await callClaude(sysPrompt, userPrompt, (text) => setFeedback(text), { thinkBudget: 8000, maxTokens: 6000 });
+    } catch(e) {
+      setFeedback('Error: ' + e.message);
+    }
+    setLoading(false);
+  };
+
+  const readAsSpeech = (text) => {
+    if (!text || typeof window === 'undefined' || !window.speechSynthesis) return;
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.05;
+    utterance.pitch = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Google US English'));
+    if (preferred) utterance.voice = preferred;
+    utterance.onend = () => setSpeaking(false);
+    setSpeaking(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  return el('div',{className:'panel'},
+    el('p',{style:{color:'#888',marginBottom:20,fontSize:'.95rem'}},
+      'Practice writing speeches and get AI coaching feedback. Select the speech you\'re practicing, type it out, and submit for review.'
+    ),
+
+    // Speech type selector
+    el('label',{className:'field-label'},'Which speech are you practicing?'),
+    el('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginBottom:20}},
+      SPEECHES.map(s =>
+        el('div',{
+          key:s.code,
+          onClick:()=>setSpeechType(s.code),
+          style:{
+            padding:'14px 16px',cursor:'pointer',borderRadius:10,
+            border:speechType===s.code?'2px solid #fbbf24':'1px solid #ffffff15',
+            background:speechType===s.code?'#fbbf2415':'#ffffff05',
+            transition:'.2s',
+          }
+        },
+          el('div',{style:{fontWeight:700,fontSize:'1rem',color:speechType===s.code?'#fbbf24':'#e0e7ef'}},s.code),
+          el('div',{style:{fontSize:'.78rem',color:'#888',marginTop:2}},s.title),
+          el('div',{style:{fontSize:'.72rem',color:'#666',marginTop:4}},s.time + (s.side==='gov'?' (Gov)':' (Opp)')),
+        )
+      )
+    ),
+
+    // Motion input
+    el('label',{className:'field-label green'},'Motion (optional but recommended)'),
+    el('input',{
+      type:'text',
+      placeholder:'e.g., THBT we should abolish the electoral college',
+      value:motion,
+      onChange:e=>setMotion(e.target.value),
+      style:{marginBottom:16}
+    }),
+
+    // Speech input
+    el('label',{className:'field-label green'},'Your ' + selectedSpeech.code + ' Speech'),
+    el('div',{style:{fontSize:'.8rem',color:'#888',marginBottom:8}}, selectedSpeech.desc),
+    el('textarea',{
+      value:userSpeech,
+      onChange:e=>setUserSpeech(e.target.value),
+      placeholder:'Write your speech here. Include your framework, arguments, warrants, and weighing. Write it exactly as you would say it in a round.',
+      style:{minHeight:300,width:'100%',background:'#141e30',border:'1px solid #ffffff18',borderRadius:10,padding:16,color:'#e0e7ef',fontSize:'1rem',lineHeight:1.6,resize:'vertical',fontFamily:'inherit'}
+    }),
+
+    // Word count + time estimate
+    el('div',{style:{display:'flex',gap:16,marginTop:8,marginBottom:16,fontSize:'.8rem',color:'#666'}},
+      el('span',null,'Words: ' + (userSpeech.trim() ? userSpeech.trim().split(/\s+/).length : 0)),
+      el('span',null,'Est. speaking time: ' + Math.round((userSpeech.trim() ? userSpeech.trim().split(/\s+/).length : 0) / 130) + ' min'),
+    ),
+
+    // Action buttons
+    el('div',{style:{display:'flex',gap:12,flexWrap:'wrap'}},
+      el('button',{
+        className:'btn btn-orange',
+        onClick:submitForReview,
+        disabled:loading || !userSpeech.trim(),
+      }, loading ? el('span',null,el('span',{className:'spinner'}),'Reviewing...') : 'Submit for Review'),
+      userSpeech.trim() && el('button',{
+        className:'btn btn-secondary',
+        onClick:()=>readAsSpeech(userSpeech),
+      }, speaking ? 'Stop Reading' : 'Read Like Speech'),
+    ),
+
+    // Feedback output
+    feedback && el('div',{style:{marginTop:24}},
+      el('div',{style:{
+        background:'#141e30',border:'1px solid #ffffff10',borderRadius:12,padding:'24px 32px',
+      }},
+        el('div',{className:'output',style:{padding:0,minHeight:0,maxHeight:'none'}},
+          cleanOutput(feedback)
+        ),
+        !loading && el('div',{style:{display:'flex',gap:12,marginTop:16}},
+          el('button',{
+            className:'btn btn-secondary',
+            style:{fontSize:'.85rem'},
+            onClick:()=>readAsSpeech(feedback),
+          }, speaking ? 'Stop Reading' : 'Read Feedback Aloud'),
+          el(SaveToDocsButton,{text:feedback,filename:'Practice Feedback ' + selectedSpeech.code}),
+        )
+      )
+    ),
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    TAB 7: DEBATE FOR NEWBIES
    ═══════════════════════════════════════════════════ */
 
@@ -3329,13 +3554,13 @@ function Newbies() {
       el('p',{key:0},"Parliamentary debate is a structured format where two teams argue for and against a resolution. One team (Government) proposes and defends a position; the other (Opposition) challenges it."),
       el('p',{key:1},"In APDA (American Parliamentary Debate Association), the most common college format, it's 2v2. Government has a Prime Minister (PM) and Member of Government (MG). Opposition has a Leader of Opposition (LO) and Member of Opposition (MO). There are six speeches total, alternating sides."),
       el('p',{key:2},'Most APDA tournaments are "Cases Tournaments" where the Government team chooses the topic and has already prepared their case. The Opposition team doesn\'t get preparation time, except during POCs (Points of Clarification). There are also Motions rounds where both sides get 15 minutes to prep a topic chosen by the tournament.'),
-      el('p',{key:3},"A judge watches the round and decides who won based on the quality of arguments, not personal opinion on the topic. After the round, the judge gives an RFD (Reason for Decision) explaining the call. Listen carefully to RFDs \u2014 they're more valuable than any practice you'll do."),
+      el('p',{key:3},"A judge watches the round and decides who won based on the quality of arguments, not personal opinion on the topic. After the round, the judge gives an RFD (Reason for Decision) explaining the call. Listen carefully to RFDs. They're more valuable than any practice you'll do."),
     ]},
     { key:'tournament', icon:'\u{1F3C6}', title:'Your First Tournament', render: () => [
       el('p',{key:0},"Tournaments run Friday afternoon through Saturday evening. There are 5 in-rounds that everyone participates in. After in-rounds, the top teams continue into out-rounds (elimination rounds): octafinals, quarterfinals, semifinals, and finals."),
-      el('p',{key:1},"A typical schedule: arrive Friday afternoon, check into the GA (General Assembly, where everyone hangs out), listen to briefings, then debate rounds 1\u20133 that evening. Saturday morning you finish rounds 4\u20135, break is announced around 1 PM, and outrounds go until about 10 PM."),
+      el('p',{key:1},"A typical schedule: arrive Friday afternoon, check into the GA (General Assembly, where everyone hangs out), listen to briefings, then debate rounds 1 through 3 that evening. Saturday morning you finish rounds 4 and 5, break is announced around 1 PM, and outrounds go until about 10 PM."),
       el('p',{key:'2a'},"In each round, speakers are assigned speaker points based on their speech quality. The average varsity score is around 28, and the average novice score is around 25. Most tournaments have closed speaks, meaning you don't find out your points until the tab card is posted after the tournament."),
-      el('div',{key:2,className:'newbie-callout'}, "Dress is casual \u2014 wear what you'd wear to class. Friday night dinner is usually provided, plus Saturday breakfast and lunch. You'll be nervous. Everyone is. You'll probably speak too fast, forget a warrant, and feel like the other team is way better. This is normal. The other team also forgot a warrant and also thinks you're better than them."),
+      el('div',{key:2,className:'newbie-callout'}, "Dress is casual. Wear what you'd wear to class. Friday night dinner is usually provided, plus Saturday breakfast and lunch. You'll be nervous. Everyone is. You'll probably speak too fast, forget a warrant, and feel like the other team is way better. This is normal. The other team also forgot a warrant and also thinks you're better than them."),
       el('p',{key:3},"You will lose rounds, probably most of your early ones. This is the learning process, not a failure. The best debaters in the country lost constantly when they started. The most important thing: after each round, listen to the judge's RFD. That feedback is gold."),
     ]},
     { key:'structure', icon:'\u{1F4CB}', title:'Structure of a Round', render: () => [
@@ -3353,27 +3578,27 @@ function Newbies() {
           el('tr',null, el('td',null,'PM Rebuttal (PMR)'), el('td',null,'Government'), el('td',null,'5 min')),
         )
       ),
-      el('p',{key:2},"All speeches have a 30-second grace period. During constructive speeches (not LOR or PMR), the other team can offer Points of Information (POIs) \u2014 brief questions or comments that support their side. You offer one by raising your hand, and the speaker can accept or decline. General rule: if someone offers you a POI, almost never take it."),
+      el('p',{key:2},"All speeches have a 30-second grace period. During constructive speeches (not LOR or PMR), the other team can offer Points of Information (POIs), which are brief questions or comments that support their side. You offer one by raising your hand, and the speaker can accept or decline. General rule: if someone offers you a POI, almost never take it."),
       el('div',{key:3,className:'newbie-callout'}, el('span',null, el('strong',null,'No new arguments in rebuttals. '), "LOR and PMR can introduce new weighing and new examples, but no new substantive arguments or responses. If you think the other team brought something new in rebuttal, you can call a Point of Order by interrupting and saying so. The judge rules on whether it's new.")),
     ]},
     { key:'govguide', icon:'\u{1F451}', title:'Playing Government', render: () => [
       el('p',{key:0},"As Government, you wrote the case and you control the framing. Here's how each speech works:"),
-      el('p',{key:1},"During POCs, answer questions about your case. You don't have to commit to everything \u2014 you can say \"that's up for debate.\" But be careful: everything Gov says in POCs is considered true for the round. Don't accidentally caveat yourself into a corner, and don't give Opp material you weren't planning to defend."),
-      el('p',{key:2},"The PMC is where you read the case you've prepared: framework, background, and 2\u20133 arguments with warrants. The MG is your chance to extend. Respond to everything the LO said \u2014 this is your only chance. Start with Off-Case (responding to Opp's constructive arguments), then go On-Case (defending against their attacks on your arguments). You can add new material in the form of overviews, but focus on responding."),
+      el('p',{key:1},"During POCs, answer questions about your case. You don't have to commit to everything. You can say \"that's up for debate.\" But be careful: everything Gov says in POCs is considered true for the round. Don't accidentally caveat yourself into a corner, and don't give Opp material you weren't planning to defend."),
+      el('p',{key:2},"The PMC is where you read the case you've prepared: framework, background, and 2 to 3 arguments with warrants. The MG is your chance to extend. Respond to everything the LO said because this is your only chance. Start with Off-Case (responding to Opp's constructive arguments), then go On-Case (defending against their attacks on your arguments). You can add new material in the form of overviews, but focus on responding."),
       el('p',{key:3},'The PMR is the final word. Summarize your case in the most favorable light. Weigh your arguments: "Even if you buy their argument about X, our impact on Y outweighs because..." Pull through any arguments Opp never responded to \u2014 these are free wins. No new arguments or responses allowed, but new weighing and examples are fair game.'),
       el('div',{key:4,className:'newbie-callout'}, "Write a Tight Block for every case. This is a pre-written document of responses to the best opposition arguments you can anticipate. Read it fast at the start of MG if Opp calls your case tight, then spend the rest of the speech on substantive debate."),
     ]},
     { key:'oppguide', icon:'\u2694\uFE0F', title:'Playing Opposition', render: () => [
       el('p',{key:0},"As Opposition, your case is prepared live during POCs and the PMC. Listen carefully and write everything down."),
-      el('p',{key:1},"The LOC has two jobs: present your side's constructive arguments (Off-Case) and rebut Government's arguments (On-Case). Off-Case usually comes first and takes 5\u20137 minutes. Then attack the Government's arguments."),
+      el('p',{key:1},"The LOC has two jobs: present your side's constructive arguments (Off-Case) and rebut Government's arguments (On-Case). Off-Case usually comes first and takes 5 to 7 minutes. Then attack the Government's arguments."),
       el('p',{key:2},"The MO responds to Government's attacks on Off-Case, rebuts everything from the MG, and addresses anything the LO didn't cover from the PMC. Add new material and analysis \u2014 don't just reference what the LO said. Respond to everything from Gov's case, because this is your last chance."),
       el('p',{key:3},'The LOR comes right after the MO. Summarize your case in the best light, give the judge clear reasons to vote Opp ("ballots"), and weigh aggressively. No new arguments or responses, but new weighing and examples are allowed.'),
-      el('p',{key:'types'},"There are a few ways to Opp a case. Most commonly you'll straight opp \u2014 just argue the other side. You can also run a counter-case (propose a mutually exclusive alternative with equal fiat power). If the case is structurally impossible to beat, you can call it tight. But don't tight call just because you can't think of arguments \u2014 tight call because you've thought of the arguments and they genuinely can't win."),
+      el('p',{key:'types'},"There are a few ways to Opp a case. Most commonly you'll straight opp, meaning you just argue the other side. You can also run a counter-case (propose a mutually exclusive alternative with equal fiat power). If the case is structurally impossible to beat, you can call it tight. But don't tight call just because you can't think of arguments. Tight call because you've thought of the arguments and they genuinely can't win."),
     ]},
     { key:'cases', icon:'\u{1F4DD}', title:'How to Write a Case', render: () => [
-      el('p',{key:0},"Pick a topic you find interesting \u2014 a policy you wish existed, something you discussed in class, or a debate topic from the news. Make sure you can think of arguments on both sides. The case shouldn't be \"status quo\" (something that's already true) and it needs to be debatable."),
+      el('p',{key:0},"Pick a topic you find interesting. A policy you wish existed, something you discussed in class, or a debate topic from the news. Make sure you can think of arguments on both sides. The case shouldn't be \"status quo\" (something that's already true) and it needs to be debatable."),
       el('p',{key:1},'Phrase your case statement carefully. Adding "preferable to the status quo" means Opp has to defend the current world. "This House believes that" is a normative claim. "This House would" gives you fiat to describe implementation. The phrasing shapes what debate you get.'),
-      el('p',{key:2},"Write 2\u20134 arguments in favor, a clear background section, and a framework for how the judge should evaluate the round. Then write out the best opposition arguments you can think of and your rebuttals to each \u2014 this becomes your tight block for MG."),
+      el('p',{key:2},"Write 2 to 4 arguments in favor, a clear background section, and a framework for how the judge should evaluate the round. Then write out the best opposition arguments you can think of and your rebuttals to each. This becomes your tight block for MG."),
       el('div',{key:3,className:'newbie-callout'}, el('span',null, el('strong',null,'Types of motions: '), 'THBT (This House Believes That) = normative claim, no fiat. THW (This House Would) = policy, you have fiat. THW as [actor] = argue from that actor\'s perspective. THS/O (Supports/Opposes) = neutral observer, good or bad for the world. THR (Regrets) = argue the counterfactual would have been better. THP (Prefers) = compare two worlds.')),
     ]},
     { key:'jargon', icon:'\u{1F4AC}', title:'Core Jargon Decoded', render: () => [
@@ -3382,8 +3607,8 @@ function Newbies() {
       el('div',{key:2,className:'newbie-term'}, el('span',{className:'term-word'},'Impact'), el('span',{className:'term-def'},'The "so what." Why does your argument matter? Impacts should be specific, measurable, and connected to human stakes.')),
       el('div',{key:3,className:'newbie-term'}, el('span',{className:'term-word'},'Weighing'), el('span',{className:'term-def'},'Comparing impacts across sides. "Even if you buy their X, our Y outweighs because it affects more people, is less reversible, and is more probable."')),
       el('div',{key:4,className:'newbie-term'}, el('span',{className:'term-word'},'Turn'), el('span',{className:'term-def'},'Taking an opponent\'s argument and showing it supports YOUR side. The most devastating move in debate.')),
-      el('div',{key:5,className:'newbie-term'}, el('span',{className:'term-word'},'Drop'), el('span',{className:'term-def'},'When a team fails to respond to an argument. Treated as conceded \u2014 if you don\'t contest it, you agree with it.')),
-      el('div',{key:6,className:'newbie-term'}, el('span',{className:'term-word'},'Link Chain'), el('span',{className:'term-def'},'Claim \u2192 Warrant \u2192 Impact. "Private education exists \u2192 creates segregated systems \u2192 entrenches inequality across generations."')),
+      el('div',{key:5,className:'newbie-term'}, el('span',{className:'term-word'},'Drop'), el('span',{className:'term-def'},'When a team fails to respond to an argument. Treated as conceded. If you don\'t contest it, you agree with it.')),
+      el('div',{key:6,className:'newbie-term'}, el('span',{className:'term-word'},'Link Chain'), el('span',{className:'term-def'},'Claim, then Warrant, then Impact. Example: "Private education exists, which creates segregated systems, which entrenches inequality across generations."')),
       el('div',{key:7,className:'newbie-term'}, el('span',{className:'term-word'},'Flow'), el('span',{className:'term-def'},'Notes the judge takes during the round, tracking arguments and responses across speeches. Also what debaters write during the round.')),
       el('div',{key:8,className:'newbie-term'}, el('span',{className:'term-word'},'Tight Block'), el('span',{className:'term-def'},'Pre-written responses to anticipated Opp arguments. Your defensive playbook, read at the start of MG.')),
       el('div',{key:9,className:'newbie-term'}, el('span',{className:'term-word'},'A2 (Answer To)'), el('span',{className:'term-def'},'Pre-prepared responses formatted as "A2: [their likely argument]" followed by your rebuttal.')),
@@ -3391,22 +3616,22 @@ function Newbies() {
       el('div',{key:11,className:'newbie-term'}, el('span',{className:'term-word'},'RFD'), el('span',{className:'term-def'},'Reason for Decision. The judge\'s explanation of why they voted the way they did.')),
     ]},
     { key:'strategy', icon:'\u{1F9E0}', title:'Argument Strategy', render: () => [
-      el('p',{key:0},'Your first instincts are often right \u2014 go with them. Obvious arguments are often good and easy to make. Ask yourself: What is this motion trying to get at? Is there a problem the policy is attempting to solve? Who are the actors and what are their incentives? What does the other side look like?'),
+      el('p',{key:0},'Your first instincts are often right, so go with them. Obvious arguments are often good and easy to make. Ask yourself: What is this motion trying to get at? Is there a problem the policy is attempting to solve? Who are the actors and what are their incentives? What does the other side look like?'),
       el('p',{key:1},'Think about the case on multiple levels: individual, community, demographic groups, local government, national government, international. Also think thematically \u2014 what norms does this set? What precedent does it create?'),
       el('p',{key:2},'Every argument should have a claim (what am I saying?), a warrant (why is this true?), an impact (what does this mean?), and weighing (why do you care?). Your goal is to make it easy for the judge to follow your logic to its conclusion.'),
-      el('p',{key:3},"Weigh, weigh, and weigh some more. Make sure you've explained what makes your arguments important and why they're more important than the other side's. The most important argument is the one you're winning \u2014 don't spend time resolving a clash you're losing when you can explain why the clash you're winning matters more."),
-      el('div',{key:4,className:'newbie-callout'}, el('span',null, el('strong',null,'The hierarchy of winning: '), 'Frameworks (how to evaluate?) \u2192 Burdens (what must each side prove?) \u2192 Weighing (whose arguments matter more?) \u2192 Arguments (what will happen?) \u2192 Warrants (why will it happen?). Win at the highest level you can.')),
-      el('p',{key:5},'Layer your responses. Beat the case at a high level, then beat the individual arguments, then beat the warrants. If the judge doesn\'t buy your response A, you still have responses B and C. But note: 1 good reason beats 2\u20133 bad reasons. Only add responses that actually help.'),
+      el('p',{key:3},"Weigh, weigh, and weigh some more. Make sure you've explained what makes your arguments important and why they're more important than the other side's. The most important argument is the one you're winning. Don't spend time resolving a clash you're losing when you can explain why the clash you're winning matters more."),
+      el('div',{key:4,className:'newbie-callout'}, el('span',null, el('strong',null,'The hierarchy of winning: '), 'Frameworks (how to evaluate?) then Burdens (what must each side prove?) then Weighing (whose arguments matter more?) then Arguments (what will happen?) then Warrants (why will it happen?). Win at the highest level you can.')),
+      el('p',{key:5},'Layer your responses. Beat the case at a high level, then beat the individual arguments, then beat the warrants. If the judge doesn\'t buy your response A, you still have responses B and C. But note: one good reason beats two or three bad reasons. Only add responses that actually help.'),
       el('p',{key:6},'Use "even if" generously. "Even if they win this argument, we still win because..." This shows the judge you can win even in the worst-case scenario. Take the other team at their best and beat them anyway.'),
     ]},
     { key:'speaks', icon:'\u{1F399}', title:'Improving Your Speaks', render: () => [
       el('p',{key:0},"Clearer delivery, not just more style, makes it easier for the judge to follow you. Signpost your arguments: \"Our first independent argument is...\", \"There are three warrants...\", \"This is important because...\" Number your points so the judge can flow them cleanly."),
       el('p',{key:1},"Have good flow coverage. Respond to everything at a high level at minimum. You don't need to beat every individual warrant if you've already beaten the claim or the impact, but you should acknowledge it."),
-      el('p',{key:2},"Do picture painting \u2014 give concrete examples that characterize how people actually behave. Abstract arguments are harder for judges to weigh than vivid, specific ones."),
-      el('p',{key:3},"Say your questions out loud: \"Why is this true? Why does this matter? Why is this relevant?\" This helps you figure out what to say next and sets up what the judge should be thinking. Time yourself \u2014 new debaters always run out of time. Practice a 7-minute speech at home until you feel the pacing."),
+      el('p',{key:2},"Do picture painting. Give concrete examples that characterize how people actually behave. Abstract arguments are harder for judges to weigh than vivid, specific ones."),
+      el('p',{key:3},"Say your questions out loud: \"Why is this true? Why does this matter? Why is this relevant?\" This helps you figure out what to say next and sets up what the judge should be thinking. Time yourself. New debaters always run out of time. Practice a 7-minute speech at home until you feel the pacing."),
     ]},
     { key:'advanced', icon:'\u{1F4DA}', title:'Advanced Vocabulary', render: () => [
-      el('p',{key:0},'These words describe concepts you already understand intuitively. Once you learn them, you\'ll hear them everywhere \u2014 in news, philosophy, everyday arguments. This isn\'t gatekeeping vocabulary; it\'s precision vocabulary.'),
+      el('p',{key:0},'These words describe concepts you already understand intuitively. Once you learn them, you\'ll hear them everywhere: in news, philosophy, everyday arguments. This isn\'t gatekeeping vocabulary. It\'s precision vocabulary.'),
       el('div',{key:1,className:'newbie-term'}, el('span',{className:'term-word'},'Counterfactual'), el('span',{className:'term-def'},'The world where the opposite happened. "What\'s the counterfactual?" = "if we DON\'T do this, what happens instead?"')),
       el('div',{key:2,className:'newbie-term'}, el('span',{className:'term-word'},'Structural'), el('span',{className:'term-def'},'Built into the system, not accidental. Implies individual solutions are insufficient.')),
       el('div',{key:3,className:'newbie-term'}, el('span',{className:'term-word'},'Solvency'), el('span',{className:'term-def'},'Whether the plan actually fixes the problem. "They have no solvency" = mechanism doesn\'t connect to impact.')),
@@ -3441,36 +3666,23 @@ function Newbies() {
       el('div',{key:13,className:'newbie-term'}, el('span',{className:'term-word'},'TOTY / SOTY / COTY'), el('span',{className:'term-def'},'Team / Speaker / College of the Year. Season-long awards based on accumulated outround results and speaker scores.')),
     ]},
     { key:'tips', icon:'\u{1F680}', title:'Tips for Getting Started', render: () => [
-      el('p',{key:0},"Read the news every day. Not just headlines \u2014 understand WHY things are happening. Debate rewards people who can connect current events to structural arguments."),
-      el('p',{key:1},"Learn 3\u20134 philosophical frameworks well. Utilitarianism, Rawlsian justice, Kantian ethics, and one critical theory framework (Marx, Foucault, or feminist theory) covers about 80% of what you'll encounter."),
+      el('p',{key:0},"Read the news every day. Not just headlines. Understand WHY things are happening. Debate rewards people who can connect current events to structural arguments."),
+      el('p',{key:1},"Learn 3 or 4 philosophical frameworks well. Utilitarianism, Rawlsian justice, Kantian ethics, and one critical theory framework (Marx, Foucault, or feminist theory) covers about 80% of what you'll encounter."),
       el('p',{key:2},'Always have a warrant. The biggest novice mistake is asserting without explaining. "Climate change is bad" is an assertion. "Climate change is bad because rising sea levels will displace 200 million coastal residents by 2050" is a warranted argument.'),
       el('p',{key:3},"Listen more than you talk in prep. Your partner might see an angle you missed. The best teams are collaborative, not hierarchical."),
-      el('p',{key:4},"Don't try to win every argument \u2014 try to win the round. Conceding a small point strategically is often more powerful than fighting over everything."),
+      el('p',{key:4},"Don't try to win every argument. Try to win the round. Conceding a small point strategically is often more powerful than fighting over everything."),
       el('p',{key:5},"Time yourself. New debaters always run out of time. Practice a 7-minute speech at home until you feel the pacing."),
       el('p',{key:6},"Watch rounds on YouTube. See how top speakers structure rebuttals, handle POIs, and weigh. APDA and Worlds recordings are both useful."),
     ]},
   ];
-
-  const tocIcons = sections.map(s => ({key:s.key, icon:s.icon, label:s.title}));
 
   return el('div',{className:'panel'},
     el('div',{className:'newbie-hero'},
       el('h2',null,'The Novice Guide'),
       el('div',{className:'hero-subtitle'},'Everything you need to start debating on APDA'),
       el('div',{className:'honest'},
-        "Competitive debate has a reputation \u2014 and not all of it is undeserved. It can feel elitist, jargon-heavy, and intimidating. The learning curve is steep enough to push people out before they ever get good. We're not going to pretend otherwise. But the core of debate \u2014 learning to construct and deconstruct arguments, to see issues from multiple sides, to think under pressure \u2014 is one of the most valuable intellectual skills you can develop. This guide is the substance without the gatekeeping."
+        "Competitive debate has a reputation, and not all of it is undeserved. It can feel elitist, jargon-heavy, and intimidating. The learning curve is steep enough to push people out before they ever get good. We're not going to pretend otherwise. But the core of debate (learning to construct and deconstruct arguments, to see issues from multiple sides, to think under pressure) is one of the most valuable intellectual skills you can develop. This guide is the substance without the gatekeeping."
       ),
-    ),
-    el('div',{className:'newbie-toc'},
-      tocIcons.map(t =>
-        el('div',{key:t.key,className:'newbie-toc-item',onClick:()=>{
-          toggle(t.key);
-          setTimeout(()=>{const sec=document.getElementById('newbie-'+t.key);if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'})},100);
-        }},
-          el('span',{className:'toc-icon'},t.icon),
-          el('span',{className:'toc-label'},t.label)
-        )
-      )
     ),
     sections.map(s =>
       el('div',{key:s.key,id:'newbie-'+s.key,className:'newbie-section'},
@@ -3480,6 +3692,33 @@ function Newbies() {
           el('span',{className:'arrow'+(expanded[s.key]?' open':'')},'\u25BC')
         ),
         expanded[s.key] && el('div',{className:'newbie-section-body'}, s.render())
+      )
+    ),
+    el('div',{className:'newbie-section',style:{marginTop:32}},
+      el('div',{className:'newbie-section-header'+(expanded['whysmart']?' open':''),onClick:()=>toggle('whysmart')},
+        el('span',{className:'newbie-section-icon'},'\u{1F4A1}'),
+        el('h3',null,'Why Debate Makes You Smarter'),
+        el('span',{className:'arrow'+(expanded['whysmart']?' open':'')},'\u25BC')
+      ),
+      expanded['whysmart'] && el('div',{className:'newbie-section-body'},
+        el('p',{key:0},"Debate isn't just an extracurricular. It rewires how you think. Research in cognitive science shows that arguing both sides of an issue forces your brain to hold competing models simultaneously, which is the foundation of critical thinking. You stop accepting claims at face value because you've trained yourself to immediately ask \"what would the other side say?\""),
+        el('p',{key:1},"Debaters consistently outperform non-debaters on measures of analytical reasoning, reading comprehension, and persuasive writing. A 2015 study at the University of Vermont found that students who participated in competitive debate scored significantly higher on critical thinking assessments than matched peers. This isn't surprising: every round is a live exercise in constructing arguments, identifying logical gaps, and synthesizing information under time pressure."),
+        el('p',{key:2},"Beyond academics, debate teaches you to speak clearly under pressure, structure your thoughts on the fly, and listen actively. These are skills that transfer directly to job interviews, negotiations, presentations, and everyday conversations. The confidence you build from standing up and defending an idea in front of a judge doesn't go away when you leave the tournament."),
+        el('p',{key:3},"Perhaps most importantly, debate teaches intellectual humility. When you're forced to argue for positions you disagree with, you start to understand why smart people can look at the same evidence and reach different conclusions. That kind of empathy and nuance is rare and valuable.")
+      )
+    ),
+    el('div',{className:'newbie-section'},
+      el('div',{className:'newbie-section-header'+(expanded['aivshumans']?' open':''),onClick:()=>toggle('aivshumans')},
+        el('span',{className:'newbie-section-icon'},'\u{1F916}'),
+        el('h3',null,'So Is the AI Smarter Than Human Debaters?'),
+        el('span',{className:'arrow'+(expanded['aivshumans']?' open':'')},'\u25BC')
+      ),
+      expanded['aivshumans'] && el('div',{className:'newbie-section-body'},
+        el('p',{key:0},"No. And we want to be transparent about that."),
+        el('p',{key:1},"DebateOS uses Claude, a large language model, to generate cases, feedback, and strategic analysis. It's good at synthesizing information, structuring arguments, and covering a lot of ground quickly. But it has real limits that any experienced debater will notice."),
+        el('p',{key:2},"The AI can't read a room. It doesn't know what your judge thinks is important, what your opponent's tendencies are, or when to abandon a losing argument and pivot. It doesn't feel the energy of a round or adjust its strategy based on a raised eyebrow from the judge. These are things that only come from hundreds of hours of live debate."),
+        el('p',{key:3},"AI-generated cases also tend toward a certain sameness. Even with all our prompt engineering to make output sound more human, a Nationals-caliber debater will write cases with a creativity, specificity, and strategic depth that AI struggles to match. The best cases come from personal experience, niche knowledge, and genuine passion for an argument. AI doesn't have those."),
+        el('p',{key:4},"Think of DebateOS as a training partner, not a replacement for the real thing. It can help you brainstorm, pressure-test your arguments, and learn debate concepts faster. But the growth that matters happens in actual rounds, with real partners, against real opponents. The AI gets you ready. The rounds make you good.")
       )
     )
   );
@@ -3678,6 +3917,7 @@ const TABS = [
   {id:'vision',label:'Round Vision',color:'green'},
   {id:'casual',label:'Casual',color:'green'},
   {id:'phil',label:'Philosophy',color:'green'},
+  {id:'practice',label:'Practice',color:'orange'},
   {id:'judge',label:'Judge',color:'green'},
   {id:'forum',label:'Forum',color:'green'},
   {id:'newbies',label:'Newbies',color:'green'},
@@ -3821,6 +4061,7 @@ function App() {
       tabPane('vision', React.createElement(RoundVision)),
       tabPane('casual', React.createElement(Casual)),
       tabPane('phil', React.createElement(Philosophy)),
+      tabPane('practice', React.createElement(Practice)),
       tabPane('judge', React.createElement(Judge)),
       tabPane('forum', React.createElement(Forum, { user: user, onSignIn: () => setShowAuth(true) })),
       tabPane('newbies', React.createElement(Newbies)),
