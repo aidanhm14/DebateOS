@@ -14,26 +14,31 @@
 /* ── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
-body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#0f1724;color:#e4e8f0;font-size:18px}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#080c16;color:#e4e8f0;font-size:18px}
 
 /* ── Background ──────────────────────────────── */
-.bg-canvas{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#0a0f1a 0%,#0f1724 30%,#111c2e 60%,#0d1520 100%)}
-.bg-debate-side{position:fixed;top:0;bottom:0;width:80px;z-index:0;pointer-events:none;overflow:hidden;opacity:.06}
+.bg-canvas{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#080c16 0%,#0c1220 25%,#101828 50%,#0a1018 75%,#060a12 100%)}
+.bg-debate-side{position:fixed;top:0;bottom:0;width:120px;z-index:0;pointer-events:none;overflow:hidden}
 .bg-debate-left{left:0}
 .bg-debate-right{right:0}
-.bg-quote{position:absolute;font-size:64px;font-family:Georgia,serif;color:#fff;animation:floatQuote 20s ease-in-out infinite}
-.bg-quote:nth-child(1){top:15%;left:10px;animation-delay:0s}
-.bg-quote:nth-child(2){top:45%;left:20px;animation-delay:-7s;font-size:48px}
-.bg-quote:nth-child(3){top:75%;left:5px;animation-delay:-14s;font-size:56px}
-.bg-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#ffffff44,transparent);animation:driftLine 15s ease-in-out infinite}
-.bg-line:nth-child(1){left:30px;top:10%;height:120px;animation-delay:-3s}
-.bg-line:nth-child(2){left:50px;top:50%;height:80px;animation-delay:-8s}
-.bg-line:nth-child(3){left:15px;top:30%;height:100px;animation-delay:-12s}
-@keyframes floatQuote{0%,100%{transform:translateY(0) rotate(-2deg);opacity:.5}50%{transform:translateY(-30px) rotate(2deg);opacity:1}}
-@keyframes driftLine{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-20px);opacity:.7}}
+.bg-quote{position:absolute;font-size:72px;font-family:Georgia,serif;color:#5eead4;opacity:.08;animation:floatQuote 18s ease-in-out infinite}
+.bg-quote:nth-child(1){top:12%;left:15px;animation-delay:0s}
+.bg-quote:nth-child(2){top:42%;left:30px;animation-delay:-6s;font-size:56px;color:#fbbf24;opacity:.07}
+.bg-quote:nth-child(3){top:72%;left:10px;animation-delay:-12s;font-size:64px}
+.bg-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#5eead422,transparent);animation:driftLine 14s ease-in-out infinite}
+.bg-line:nth-child(4){left:40px;top:8%;height:140px;animation-delay:-2s}
+.bg-line:nth-child(5){left:70px;top:45%;height:100px;animation-delay:-7s}
+.bg-line:nth-child(6){left:20px;top:28%;height:120px;animation-delay:-11s}
+.bg-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:#5eead4;opacity:.12;animation:pulseDot 8s ease-in-out infinite}
+.bg-dot:nth-child(7){top:20%;left:60px;animation-delay:0s}
+.bg-dot:nth-child(8){top:55%;left:35px;animation-delay:-3s}
+.bg-dot:nth-child(9){top:85%;left:80px;animation-delay:-5s}
+@keyframes floatQuote{0%,100%{transform:translateY(0) rotate(-3deg);opacity:.06}50%{transform:translateY(-25px) rotate(3deg);opacity:.12}}
+@keyframes driftLine{0%,100%{transform:translateY(0);opacity:.08}50%{transform:translateY(-15px);opacity:.18}}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:.08}50%{transform:scale(2.5);opacity:.2}}
 
 /* ── App Shell ────────────────────────────────── */
-.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
 .header{text-align:center;padding:28px 20px 0}
 .logo{font-size:3rem;font-weight:800;letter-spacing:-1px}
 .logo .green{color:#34d399}
@@ -41,62 +46,69 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 .subtitle{color:#94a3b8;font-size:1.05rem;margin-top:4px;letter-spacing:.5px}
 
 /* ── Nav Tabs ─────────────────────────────────── */
-.nav{display:flex;gap:6px;margin:22px auto 0;padding:4px;flex-wrap:wrap;justify-content:center}
+.nav{display:flex;gap:6px;margin:22px auto 0;padding:6px;flex-wrap:wrap;justify-content:center;background:#ffffff06;border-radius:14px;border:1px solid #ffffff08}
 .nav-btn{
-  background:transparent;border:1.5px solid transparent;color:#a8b8cc;
-  padding:11px 24px;border-radius:8px;font-size:.95rem;font-weight:600;
-  letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:.2s;
+  background:transparent;border:1.5px solid transparent;color:#7a8da4;
+  padding:10px 22px;border-radius:10px;font-size:.88rem;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.25s;
   font-family:inherit;white-space:nowrap;
 }
-.nav-btn:hover{color:#e4e8f0;border-color:#ffffff28}
-.nav-btn.active{color:#5eead4;border-color:#5eead4;background:#5eead414}
-.nav-btn.active-orange{color:#fbbf24;border-color:#fbbf24;background:#fbbf2414}
+.nav-btn:hover{color:#e4e8f0;background:#ffffff0a}
+.nav-btn.active{color:#5eead4;border-color:#5eead440;background:#5eead412;box-shadow:0 2px 12px #5eead418}
+.nav-btn.active-orange{color:#fbbf24;border-color:#fbbf2440;background:#fbbf2412;box-shadow:0 2px 12px #fbbf2418}
 
 /* ── Cards / Panels ───────────────────────────── */
 .panel{
-  width:100%;max-width:1400px;margin:28px auto 40px;
-  background:#1e2d44ee;border:1px solid #ffffff22;
-  border-radius:16px;padding:32px 42px;
-  backdrop-filter:blur(12px);
+  width:92%;max-width:1600px;margin:28px auto 40px;
+  background:linear-gradient(145deg,#131d2e 0%,#162036 50%,#141c2c 100%);
+  border:1px solid #ffffff15;
+  border-radius:20px;padding:36px 44px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 8px 32px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.05) inset;
   transition:max-width .4s ease, padding .3s ease;
 }
 .panel.panel-expanded{
-  max-width:1800px;padding:32px 48px;
+  max-width:1800px;padding:36px 48px;
 }
+.panel textarea,.panel input[type="text"]{width:100%;box-sizing:border-box}
 .panel-inner{
-  background:#141e30;border:1px solid #ffffff18;
-  border-radius:10px;padding:16px 18px;margin-top:10px;
+  background:#0e1620;border:1px solid #ffffff12;
+  border-radius:12px;padding:16px 18px;margin-top:10px;
 }
 
 /* ── Form Elements ────────────────────────────── */
 label.field-label{display:block;font-size:.92rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fbbf24;margin-bottom:8px}
 label.field-label.green{color:#5eead4}
 textarea,select,input[type="text"]{
-  width:100%;background:#182236;color:#e4e8f0;
-  border:1px solid #ffffff20;border-radius:10px;
-  padding:14px 16px;font-size:1.05rem;font-family:inherit;
-  resize:vertical;outline:none;transition:.2s;
+  width:100%;background:#0c1422;color:#e4e8f0;
+  border:1px solid #ffffff14;border-radius:12px;
+  padding:14px 18px;font-size:1.05rem;font-family:inherit;
+  resize:vertical;outline:none;transition:.25s;
+  box-shadow:0 2px 8px rgba(0,0,0,.2) inset;
 }
-textarea:focus,select:focus,input[type="text"]:focus{border-color:#34d39966}
+textarea:focus,select:focus,input[type="text"]:focus{border-color:#5eead444;box-shadow:0 0 0 3px #5eead410,0 2px 8px rgba(0,0,0,.2) inset}
 textarea{min-height:90px}
 select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 
 /* ── Buttons ──────────────────────────────────── */
 .btn{
-  padding:14px 28px;border-radius:12px;font-size:1.08rem;font-weight:600;
-  cursor:pointer;border:none;font-family:inherit;transition:.2s;
-  letter-spacing:.5px;
+  padding:14px 28px;border-radius:12px;font-size:1.05rem;font-weight:600;
+  cursor:pointer;border:none;font-family:inherit;transition:.25s;
+  letter-spacing:.3px;
 }
-.btn-primary{background:linear-gradient(135deg,#34d399,#06b6d4);color:#0f1724}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px #34d39944}
-.btn-orange{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#0f1724}
-.btn-orange:hover{transform:translateY(-1px);box-shadow:0 6px 24px #f59e0b44}
-.btn-secondary{background:#ffffff12;color:#e0e0e8;border:1px solid #ffffff18}
-.btn-secondary:hover{background:#ffffff1a}
-.btn-purple{background:linear-gradient(135deg,#c084fc,#a78bfa);color:#0f1724}
-.btn-purple:hover{transform:translateY(-1px);box-shadow:0 6px 24px #c084fc44}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#34d399,#06b6d4);color:#0a1018}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px #34d39940}
+.btn-orange{background:linear-gradient(135deg,#f59e0b,#e67e22);color:#0a1018}
+.btn-orange:hover{transform:translateY(-2px);box-shadow:0 8px 28px #f59e0b40}
+.btn-secondary{background:#ffffff0a;color:#c8d0dc;border:1px solid #ffffff18}
+.btn-secondary:hover{background:#ffffff14;border-color:#ffffff28;color:#fff}
+.btn-purple{background:linear-gradient(135deg,#c084fc,#8b5cf6);color:#0a1018}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 8px 28px #c084fc40}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 8px 28px #22c55e40}
 .btn-sm{padding:7px 14px;font-size:.78rem;border-radius:8px}
-.btn-record{background:#5eead4;color:#0f1724;display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:700;font-size:.78rem;border:none;cursor:pointer;font-family:inherit}
+.btn-record{background:#5eead4;color:#0a1018;display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:700;font-size:.78rem;border:none;cursor:pointer;font-family:inherit}
 
 /* ── Row helpers ──────────────────────────────── */
 .row{display:flex;gap:16px;flex-wrap:wrap}
@@ -107,20 +119,21 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 /* ── Tags / Chips ─────────────────────────────── */
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .chip{
-  padding:9px 20px;border-radius:20px;font-size:.92rem;font-weight:600;
-  letter-spacing:.8px;text-transform:uppercase;cursor:pointer;
-  border:1.5px solid #ffffff22;background:transparent;color:#bbb;
-  transition:.2s;font-family:inherit;
+  padding:9px 20px;border-radius:20px;font-size:.88rem;font-weight:600;
+  letter-spacing:.5px;text-transform:uppercase;cursor:pointer;
+  border:1.5px solid #ffffff15;background:#ffffff06;color:#8899aa;
+  transition:.25s;font-family:inherit;
 }
-.chip:hover{border-color:#ffffff44;color:#fff}
-.chip.active{border-color:#5eead4;color:#5eead4;background:#5eead412}
+.chip:hover{border-color:#ffffff30;color:#e0e7ef;background:#ffffff0c}
+.chip.active{border-color:#5eead450;color:#5eead4;background:#5eead414;box-shadow:0 2px 10px #5eead418}
 
 /* ── Speech Cards (Judge) ─────────────────────── */
 .speech-card{
-  background:#151e30;border:1px solid #ffffff14;border-radius:14px;
+  background:linear-gradient(145deg,#0e1620,#151e30);border:1px solid #ffffff10;border-radius:14px;
   padding:20px 24px;margin-bottom:18px;
-  border-left:3px solid #5eead4;
+  border-left:3px solid #5eead4;transition:.2s;
 }
+.speech-card:hover{border-color:#ffffff18}
 .speech-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .speech-badge{display:inline-flex;align-items:center;justify-content:center;width:36px;height:22px;border-radius:4px;font-size:.72rem;font-weight:800;background:#5eead4;color:#0f1724}
 .speech-title{font-size:1.05rem;color:#cbd5e1;margin-left:10px}
@@ -146,12 +159,15 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 /* ── Depth Selector ────────────────────────────── */
 .depth-selector{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
 .depth-card{
-  flex:1;min-width:140px;padding:14px 16px;border-radius:12px;
-  border:1.5px solid #ffffff20;background:#182236aa;cursor:pointer;
-  transition:.2s;text-align:center;
+  flex:1;min-width:140px;padding:16px 18px;border-radius:14px;
+  border:1.5px solid #ffffff12;background:#0e1620;cursor:pointer;
+  transition:.25s;text-align:center;position:relative;overflow:hidden;
 }
-.depth-card:hover{border-color:#ffffff38;background:#1e2d44cc}
-.depth-card.active{border-color:#fbbf24;background:#fbbf240a}
+.depth-card::before{content:'';position:absolute;inset:0;border-radius:14px;opacity:0;transition:.25s;background:linear-gradient(135deg,#fbbf2408,#fbbf2402)}
+.depth-card:hover{border-color:#ffffff30;background:#131d2e;transform:translateY(-1px)}
+.depth-card:hover::before{opacity:1}
+.depth-card.active{border-color:#fbbf24;background:#fbbf240c}
+.depth-card.active::before{opacity:1;background:linear-gradient(135deg,#fbbf2410,#fbbf2404)}
 .depth-card .depth-title{font-size:1rem;font-weight:700;color:#e4e8f0;margin-bottom:4px}
 .depth-card .depth-desc{font-size:.82rem;color:#94a3b8;line-height:1.4}
 .depth-card.active .depth-title{color:#fbbf24}
@@ -176,7 +192,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .thinking-status{font-size:.92rem;color:#cbd5e1;text-align:center;min-height:20px}
 
 /* ── Streaming output ─────────────────────────── */
-.output-wrapper{display:flex;gap:0;margin-top:24px;border-radius:14px;overflow:hidden;border:1px solid #ffffff1c;background:#141e30;margin-left:-12px;margin-right:-12px}
+.output-wrapper{display:flex;gap:0;margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid #ffffff14;background:linear-gradient(145deg,#0e1620,#121c2c);margin-left:-12px;margin-right:-12px;box-shadow:0 4px 24px rgba(0,0,0,.3)}
 .output-main{flex:1;min-width:0}
 .output-stream{position:relative}
 .output-stream .stream-indicator{
@@ -286,14 +302,14 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .newbie-toc-item .toc-icon{font-size:1.2rem;width:28px;text-align:center;flex-shrink:0}
 .newbie-toc-item .toc-label{font-size:.92rem;color:#cbd5e1;font-weight:500}
 .newbie-section{margin-top:20px;padding:0;background:transparent;border:none;border-radius:0}
-.newbie-section-header{padding:16px 20px;background:#131b2c;border:1px solid #ffffff10;border-radius:12px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px}
-.newbie-section-header:hover{background:#1a2538;border-color:#5eead430}
-.newbie-section-header.open{border-radius:12px 12px 0 0;border-bottom-color:transparent;background:#141e30}
+.newbie-section-header{padding:16px 20px;background:#0e1620;border:1px solid #ffffff10;border-radius:14px;cursor:pointer;transition:.25s;display:flex;align-items:center;gap:12px}
+.newbie-section-header:hover{background:#131d2e;border-color:#5eead430;transform:translateX(2px)}
+.newbie-section-header.open{border-radius:14px 14px 0 0;border-bottom-color:transparent;background:#121c2c}
 .newbie-section-icon{font-size:1.3rem;width:32px;text-align:center;flex-shrink:0}
 .newbie-section h3{color:#e2e8f0;font-size:1.1rem;margin:0;font-weight:600;flex:1}
 .newbie-section .arrow{color:#5eead4;font-size:.75rem;transition:.25s;opacity:.6}
 .newbie-section .arrow.open{transform:rotate(180deg);opacity:1}
-.newbie-section-body{padding:20px 24px;background:#152038;border:1px solid #ffffff16;border-top:none;border-radius:0 0 12px 12px;animation:slideDown .25s ease}
+.newbie-section-body{padding:20px 24px;background:#0e1822;border:1px solid #ffffff10;border-top:none;border-radius:0 0 14px 14px;animation:slideDown .25s ease}
 @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .newbie-section p{font-size:1rem;line-height:1.8;color:#b0bec5;margin-bottom:14px;text-align:left}
 .newbie-section li{font-size:1rem;line-height:1.75;color:#b0bec5;margin-bottom:6px}
@@ -324,7 +340,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422}
 .output h4{color:#5eead4;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
 .output .section{margin-bottom:12px}
-.phil-output{background:#141e30;border:1px solid #ffffff10;border-radius:12px;padding:28px 36px;margin-top:20px}
+.phil-output{background:linear-gradient(145deg,#0e1620,#121c2c);border:1px solid #ffffff10;border-radius:16px;padding:28px 36px;margin-top:20px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
 .phil-output .output{padding:0;min-height:0;max-height:none;line-height:1.7;font-size:1.05rem}
 .phil-output .output h3{font-size:1.2rem;margin-top:28px}
 
@@ -355,10 +371,11 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 /* ── Resolution Card ──────────────────────────── */
 .res-card{
-  text-align:center;padding:32px;background:#131b2c;
-  border:1px solid #ffffff14;border-radius:14px;margin-top:16px;
+  text-align:center;padding:36px;background:linear-gradient(145deg,#0e1620,#131d2e);
+  border:1px solid #ffffff10;border-radius:16px;margin-top:16px;
   min-height:100px;display:flex;align-items:center;justify-content:center;
   font-size:1.25rem;line-height:1.6;color:#f1f5f9;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
 }
 
 /* ── Scrollbar ────────────────────────────────── */
@@ -394,14 +411,14 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .light-theme .chip{border-color:#3b82f618;color:#6b7fa0}
 .light-theme .chip:hover{border-color:#3b82f640;color:#1e3a5f}
 .light-theme .chip.active{border-color:#3b82f6;color:#2563eb;background:#3b82f610}
-.light-theme .speech-card{background:#f8faff;border-color:#3b82f610;border-left-color:#3b82f6}
+.light-theme .speech-card{background:#f8faff;border-color:#3b82f610;border-left-color:#3b82f6;box-shadow:none}
 .light-theme .speech-badge{background:#3b82f6}
 .light-theme .tag{background:#3b82f606;border-color:#3b82f612;color:#6b7fa0}
 .light-theme .tag.active{background:#2563eb12;border-color:#2563eb;color:#1d4ed8}
 .light-theme .feedback-btn{border-color:#3b82f6;color:#3b82f6}
 .light-theme .feedback-btn:hover{background:#3b82f610}
 .light-theme .output{background:#f8faff;border-color:#3b82f608;color:#1a1a2e}
-.light-theme .output-wrapper{background:#f8faff;border-color:#3b82f608}
+.light-theme .output-wrapper{background:#f8faff;border-color:#3b82f610;box-shadow:0 2px 12px rgba(0,0,0,.04)}
 .light-theme .revision-sidebar{background:#f5f8ffee;border-color:#3b82f608}
 .light-theme .revision-header{color:#2563eb}
 .light-theme .revision-comment{background:#3b82f604;border-color:#3b82f60a}
@@ -429,19 +446,21 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .light-theme .btn-secondary:hover{background:#3b82f614}
 .light-theme .btn-purple{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
 .light-theme .btn-purple:hover{box-shadow:0 6px 24px #6366f144}
-.light-theme .depth-card{border-color:#3b82f612;background:#f8faff88}
-.light-theme .depth-card:hover{background:#eef4ffcc;border-color:#3b82f625}
+.light-theme .depth-card{border-color:#3b82f612;background:#f5f8ff}
+.light-theme .depth-card:hover{background:#eef4ff;border-color:#3b82f630}
 .light-theme .depth-card.active{border-color:#2563eb;background:#2563eb08}
+.light-theme .depth-card::before{background:linear-gradient(135deg,#2563eb08,#2563eb02)}
 .light-theme .depth-card .depth-title{color:#1a1a2e}
 .light-theme .depth-card.active .depth-title{color:#2563eb}
 .light-theme .depth-card .depth-desc{color:#6b7fa0}
-.light-theme .res-card{background:#f5f8ff;border-color:#3b82f608;color:#1a1a2e}
+.light-theme .res-card{background:#f5f8ff;border-color:#3b82f610;color:#1a1a2e;box-shadow:0 2px 12px rgba(0,0,0,.04)}
 .light-theme .newbie-toc-item{background:#f5f8ff;border-color:#3b82f610}
 .light-theme .newbie-toc-item:hover{background:#eef4ff;border-color:#3b82f630}
 .light-theme .newbie-toc-item .toc-label{color:#334155}
 .light-theme .newbie-section-header{background:#f5f8ff;border-color:#3b82f610}
-.light-theme .newbie-section-header:hover{background:#eef4ff;border-color:#3b82f630}
+.light-theme .newbie-section-header:hover{background:#eef4ff;border-color:#3b82f630;transform:translateX(2px)}
 .light-theme .newbie-section-header.open{background:#f0f5ff}
+.light-theme .newbie-section-body{background:#f8faff;border-color:#3b82f60a}
 .light-theme .newbie-section h3{color:#1e293b}
 .light-theme .newbie-section .arrow{color:#2563eb}
 .light-theme .newbie-section-body{background:#f8faff;border-color:#3b82f610}
@@ -472,6 +491,24 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .light-theme .theme-toggle:hover{background:#3b82f60a}
 .light-theme ::-webkit-scrollbar-thumb{background:#3b82f620}
 .light-theme .newbie-quote{border-left-color:#6366f1;background:#6366f108}
+
+/* ── Light: Practice Tab ──────────────────────── */
+.light-theme .practice-intro{color:#6b7fa0}
+.light-theme .practice-card{border-color:#3b82f612;background:#f5f8ff}
+.light-theme .practice-card:hover{border-color:#3b82f630;background:#eef4ff}
+.light-theme .practice-card.active{border-color:#2563eb;background:#2563eb08}
+.light-theme .practice-card .pc-code{color:#1a1a2e}
+.light-theme .practice-card.active .pc-code{color:#2563eb}
+.light-theme .practice-card .pc-title{color:#6b7fa0}
+.light-theme .practice-card .pc-meta{color:#94a3b8}
+.light-theme .practice-card .pc-side.gov{background:#05966912;color:#059669}
+.light-theme .practice-card .pc-side.opp{background:#dc262610;color:#dc2626}
+.light-theme .practice-textarea{background:#f8faff;color:#1a1a2e;border-color:#3b82f618;box-shadow:0 2px 8px rgba(0,0,0,.04) inset}
+.light-theme .practice-textarea:focus{border-color:#2563eb66;box-shadow:0 0 0 3px #2563eb10}
+.light-theme .practice-textarea::placeholder{color:#94a3b8}
+.light-theme .practice-stats{color:#6b7fa0}
+.light-theme .practice-feedback{background:#f8faff;border-color:#3b82f610;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.light-theme .practice-feedback-actions{border-top-color:#3b82f60a}
 
 /* ── Saved Cases Sidebar ─────────────────────── */
 .cases-toggle{
@@ -573,6 +610,53 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .error-toast-title{font-weight:700;margin-bottom:2px}
 .error-toast-detail{color:#fca5a5;font-size:.85rem}
 .error-toast-dismiss{background:none;border:none;color:#fca5a5;cursor:pointer;font-size:1rem;padding:0 4px;margin-left:auto;flex-shrink:0}
+
+/* ── Practice Tab ─────────────────────────────── */
+.practice-intro{color:#7a8da4;margin-bottom:24px;font-size:.95rem;line-height:1.7}
+.practice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:720px){.practice-grid{grid-template-columns:repeat(2,1fr)}}
+.practice-card{
+  padding:16px 18px;cursor:pointer;border-radius:14px;
+  border:1.5px solid #ffffff12;background:#0e1620;
+  transition:.25s;position:relative;overflow:hidden;
+}
+.practice-card::before{
+  content:'';position:absolute;inset:0;border-radius:14px;opacity:0;transition:.25s;
+  background:linear-gradient(135deg,#fbbf2408,#fbbf2402);
+}
+.practice-card:hover{border-color:#ffffff28;background:#131d2e;transform:translateY(-1px)}
+.practice-card:hover::before{opacity:1}
+.practice-card.active{border-color:#fbbf24;background:#fbbf240c}
+.practice-card.active::before{opacity:1;background:linear-gradient(135deg,#fbbf2410,#fbbf2404)}
+.practice-card .pc-code{font-weight:800;font-size:1.05rem;color:#e0e7ef;letter-spacing:.5px;margin-bottom:3px}
+.practice-card.active .pc-code{color:#fbbf24}
+.practice-card .pc-title{font-size:.78rem;color:#7a8da4;margin-bottom:4px}
+.practice-card .pc-meta{font-size:.72rem;color:#566478;display:flex;gap:8px;align-items:center}
+.practice-card .pc-side{
+  display:inline-block;padding:2px 8px;border-radius:4px;font-weight:700;font-size:.68rem;letter-spacing:.5px;text-transform:uppercase;
+}
+.practice-card .pc-side.gov{background:#5eead412;color:#5eead4}
+.practice-card .pc-side.opp{background:#f8717112;color:#f87171}
+.practice-textarea-wrap{position:relative;margin-bottom:8px}
+.practice-textarea{
+  width:100%;min-height:280px;background:#0a1018;color:#e0e7ef;
+  border:1.5px solid #ffffff14;border-radius:14px;padding:20px 22px;
+  font-size:1rem;line-height:1.7;resize:vertical;font-family:inherit;
+  outline:none;transition:.25s;
+  box-shadow:0 2px 12px rgba(0,0,0,.3) inset;
+}
+.practice-textarea:focus{border-color:#fbbf2444;box-shadow:0 0 0 3px #fbbf2410,0 2px 12px rgba(0,0,0,.3) inset}
+.practice-textarea::placeholder{color:#4a5568}
+.practice-stats{display:flex;gap:20px;margin-bottom:20px;font-size:.82rem;color:#566478}
+.practice-stats span{display:flex;align-items:center;gap:5px}
+.practice-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.practice-feedback{
+  margin-top:28px;background:linear-gradient(145deg,#0e1620,#121c2c);
+  border:1px solid #ffffff10;border-radius:16px;padding:28px 32px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+}
+.practice-feedback .output{padding:0;min-height:0;max-height:none;line-height:1.7;font-size:1.02rem}
+.practice-feedback-actions{display:flex;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid #ffffff0a}
 
 /* ── Profile Badge ───────────────────────────── */
 .profile-badge{
@@ -807,7 +891,10 @@ function PolyBackground() {
       el('span',{className:'bg-quote'},'\u201C'),
       el('div',{className:'bg-line'}),
       el('div',{className:'bg-line'}),
-      el('div',{className:'bg-line'})
+      el('div',{className:'bg-line'}),
+      el('div',{className:'bg-dot'}),
+      el('div',{className:'bg-dot'}),
+      el('div',{className:'bg-dot'})
     ),
     el('div',{className:'bg-debate-side bg-debate-right'},
       el('span',{className:'bg-quote'},'\u201D'),
@@ -815,7 +902,10 @@ function PolyBackground() {
       el('span',{className:'bg-quote'},'\u201D'),
       el('div',{className:'bg-line'}),
       el('div',{className:'bg-line'}),
-      el('div',{className:'bg-line'})
+      el('div',{className:'bg-line'}),
+      el('div',{className:'bg-dot'}),
+      el('div',{className:'bg-dot'}),
+      el('div',{className:'bg-dot'})
     )
   );
 }
@@ -1311,7 +1401,47 @@ CASE STATEMENT CONSIDERATIONS — critical strategic choices:
 - TIGHT CALLS: A well-designed case forces a tight call — a round where both sides have legitimate ground and the winner is determined by execution, not by the motion being lopsided. If your case is so one-sided that opp has no real arguments, you have failed as a case writer.
 - STATUS QUO ANALYSIS: Always ground your case in what is actually happening right now. What is the current policy? What are the current incentives? What are the current outcomes? Cases that ignore the status quo feel detached from reality.
 - TRIGGER WARNINGS: If your case involves sensitive content (sexual violence, graphic descriptions, etc.), flag this in the case statement. This is standard APDA practice and shows strategic maturity.
-- RESOLVABILITY: Your resolution must be clear enough that both sides know what they are debating. Ambiguous resolutions lead to definitional debates that waste everyone's time. A good resolution constrains the debate to the clash you WANT to have.`;
+- RESOLVABILITY: Your resolution must be clear enough that both sides know what they are debating. Ambiguous resolutions lead to definitional debates that waste everyone's time. A good resolution constrains the debate to the clash you WANT to have.
+
+LESSONS FROM REAL COMPETITIVE APDA CASES — study these patterns carefully:
+
+The following patterns come from actual winning APDA cases. They represent what the BEST cases look like in practice, not in theory.
+
+PATTERN 1: FRAMING THAT KILLS OPP BEFORE THEY SPEAK
+The best cases use framing not as decoration but as a weapon. A case about the Greek debt crisis (TH as Samaras would accept the Troika's bailout) opens with two framing points: (1) establishing that the actor's political survival is NOT at risk, which preemptively kills opp's "you'll lose power" argument, and (2) the public expects and has prepared for austerity, which preemptively kills "public backlash." By the time the actual arguments start, opp's two best responses are already dead. Your framing should do this. Identify opp's 2 strongest instinct-responses and kill them in framing.
+
+PATTERN 2: FULL ROUND PLANNING, NOT JUST A PMC
+The best case documents include far more than just the PM constructive. They include: MG overviews (specific strategic moves for the extension speech), tight block notes (pre-written responses to anticipated opp), opp argument predictions (list of what they will likely say), MO/LOR strategy notes, and PMR closing architecture. A case about monthly bowel movements (yes, really) includes a full tight block, MO notes, and a PMR framing section that opens with "what's most important in this round." Write cases as full round playbooks, not just opening speeches.
+
+PATTERN 3: ACTOR-SPECIFIC PSYCHOLOGY
+When the case has an actor (TH as X), deeply embed into that actor's psychology, incentives, and constraints. Don't just argue "this is good policy." Argue "given that YOU are a recently elected centrist PM with post-election popularity, who ran on economic reform, whose friends and family have savings in Greek banks, it is in YOUR interest to..." The best actor cases make every argument flow from the actor's specific position, not from generic policy analysis.
+
+PATTERN 4: CASE TYPE VERSATILITY
+Top debaters run wildly different types of cases. Your outputs should be able to generate all of these:
+- Policy cases (accept bailout, reform jury system) with empirical warrants and institutional analysis
+- Moral dilemma cases (doctor choosing between patients) with deep philosophical framing (Hippocratic oath, action vs. inaction, utilitarianism critiques)
+- Historical actor cases (Chile No Campaign strategy choice) where you argue from within a real moment in history
+- Creative/absurdist cases (monthly bowel movements, THP) that use silly premises to make genuinely clever arguments about productivity, developing world health, behavioral economics
+- Meta/structural cases (debate program resource allocation) that argue about institutions, incentives, and community building
+Each type has a different voice. Policy cases are empirical and specific. Moral cases are philosophical and principled. Actor cases are psychological and strategic. Creative cases are playful but substantively deep. Meta cases are about systems and incentives. Match the voice to the case type.
+
+PATTERN 5: THE WORKING DOCUMENT FEEL
+Real cases feel like working documents, not polished essays. They include strategic annotations to the team: "this is where their case completely falls apart," shorthand like "A2: competitive success is good," notes like "Drew made some smart arguments about how this will decrease access to toilets. Probably figure those out?" and even incomplete thoughts that show real thinking. Your cases should include strategic meta-commentary that helps the debater understand HOW to deploy the arguments, not just what the arguments are. Include brief tactical notes like "(Start MG here if LO attacks argument 1 hardest)" or "(This is your kill shot. Spend time here.)"
+
+PATTERN 6: LAYERED ARGUMENT DEPTH WITH NUMBERED SUB-POINTS
+Real competitive cases use deep nesting: arguments have sub-claims (a, b, c), each sub-claim has warrants (i, ii, iii), and sometimes sub-warrants (1, 2, 3). A moral dilemma case about a doctor choosing between patients goes: Argument 1 > Sub-point 1.1 (oath as binding obligation) > Warrant 1.1.1 (explanation) > Impact 1.1.2 (consequences). This depth is what separates a 28-speak case from a 33-speak case. Don't just make claims. Warrant them, then warrant the warrants.
+
+PATTERN 7: MG SPIKES
+The best cases have pre-planned MG spikes: arguments that are intentionally held back from the PMC to be deployed in the MG when opp has already committed to a line of attack. A case about the Chilean No Campaign includes a spike about Pinochet controlling media that is designed to be dropped in MG after opp has committed to the realist approach. Build 1-2 spikes into every competition-depth case.
+
+PATTERN 8: OPP CHOICE ARCHITECTURE
+Some of the most innovative cases give opp a genuine choice that creates a double bind. A historical case presents two approaches (realist vs. optimist campaign strategy) and lets opp choose which to defend, but the PMC is designed so that both choices walk into prepared ground. Consider whether the motion lends itself to an opp-choice structure where you can prepare for both paths.
+
+PATTERN 9: WEIGHING AS ITS OWN SECTION
+The best PMR strategies don't just summarize. They reframe the entire round with a weighing section at the top: "What's most important in this round?" followed by an explicit hierarchy of impacts. A case about developing world sanitation has a PMR that opens by dismissing entertainment and productivity arguments as low-stakes, then pivots to "the most important prerequisite to autonomy and liberation is life itself," making their health impact categorically win. Build this weighing architecture into every case.
+
+PATTERN 10: OPP ARGUMENTS LIST
+After the case itself, always include a section that lists the 3-5 most likely opposition arguments with brief notes on each. Not full A2 blocks for all of them, but a clear-eyed list of what's coming. This helps the debater prepare mentally for the round and shows strategic awareness. Include both the strong opp arguments (that you need to take seriously) and the weak ones (that you can dismiss quickly).`;
 
 
 
@@ -1435,6 +1565,7 @@ function CaseGenerator({ onSave, loadedCase, onClearLoaded }) {
   const [contextHint, setContextHint] = useState(null);
   const [checkingContext, setCheckingContext] = useState(false);
   const [progress, setProgress] = useState({ phase: 'idle', percent: 0 });
+  const [tightness, setTightness] = useState(null); // {level, explanation}
   const outputRef = useRef(null);
 
   // Load a saved case when selected from sidebar
@@ -1524,6 +1655,42 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     setStreaming(false);
     setProgress({ phase: 'idle', percent: 0 });
   };
+
+  // Run tightness check whenever output finishes generating
+  useEffect(() => {
+    if (!output || loading || streaming) { setTightness(null); return; }
+    let cancelled = false;
+    const checkTightness = async () => {
+      try {
+        const tSys = `You are an APDA debate fairness evaluator. You have judged hundreds of rounds. Your job is to evaluate whether a case gives Government an unfair advantage (i.e. is "tight" in APDA terms). A tight case is one where Opposition genuinely cannot win no matter how good they are because the case is structurally rigged.
+
+Evaluate the case and motion below. Respond with ONLY valid JSON, no other text:
+{"level": "fair" | "a bit tight" | "very tight" | "likely tight", "explanation": "1-2 sentence explanation of why"}
+
+Guidelines:
+- "fair": Both sides have strong, viable strategies. Opp has clear avenues to win.
+- "a bit tight": Gov has a noticeable advantage but a skilled Opp team can still win with the right angle.
+- "likely tight": The case is structured so most Opp strategies fail. Only a very specific, non-obvious response could win.
+- "very tight": Opp essentially cannot win. The motion, framing, or caveats have closed off all reasonable opposition ground.
+
+Think about: Does Opp have ground? Can they run a counter-case? Are the caveats fair? Does the framework pre-empt all opposition impacts? Is there a viable straight opp? Would you call this tight if you were judging?`;
+        const tUser = `Motion: ${motion}\nSide: ${side}\n\nFull case:\n${output.substring(0, 4000)}`;
+        let result = '';
+        await callClaude(tSys, tUser, (text) => { result = text; }, { thinkBudget: 3000, maxTokens: 500 });
+        if (!cancelled) {
+          try {
+            const parsed = JSON.parse(result.trim());
+            setTightness(parsed);
+          } catch(e) {
+            const match = result.match(/\{[\s\S]*\}/);
+            if (match) { try { setTightness(JSON.parse(match[0])); } catch(e2) {} }
+          }
+        }
+      } catch(e) { /* silently fail */ }
+    };
+    checkTightness();
+    return () => { cancelled = true; };
+  }, [output, loading, streaming]);
 
   return React.createElement('div',{className:'panel'+(output?' panel-expanded':'')},
     // Motion
@@ -1647,11 +1814,28 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
       depth:depth,
     }),
 
+    // Tightness evaluation badge
+    output && !streaming && !loading && tightness && React.createElement('div',{
+      style:{
+        marginTop:16,padding:'12px 20px',borderRadius:10,
+        display:'flex',alignItems:'center',gap:12,
+        background: tightness.level === 'fair' ? '#22c55e12' : tightness.level === 'a bit tight' ? '#fbbf2412' : '#ef444412',
+        border: '1px solid ' + (tightness.level === 'fair' ? '#22c55e30' : tightness.level === 'a bit tight' ? '#fbbf2430' : '#ef444430'),
+      }
+    },
+      React.createElement('span',{style:{
+        fontSize:'.8rem',fontWeight:700,letterSpacing:'.5px',textTransform:'uppercase',
+        color: tightness.level === 'fair' ? '#22c55e' : tightness.level === 'a bit tight' ? '#fbbf24' : '#ef4444',
+        whiteSpace:'nowrap',
+      }}, tightness.level === 'fair' ? '\u2705 Fair Case' : tightness.level === 'a bit tight' ? '\u26A0\uFE0F A Bit Tight' : tightness.level === 'very tight' ? '\u{1F6A8} Very Tight' : '\u{1F6A8} Likely Tight'),
+      React.createElement('span',{style:{fontSize:'.85rem',color:'#a8b8cc'}}, tightness.explanation)
+    ),
+
     // Save Case bar — appears after generation
     output && !streaming && !loading && React.createElement('div',{
       style:{
         display:'flex',gap:12,alignItems:'center',justifyContent:'center',
-        marginTop:20,padding:'16px 24px',
+        marginTop:12,padding:'16px 24px',
         background:'#ffffff06',border:'1px solid #ffffff0a',borderRadius:12,
       }
     },
@@ -3122,7 +3306,7 @@ Rules:
       el('textarea', {
         value: caseText,
         onChange: e => setCaseText(e.target.value),
-        placeholder: 'Paste your full debate case here — background, framework, arguments, everything. The AI will analyze it and give you targeted, section-by-section feedback...',
+        placeholder: 'Paste your full debate case here. Background, framework, arguments, everything. The AI will analyze it and give you targeted, section-by-section feedback...',
         rows: 28,
         style: {fontSize:'1rem', minHeight:'500px', lineHeight:'1.7', padding:'20px 24px'}
       }),
@@ -3453,28 +3637,29 @@ Write like a coach who genuinely wants this debater to improve. Be tough but con
     window.speechSynthesis.speak(utterance);
   };
 
+  const wordCount = userSpeech.trim() ? userSpeech.trim().split(/\s+/).length : 0;
+  const estMinutes = Math.round(wordCount / 130);
+
   return el('div',{className:'panel'},
-    el('p',{style:{color:'#888',marginBottom:20,fontSize:'.95rem'}},
+    el('p',{className:'practice-intro'},
       'Practice writing speeches and get AI coaching feedback. Select the speech you\'re practicing, type it out, and submit for review.'
     ),
 
     // Speech type selector
     el('label',{className:'field-label'},'Which speech are you practicing?'),
-    el('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginBottom:20}},
+    el('div',{className:'practice-grid'},
       SPEECHES.map(s =>
         el('div',{
           key:s.code,
           onClick:()=>setSpeechType(s.code),
-          style:{
-            padding:'14px 16px',cursor:'pointer',borderRadius:10,
-            border:speechType===s.code?'2px solid #fbbf24':'1px solid #ffffff15',
-            background:speechType===s.code?'#fbbf2415':'#ffffff05',
-            transition:'.2s',
-          }
+          className:'practice-card' + (speechType===s.code?' active':''),
         },
-          el('div',{style:{fontWeight:700,fontSize:'1rem',color:speechType===s.code?'#fbbf24':'#e0e7ef'}},s.code),
-          el('div',{style:{fontSize:'.78rem',color:'#888',marginTop:2}},s.title),
-          el('div',{style:{fontSize:'.72rem',color:'#666',marginTop:4}},s.time + (s.side==='gov'?' (Gov)':' (Opp)')),
+          el('div',{className:'pc-code'},s.code),
+          el('div',{className:'pc-title'},s.title),
+          el('div',{className:'pc-meta'},
+            el('span',null,s.time),
+            el('span',{className:'pc-side ' + s.side},s.side==='gov'?'GOV':'OPP'),
+          ),
         )
       )
     ),
@@ -3486,27 +3671,29 @@ Write like a coach who genuinely wants this debater to improve. Be tough but con
       placeholder:'e.g., THBT we should abolish the electoral college',
       value:motion,
       onChange:e=>setMotion(e.target.value),
-      style:{marginBottom:16}
+      style:{marginBottom:20}
     }),
 
     // Speech input
     el('label',{className:'field-label green'},'Your ' + selectedSpeech.code + ' Speech'),
-    el('div',{style:{fontSize:'.8rem',color:'#888',marginBottom:8}}, selectedSpeech.desc),
-    el('textarea',{
-      value:userSpeech,
-      onChange:e=>setUserSpeech(e.target.value),
-      placeholder:'Write your speech here. Include your framework, arguments, warrants, and weighing. Write it exactly as you would say it in a round.',
-      style:{minHeight:300,width:'100%',background:'#141e30',border:'1px solid #ffffff18',borderRadius:10,padding:16,color:'#e0e7ef',fontSize:'1rem',lineHeight:1.6,resize:'vertical',fontFamily:'inherit'}
-    }),
+    el('div',{style:{fontSize:'.82rem',color:'#7a8da4',marginBottom:10,lineHeight:1.5}}, selectedSpeech.desc),
+    el('div',{className:'practice-textarea-wrap'},
+      el('textarea',{
+        className:'practice-textarea',
+        value:userSpeech,
+        onChange:e=>setUserSpeech(e.target.value),
+        placeholder:'Write your speech here. Include your framework, arguments, warrants, and weighing. Write it exactly as you would say it in a round.',
+      }),
+    ),
 
     // Word count + time estimate
-    el('div',{style:{display:'flex',gap:16,marginTop:8,marginBottom:16,fontSize:'.8rem',color:'#666'}},
-      el('span',null,'Words: ' + (userSpeech.trim() ? userSpeech.trim().split(/\s+/).length : 0)),
-      el('span',null,'Est. speaking time: ' + Math.round((userSpeech.trim() ? userSpeech.trim().split(/\s+/).length : 0) / 130) + ' min'),
+    el('div',{className:'practice-stats'},
+      el('span',null,'\u{270F}\uFE0F ' + wordCount + ' words'),
+      el('span',null,'\u{23F1}\uFE0F ~' + estMinutes + ' min speaking time'),
     ),
 
     // Action buttons
-    el('div',{style:{display:'flex',gap:12,flexWrap:'wrap'}},
+    el('div',{className:'practice-actions'},
       el('button',{
         className:'btn btn-orange',
         onClick:submitForReview,
@@ -3519,21 +3706,17 @@ Write like a coach who genuinely wants this debater to improve. Be tough but con
     ),
 
     // Feedback output
-    feedback && el('div',{style:{marginTop:24}},
-      el('div',{style:{
-        background:'#141e30',border:'1px solid #ffffff10',borderRadius:12,padding:'24px 32px',
-      }},
-        el('div',{className:'output',style:{padding:0,minHeight:0,maxHeight:'none'}},
-          cleanOutput(feedback)
-        ),
-        !loading && el('div',{style:{display:'flex',gap:12,marginTop:16}},
-          el('button',{
-            className:'btn btn-secondary',
-            style:{fontSize:'.85rem'},
-            onClick:()=>readAsSpeech(feedback),
-          }, speaking ? 'Stop Reading' : 'Read Feedback Aloud'),
-          el(SaveToDocsButton,{text:feedback,filename:'Practice Feedback ' + selectedSpeech.code}),
-        )
+    feedback && el('div',{className:'practice-feedback'},
+      el('div',{className:'output'},
+        cleanOutput(feedback)
+      ),
+      !loading && el('div',{className:'practice-feedback-actions'},
+        el('button',{
+          className:'btn btn-secondary',
+          style:{fontSize:'.85rem'},
+          onClick:()=>readAsSpeech(feedback),
+        }, speaking ? 'Stop Reading' : 'Read Feedback Aloud'),
+        el(SaveToDocsButton,{text:feedback,filename:'Practice Feedback ' + selectedSpeech.code}),
       )
     ),
   );
@@ -3991,7 +4174,7 @@ function App() {
   const tabPane = (id, component) =>
     React.createElement('div', {
       key: id,
-      style: { display: tab === id ? 'block' : 'none' }
+      style: { display: tab === id ? 'block' : 'none', width: '100%' }
     }, component);
 
   return React.createElement(React.Fragment,null,
