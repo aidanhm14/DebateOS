@@ -14,22 +14,22 @@
 /* ── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
-body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#080c16;color:#e4e8f0;font-size:18px}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0e18;color:#e8ecf4;font-size:18px}
 
 /* ── Background ──────────────────────────────── */
-.bg-canvas{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#080c16 0%,#0c1220 25%,#101828 50%,#0a1018 75%,#060a12 100%)}
+.bg-canvas{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#0c1018 0%,#10182a 25%,#141e32 50%,#0e1420 75%,#0a0e18 100%)}
 .bg-debate-side{position:fixed;top:0;bottom:0;width:120px;z-index:0;pointer-events:none;overflow:hidden}
 .bg-debate-left{left:0}
 .bg-debate-right{right:0}
-.bg-quote{position:absolute;font-size:72px;font-family:Georgia,serif;color:#5eead4;opacity:.08;animation:floatQuote 18s ease-in-out infinite}
+.bg-quote{position:absolute;font-size:72px;font-family:Georgia,serif;color:#ef4444;opacity:.06;animation:floatQuote 18s ease-in-out infinite}
 .bg-quote:nth-child(1){top:12%;left:15px;animation-delay:0s}
-.bg-quote:nth-child(2){top:42%;left:30px;animation-delay:-6s;font-size:56px;color:#fbbf24;opacity:.07}
+.bg-quote:nth-child(2){top:42%;left:30px;animation-delay:-6s;font-size:56px;color:#fbbf24;opacity:.05}
 .bg-quote:nth-child(3){top:72%;left:10px;animation-delay:-12s;font-size:64px}
-.bg-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#5eead422,transparent);animation:driftLine 14s ease-in-out infinite}
+.bg-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#ef444422,transparent);animation:driftLine 14s ease-in-out infinite}
 .bg-line:nth-child(4){left:40px;top:8%;height:140px;animation-delay:-2s}
 .bg-line:nth-child(5){left:70px;top:45%;height:100px;animation-delay:-7s}
 .bg-line:nth-child(6){left:20px;top:28%;height:120px;animation-delay:-11s}
-.bg-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:#5eead4;opacity:.12;animation:pulseDot 8s ease-in-out infinite}
+.bg-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:#ef4444;opacity:.10;animation:pulseDot 8s ease-in-out infinite}
 .bg-dot:nth-child(7){top:20%;left:60px;animation-delay:0s}
 .bg-dot:nth-child(8){top:55%;left:35px;animation-delay:-3s}
 .bg-dot:nth-child(9){top:85%;left:80px;animation-delay:-5s}
@@ -40,27 +40,27 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
 .header{text-align:center;padding:28px 20px 0}
-.logo{font-size:3rem;font-weight:800;letter-spacing:-1px}
-.logo .green{color:#34d399}
-.logo .white{color:#fff}
-.subtitle{color:#94a3b8;font-size:1.05rem;margin-top:4px;letter-spacing:.5px}
+.logo{font-size:3.2rem;font-weight:900;letter-spacing:-2px;line-height:1}
+.logo .green{color:#ef4444;text-shadow:0 0 40px #ef444430,0 0 80px #ef444415}
+.logo .white{color:#fff;font-weight:300;letter-spacing:1px}
+.subtitle{color:#a0aec0;font-size:1.05rem;margin-top:4px;letter-spacing:.5px}
 
 /* ── Nav Tabs ─────────────────────────────────── */
 .nav{display:flex;gap:6px;margin:22px auto 0;padding:6px;flex-wrap:wrap;justify-content:center;background:#ffffff06;border-radius:14px;border:1px solid #ffffff08}
 .nav-btn{
-  background:transparent;border:1.5px solid transparent;color:#7a8da4;
+  background:transparent;border:1.5px solid transparent;color:#8899b0;
   padding:10px 22px;border-radius:10px;font-size:.88rem;font-weight:600;
   letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.25s;
   font-family:inherit;white-space:nowrap;
 }
 .nav-btn:hover{color:#e4e8f0;background:#ffffff0a}
-.nav-btn.active{color:#5eead4;border-color:#5eead440;background:#5eead412;box-shadow:0 2px 12px #5eead418}
+.nav-btn.active{color:#f87171;border-color:#f8717140;background:#f8717112;box-shadow:0 2px 12px #f8717118}
 .nav-btn.active-orange{color:#fbbf24;border-color:#fbbf2440;background:#fbbf2412;box-shadow:0 2px 12px #fbbf2418}
 
 /* ── Cards / Panels ───────────────────────────── */
 .panel{
   width:92%;max-width:1600px;margin:28px auto 40px;
-  background:linear-gradient(145deg,#131d2e 0%,#162036 50%,#141c2c 100%);
+  background:linear-gradient(145deg,#151f30 0%,#182438 50%,#161e2e 100%);
   border:1px solid #ffffff15;
   border-radius:20px;padding:36px 44px;
   backdrop-filter:blur(16px);
@@ -72,13 +72,13 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 }
 .panel textarea,.panel input[type="text"]{width:100%;box-sizing:border-box}
 .panel-inner{
-  background:#0e1620;border:1px solid #ffffff12;
+  background:#111b28;border:1px solid #ffffff14;
   border-radius:12px;padding:16px 18px;margin-top:10px;
 }
 
 /* ── Form Elements ────────────────────────────── */
 label.field-label{display:block;font-size:.92rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fbbf24;margin-bottom:8px}
-label.field-label.green{color:#5eead4}
+label.field-label.green{color:#f87171}
 textarea,select,input[type="text"]{
   width:100%;background:#0c1422;color:#e4e8f0;
   border:1px solid #ffffff14;border-radius:12px;
@@ -86,7 +86,7 @@ textarea,select,input[type="text"]{
   resize:vertical;outline:none;transition:.25s;
   box-shadow:0 2px 8px rgba(0,0,0,.2) inset;
 }
-textarea:focus,select:focus,input[type="text"]:focus{border-color:#5eead444;box-shadow:0 0 0 3px #5eead410,0 2px 8px rgba(0,0,0,.2) inset}
+textarea:focus,select:focus,input[type="text"]:focus{border-color:#ef444444;box-shadow:0 0 0 3px #ef444410,0 2px 8px rgba(0,0,0,.2) inset}
 textarea{min-height:90px}
 select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 
@@ -97,8 +97,8 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   letter-spacing:.3px;
 }
 .btn:active{transform:scale(.97)}
-.btn-primary{background:linear-gradient(135deg,#34d399,#06b6d4);color:#0a1018}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px #34d39940}
+.btn-primary{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px #ef444440}
 .btn-orange{background:linear-gradient(135deg,#f59e0b,#e67e22);color:#0a1018}
 .btn-orange:hover{transform:translateY(-2px);box-shadow:0 8px 28px #f59e0b40}
 .btn-secondary{background:#ffffff0a;color:#c8d0dc;border:1px solid #ffffff18}
@@ -108,7 +108,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
 .btn-green:hover{transform:translateY(-2px);box-shadow:0 8px 28px #22c55e40}
 .btn-sm{padding:7px 14px;font-size:.78rem;border-radius:8px}
-.btn-record{background:#5eead4;color:#0a1018;display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:700;font-size:.78rem;border:none;cursor:pointer;font-family:inherit}
+.btn-record{background:#ef4444;color:#fff;display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:700;font-size:.78rem;border:none;cursor:pointer;font-family:inherit}
 
 /* ── Row helpers ──────────────────────────────── */
 .row{display:flex;gap:16px;flex-wrap:wrap}
@@ -125,17 +125,17 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   transition:.25s;font-family:inherit;
 }
 .chip:hover{border-color:#ffffff30;color:#e0e7ef;background:#ffffff0c}
-.chip.active{border-color:#5eead450;color:#5eead4;background:#5eead414;box-shadow:0 2px 10px #5eead418}
+.chip.active{border-color:#f8717150;color:#f87171;background:#f8717114;box-shadow:0 2px 10px #f8717118}
 
 /* ── Speech Cards (Judge) ─────────────────────── */
 .speech-card{
   background:linear-gradient(145deg,#0e1620,#151e30);border:1px solid #ffffff10;border-radius:14px;
   padding:20px 24px;margin-bottom:18px;
-  border-left:3px solid #5eead4;transition:.2s;
+  border-left:3px solid #ef4444;transition:.2s;
 }
 .speech-card:hover{border-color:#ffffff18}
 .speech-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.speech-badge{display:inline-flex;align-items:center;justify-content:center;width:36px;height:22px;border-radius:4px;font-size:.72rem;font-weight:800;background:#5eead4;color:#0f1724}
+.speech-badge{display:inline-flex;align-items:center;justify-content:center;width:36px;height:22px;border-radius:4px;font-size:.72rem;font-weight:800;background:#ef4444;color:#fff}
 .speech-title{font-size:1.05rem;color:#cbd5e1;margin-left:10px}
 .speech-time{font-size:.92rem;color:#94a3b8;margin-left:6px}
 
@@ -151,10 +151,10 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .feedback-btn{
   margin-left:auto;padding:7px 18px;border-radius:6px;
   font-size:.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  border:1.5px solid #5eead4;background:transparent;color:#5eead4;
+  border:1.5px solid #ef4444;background:transparent;color:#ef4444;
   cursor:pointer;font-family:inherit;transition:.15s;
 }
-.feedback-btn:hover{background:#5eead418}
+.feedback-btn:hover{background:#ef444418}
 
 /* ── Depth Selector ────────────────────────────── */
 .depth-selector{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
@@ -179,11 +179,11 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   padding:48px 24px;gap:20px;
 }
 .thinking-logo{font-size:2.1rem;font-weight:800;letter-spacing:-1px}
-.thinking-logo .green{color:#34d399}
+.thinking-logo .green{color:#ef4444}
 .thinking-logo .white{color:#fff}
 .thinking-dots{display:flex;gap:6px;align-items:center}
 .thinking-dots span{
-  width:8px;height:8px;border-radius:50%;background:#34d399;
+  width:8px;height:8px;border-radius:50%;background:#ef4444;
   animation:dotBounce 1.4s infinite ease-in-out;
 }
 .thinking-dots span:nth-child(2){animation-delay:.16s}
@@ -197,10 +197,10 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .output-stream{position:relative}
 .output-stream .stream-indicator{
   position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:6px;
-  font-size:.72rem;color:#5eead4;font-weight:600;padding:8px 16px;
+  font-size:.72rem;color:#f87171;font-weight:600;padding:8px 16px;
   background:#141e30f0;border-bottom:1px solid #ffffff12;
 }
-.stream-dot{width:8px;height:8px;background:#34d399;border-radius:50%;animation:pulse 1s infinite}
+.stream-dot{width:8px;height:8px;background:#ef4444;border-radius:50%;animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* ── Revision Sidebar ─────────────────────────── */
@@ -227,7 +227,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   border-radius:8px;margin-bottom:8px;font-size:.82rem;line-height:1.5;
 }
 .revision-comment .rc-user{color:#f59e0b;font-weight:600;font-size:.72rem;margin-bottom:4px}
-.revision-comment .rc-ai{color:#5eead4;font-weight:600;font-size:.72rem;margin-bottom:4px}
+.revision-comment .rc-ai{color:#f87171;font-weight:600;font-size:.72rem;margin-bottom:4px}
 .revision-comment .rc-text{color:#ccc}
 .revision-comment .rc-time{color:#94a3b8;font-size:.68rem;margin-top:4px}
 
@@ -261,11 +261,11 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .argmap-columns{display:flex;justify-content:space-between;padding:20px;position:relative;z-index:2;gap:40px}
 .argmap-col{flex:1;display:flex;flex-direction:column;gap:14px}
 .argmap-col-header{text-align:center;padding:8px 0;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid;margin-bottom:6px}
-.argmap-col-header.gov{color:#5eead4;border-color:#5eead440}
+.argmap-col-header.gov{color:#f87171;border-color:#f8717140}
 .argmap-col-header.clash{color:#fbbf24;border-color:#fbbf2440}
 .argmap-col-header.opp{color:#f87171;border-color:#f8717140}
 .argmap-node{padding:12px 14px;border-radius:10px;cursor:default;transition:.2s;position:relative}
-.argmap-node.gov{background:#5eead410;border:1px solid #5eead430;color:#a7f3d0}
+.argmap-node.gov{background:#ef444410;border:1px solid #ef444430;color:#a7f3d0}
 .argmap-node.opp{background:#f8717110;border:1px solid #f8717130;color:#fca5a5}
 .argmap-node.clash{background:#fbbf2410;border:1px solid #fbbf2430;color:#fde68a}
 .argmap-node:hover{transform:scale(1.02)}
@@ -277,7 +277,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .argmap-legend .dot{width:10px;height:10px;border-radius:50%}
 .argmap-tab-toggle{display:flex;gap:8px;margin:16px 0}
 .argmap-tab-toggle button{padding:8px 18px;border-radius:8px;border:1px solid #ffffff12;background:#131b2c;color:#94a3b8;font-size:.85rem;cursor:pointer;transition:.2s}
-.argmap-tab-toggle button.active{background:#5eead418;border-color:#5eead440;color:#5eead4}
+.argmap-tab-toggle button.active{background:#ef444418;border-color:#f8717140;color:#f87171}
 .argmap-tab-toggle button:hover{border-color:#ffffff25}
 
 /* light theme */
@@ -294,32 +294,32 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 /* ── Newbies Tab ──────────────────────────────── */
 .newbie-hero{text-align:left;padding:20px 0 32px}
 .newbie-hero h2{font-size:2rem;font-weight:800;color:#f1f5f9;margin-bottom:6px;letter-spacing:-.02em}
-.newbie-hero .hero-subtitle{color:#5eead4;font-size:1rem;margin-bottom:16px;font-weight:500}
+.newbie-hero .hero-subtitle{color:#f87171;font-size:1rem;margin-bottom:16px;font-weight:500}
 .newbie-hero .honest{color:#94a3b8;font-size:1rem;line-height:1.8;max-width:760px}
 .newbie-toc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 8px}
 .newbie-toc-item{padding:12px 16px;background:#131b2c;border:1px solid #ffffff10;border-radius:10px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px}
-.newbie-toc-item:hover{background:#1a2538;border-color:#5eead440}
+.newbie-toc-item:hover{background:#1a2538;border-color:#ef444440}
 .newbie-toc-item .toc-icon{font-size:1.2rem;width:28px;text-align:center;flex-shrink:0}
 .newbie-toc-item .toc-label{font-size:.92rem;color:#cbd5e1;font-weight:500}
 .newbie-section{margin-top:20px;padding:0;background:transparent;border:none;border-radius:0}
 .newbie-section-header{padding:16px 20px;background:#0e1620;border:1px solid #ffffff10;border-radius:14px;cursor:pointer;transition:.25s;display:flex;align-items:center;gap:12px}
-.newbie-section-header:hover{background:#131d2e;border-color:#5eead430;transform:translateX(2px)}
+.newbie-section-header:hover{background:#131d2e;border-color:#ef444430;transform:translateX(2px)}
 .newbie-section-header.open{border-radius:14px 14px 0 0;border-bottom-color:transparent;background:#121c2c}
 .newbie-section-icon{font-size:1.3rem;width:32px;text-align:center;flex-shrink:0}
 .newbie-section h3{color:#e2e8f0;font-size:1.1rem;margin:0;font-weight:600;flex:1}
-.newbie-section .arrow{color:#5eead4;font-size:.75rem;transition:.25s;opacity:.6}
+.newbie-section .arrow{color:#ef4444;font-size:.75rem;transition:.25s;opacity:.6}
 .newbie-section .arrow.open{transform:rotate(180deg);opacity:1}
 .newbie-section-body{padding:20px 24px;background:#0e1822;border:1px solid #ffffff10;border-top:none;border-radius:0 0 14px 14px;animation:slideDown .25s ease}
 @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .newbie-section p{font-size:1rem;line-height:1.8;color:#b0bec5;margin-bottom:14px;text-align:left}
 .newbie-section li{font-size:1rem;line-height:1.75;color:#b0bec5;margin-bottom:6px}
-.newbie-callout{padding:14px 18px;background:#5eead408;border-left:3px solid #5eead4;border-radius:0 8px 8px 0;margin:14px 0;color:#94a3b8;font-size:.95rem;line-height:1.7}
-.newbie-callout strong{color:#5eead4}
+.newbie-callout{padding:14px 18px;background:#ef444408;border-left:3px solid #ef4444;border-radius:0 8px 8px 0;margin:14px 0;color:#a0aec0;font-size:.95rem;line-height:1.7}
+.newbie-callout strong{color:#ef4444}
 .newbie-term{display:flex;gap:10px;margin-bottom:14px;align-items:baseline}
 .newbie-term .term-word{color:#fbbf24;font-weight:600;min-width:120px;flex-shrink:0;font-size:.98rem}
 .newbie-term .term-def{color:#b0bec5;font-size:.96rem;line-height:1.7}
 .newbie-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.92rem}
-.newbie-table th{text-align:left;padding:10px 14px;background:#1a253866;color:#5eead4;font-weight:600;border-bottom:1px solid #ffffff12}
+.newbie-table th{text-align:left;padding:10px 14px;background:#1a253866;color:#ef4444;font-weight:600;border-bottom:1px solid #ffffff12}
 .newbie-table td{padding:10px 14px;color:#b0bec5;border-bottom:1px solid #ffffff08}
 .newbie-table tr:last-child td{border-bottom:none}
 .newbie-quote{border-left:3px solid #c084fc;padding:10px 16px;margin:16px 0;color:#ccc;font-style:italic;background:#c084fc08;border-radius:0 8px 8px 0}
@@ -338,7 +338,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 }
 .output *{margin:0;padding:0}
 .output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422}
-.output h4{color:#5eead4;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
+.output h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
 .output .section{margin-bottom:12px}
 .phil-output{background:linear-gradient(145deg,#0e1620,#121c2c);border:1px solid #ffffff10;border-radius:16px;padding:28px 36px;margin-top:20px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
 .phil-output .output{padding:0;min-height:0;max-height:none;line-height:1.7;font-size:1.05rem}
@@ -355,18 +355,18 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .fb-comment-label{color:#fbbf24;font-weight:600;font-size:.78rem;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
 .fb-comment-excerpt{color:#b0bec5;font-size:.78rem;font-style:italic;margin-bottom:6px;line-height:1.3}
 .fb-comment-text{color:#ccc;line-height:1.4}
-.fb-comment.active{border-color:#5eead4;background:#5eead408}
+.fb-comment.active{border-color:#f87171;background:#ef444408}
 .fb-highlight{background:#fbbf2418;border-bottom:2px solid #fbbf2466;cursor:pointer;transition:.15s;padding:1px 0}
 .fb-highlight:hover{background:#fbbf2430}
-.fb-highlight.active{background:#5eead420;border-bottom-color:#5eead4}
+.fb-highlight.active{background:#ef444420;border-bottom-color:#f87171}
 .fb-reply-box{padding:12px;border-top:1px solid #ffffff10;background:#0f1724}
 .fb-reply-box textarea{min-height:60px;font-size:.88rem}
 .fb-reply-box .btn{margin-top:8px;padding:8px 16px;font-size:.85rem}
-.fb-reply-ai{padding:10px 12px;margin:0 10px 8px;background:#5eead408;border:1px solid #5eead420;border-radius:8px;font-size:.85rem;color:#cbd5e1;line-height:1.4}
+.fb-reply-ai{padding:10px 12px;margin:0 10px 8px;background:#ef444408;border:1px solid #ef444420;border-radius:8px;font-size:.85rem;color:#cbd5e1;line-height:1.4}
 .fb-status{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:.82rem;color:#94a3b8}
 
 /* ── Loading Spinner ──────────────────────────── */
-.spinner{display:inline-block;width:20px;height:20px;border:2.5px solid #ffffff33;border-top-color:#34d399;border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle}
+.spinner{display:inline-block;width:20px;height:20px;border:2.5px solid #ffffff33;border-top-color:#ef4444;border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── Resolution Card ──────────────────────────── */
@@ -534,7 +534,7 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
   display:flex;justify-content:space-between;align-items:center;
 }
 .light-theme .cases-sidebar-header{border-bottom-color:#3b82f610}
-.cases-sidebar-header h3{font-size:1.05rem;font-weight:700;color:#34d399;letter-spacing:.5px}
+.cases-sidebar-header h3{font-size:1.05rem;font-weight:700;color:#ef4444;letter-spacing:.5px}
 .light-theme .cases-sidebar-header h3{color:#2563eb}
 .cases-sidebar-close{
   background:none;border:none;color:#888;font-size:1.3rem;cursor:pointer;padding:4px 8px;
@@ -553,7 +553,7 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
   border:1px solid transparent;transition:.15s;
 }
 .case-item:hover{background:#ffffff08;border-color:#ffffff0a}
-.case-item.active{background:#34d39910;border-color:#34d39930}
+.case-item.active{background:#ef444410;border-color:#ef444430}
 .light-theme .case-item:hover{background:#3b82f606;border-color:#3b82f610}
 .light-theme .case-item.active{background:#2563eb10;border-color:#2563eb30}
 
@@ -588,7 +588,7 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
   width:100%;background:#182236;color:#e4e8f0;border:1px solid #ffffff18;
   border-radius:8px;padding:8px 12px;font-size:.85rem;font-family:inherit;outline:none;
 }
-.cases-search input:focus{border-color:#34d39966}
+.cases-search input:focus{border-color:#ef444466}
 .cases-search input::placeholder{color:#64748b}
 .light-theme .cases-search input{background:#f5f8ff;color:#1a1a2e;border-color:#3b82f618}
 
@@ -635,7 +635,7 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .practice-card .pc-side{
   display:inline-block;padding:2px 8px;border-radius:4px;font-weight:700;font-size:.68rem;letter-spacing:.5px;text-transform:uppercase;
 }
-.practice-card .pc-side.gov{background:#5eead412;color:#5eead4}
+.practice-card .pc-side.gov{background:#ef444412;color:#f87171}
 .practice-card .pc-side.opp{background:#f8717112;color:#f87171}
 .practice-textarea-wrap{position:relative;margin-bottom:8px}
 .practice-textarea{
@@ -665,7 +665,7 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
   backdrop-filter:blur(8px);cursor:pointer;transition:.2s;
 }
 .profile-badge:hover{background:#ffffff12}
-.profile-avatar{width:24px;height:24px;border-radius:50%;background:#34d399;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#0f1724}
+.profile-avatar{width:24px;height:24px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#0f1724}
 .profile-name{font-size:.82rem;color:#cbd5e1;font-weight:500}
 .light-theme .profile-badge{background:#ffffffcc;border-color:#3b82f612}
 .light-theme .profile-name{color:#1a1a2e}
@@ -678,10 +678,10 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .forum-post:hover{border-color:#ffffff22}
 .forum-post-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .forum-post-author{display:flex;align-items:center;gap:8px}
-.forum-post-author-avatar{width:28px;height:28px;border-radius:50%;background:#5eead4;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:#0f1724}
+.forum-post-author-avatar{width:28px;height:28px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:#0f1724}
 .forum-post-author-name{font-size:.92rem;font-weight:600;color:#e4e8f0}
 .forum-post-time{font-size:.78rem;color:#94a3b8}
-.forum-post-tag{font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 10px;border-radius:4px;background:#5eead412;color:#5eead4;border:1px solid #5eead430}
+.forum-post-tag{font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 10px;border-radius:4px;background:#ef444412;color:#f87171;border:1px solid #ef444430}
 .forum-post-tag.idea{background:#fbbf2412;color:#fbbf24;border-color:#fbbf2430}
 .forum-post-tag.case{background:#c084fc12;color:#c084fc;border-color:#c084fc30}
 .forum-post-body{font-size:.95rem;color:#cbd5e1;line-height:1.6;margin-bottom:12px}
@@ -1441,7 +1441,23 @@ PATTERN 9: WEIGHING AS ITS OWN SECTION
 The best PMR strategies don't just summarize. They reframe the entire round with a weighing section at the top: "What's most important in this round?" followed by an explicit hierarchy of impacts. A case about developing world sanitation has a PMR that opens by dismissing entertainment and productivity arguments as low-stakes, then pivots to "the most important prerequisite to autonomy and liberation is life itself," making their health impact categorically win. Build this weighing architecture into every case.
 
 PATTERN 10: OPP ARGUMENTS LIST
-After the case itself, always include a section that lists the 3-5 most likely opposition arguments with brief notes on each. Not full A2 blocks for all of them, but a clear-eyed list of what's coming. This helps the debater prepare mentally for the round and shows strategic awareness. Include both the strong opp arguments (that you need to take seriously) and the weak ones (that you can dismiss quickly).`;
+After the case itself, always include a section that lists the 3-5 most likely opposition arguments with brief notes on each. Not full A2 blocks for all of them, but a clear-eyed list of what's coming. This helps the debater prepare mentally for the round and shows strategic awareness. Include both the strong opp arguments (that you need to take seriously) and the weak ones (that you can dismiss quickly).
+
+CASE WRITING PROCESS INTELLIGENCE (from APDA coaching):
+
+When generating cases, simulate the actual process experienced debaters use to build cases:
+
+1. TOPIC SELECTION: Start from genuine interest. The best cases come from things the debater actually cares about: a class they took, a news article they read, a conversation with a friend. When generating cases from a user's motion, think about what domain knowledge makes this topic interesting and draw from that depth.
+
+2. RESEARCH-INFORMED WARRANTS: Real debaters don't just assert things. They research their topics. Your warrants should reflect having actually looked into the subject. Cite specific policies, reference real events, name real mechanisms. A case about a sin tax should know that addictive substances have inelastic demand, which means a price increase may not deter consumption. Build this kind of domain expertise into every case.
+
+3. THE STRESS TEST: Before finalizing any case, stress test it. For each argument, ask: "What if opp says the opposite?" For each warrant, ask: "Is this actually true, or am I making it up?" For the overall case, ask: "Is this already status quo?" and "Is this tight (impossible to oppose)?" These checks prevent embarrassing failures in round.
+
+4. THE PARTNER COLLABORATION MODEL: Real cases are refined through back and forth with a partner. When generating cases, simulate this by including sections where you challenge your own arguments. If you wrote an argument about deterrence, ask yourself: "Wait, but what about inelastic demand?" Then either fix the argument or scope the case to avoid the problem. Show this thinking process in the case notes.
+
+5. COLLAPSE PLANNING: The best debaters know before the round starts what their collapse will be. A collapse is the single strongest argument or world comparison that the PMR will use to close the round. Design every case with a clear collapse in mind. This could be a "two worlds" comparison: "In world A people buy the product at a higher price and we get revenue for social programs. In world B people are deterred and public health improves. Either way, we win." Build the collapse into the case as a clearly labeled section.
+
+6. OPPOSITION BRAINSTORMING: After writing the case, always think through 4-5 opposition arguments. Some of these should be genuinely threatening. If you can't think of good opp arguments, the case might be tight. If the opp arguments are too strong, the case might not be worth running. The sweet spot is a case where opp has good arguments but your framework and framing give you a structural advantage.`;
 
 
 
@@ -1791,14 +1807,14 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
         React.createElement('span',{style:{fontSize:'.78rem',color:'#94a3b8',letterSpacing:'.5px',textTransform:'uppercase',fontWeight:600}},
           progress.phase === 'writing' ? 'Writing case...' : 'Generating...'
         ),
-        React.createElement('span',{style:{fontSize:'.82rem',color:'#34d399',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
+        React.createElement('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
           progress.percent + '%'
         )
       ),
       React.createElement('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
         React.createElement('div',{style:{
           height:'100%',width:progress.percent+'%',
-          background:'linear-gradient(90deg,#34d399,#06b6d4)',
+          background:'linear-gradient(90deg,#ef4444,#06b6d4)',
           borderRadius:2,transition:'width .3s ease'
         }})
       )
@@ -1914,14 +1930,14 @@ function ThinkingAnimation({mode, progress}) {
         React.createElement('span',{style:{fontSize:'.75rem',color:'#64748b',textTransform:'uppercase',letterSpacing:'.5px'}},
           progress && progress.phase === 'thinking' ? 'Thinking' : 'Writing'
         ),
-        React.createElement('span',{style:{fontSize:'.82rem',color:'#34d399',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
+        React.createElement('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
           pct + '%'
         )
       ),
       React.createElement('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
         React.createElement('div',{style:{
           height:'100%',width:pct+'%',
-          background:'linear-gradient(90deg,#34d399,#06b6d4)',
+          background:'linear-gradient(90deg,#ef4444,#06b6d4)',
           borderRadius:2,transition:'width .4s ease'
         }})
       )
@@ -2538,7 +2554,7 @@ function ArgumentMap({ mapData }) {
             newLines.push({
               x1: gr.right - rect.left, y1: gr.top + gr.height/2 - rect.top,
               x2: cr.left - rect.left, y2: cr.top + cr.height/2 - rect.top,
-              color: '#5eead4', clash: ci
+              color: '#ef4444', clash: ci
             });
           }
         });
@@ -2609,7 +2625,7 @@ function ArgumentMap({ mapData }) {
       ),
     ),
     el('div',{className:'argmap-legend'},
-      el('span',null, el('span',{className:'dot',style:{background:'#5eead4'}}), 'Gov arguments'),
+      el('span',null, el('span',{className:'dot',style:{background:'#ef4444'}}), 'Gov arguments'),
       el('span',null, el('span',{className:'dot',style:{background:'#fbbf24'}}), 'Clash points'),
       el('span',null, el('span',{className:'dot',style:{background:'#f87171'}}), 'Opp arguments'),
       el('span',null, 'W = relative weight (1-10)'),
@@ -2712,7 +2728,7 @@ Rules:
     ),
 
     // Map loading state
-    view === 'map' && mapLoading && el('div',{style:{textAlign:'center',padding:40,color:'#5eead4',fontSize:'.9rem'}},
+    view === 'map' && mapLoading && el('div',{style:{textAlign:'center',padding:40,color:'#ef4444',fontSize:'.9rem'}},
       el('span',{className:'spinner'}), ' Building argument map...'
     ),
 
@@ -2848,8 +2864,8 @@ How to write:
       messages.map((m,i) =>
         React.createElement('div',{key:i,style:{
           alignSelf: m.role==='user' ? 'flex-end' : 'flex-start',
-          background: m.role==='user' ? '#34d39922' : '#ffffff08',
-          border: `1px solid ${m.role==='user' ? '#34d39933' : '#ffffff12'}`,
+          background: m.role==='user' ? '#ef444422' : '#ffffff08',
+          border: `1px solid ${m.role==='user' ? '#ef444433' : '#ffffff12'}`,
           borderRadius: 12, padding:'12px 16px',
           maxWidth:'80%', fontSize:'.92rem', lineHeight:1.45, whiteSpace:'pre-line'
         }}, cleanOutput(m.text))
@@ -3111,7 +3127,7 @@ function buildPhilosophyOutput(philosopher, concept) {
     attack: 'Like any philosophical framework, this approach has known vulnerabilities that sophisticated opponents will target.'
   };
   return `<h3>${philosopher}</h3>
-<p style="color:#34d399;margin-bottom:12px"><strong>School:</strong> ${info.school}</p>
+<p style="color:#ef4444;margin-bottom:12px"><strong>School:</strong> ${info.school}</p>
 <h4>Key Concepts</h4>
 <div class="section">${info.key}</div>
 <h4>How to Use in Debate</h4>
@@ -3381,7 +3397,7 @@ Rules:
               // Replies
               c.replies.map((r, ri) =>
                 el('div', {key:ri, className: r.role === 'user' ? 'fb-comment' : 'fb-reply-ai', style:{marginLeft:12,marginTop:4}},
-                  el('div', {style:{color: r.role === 'user' ? '#5eead4' : '#fbbf24', fontSize:'.75rem',fontWeight:600,marginBottom:2}},
+                  el('div', {style:{color: r.role === 'user' ? '#ef4444' : '#fbbf24', fontSize:'.75rem',fontWeight:600,marginBottom:2}},
                     r.role === 'user' ? 'You' : 'DebateOS'
                   ),
                   r.text
@@ -3779,10 +3795,23 @@ function Newbies() {
       el('p',{key:'types'},"There are a few ways to Opp a case. Most commonly you'll straight opp, meaning you just argue the other side. You can also run a counter-case (propose a mutually exclusive alternative with equal fiat power). If the case is structurally impossible to beat, you can call it tight. But don't tight call just because you can't think of arguments. Tight call because you've thought of the arguments and they genuinely can't win."),
     ]},
     { key:'cases', icon:'\u{1F4DD}', title:'How to Write a Case', render: () => [
-      el('p',{key:0},"Pick a topic you find interesting. A policy you wish existed, something you discussed in class, or a debate topic from the news. Make sure you can think of arguments on both sides. The case shouldn't be \"status quo\" (something that's already true) and it needs to be debatable."),
-      el('p',{key:1},'Phrase your case statement carefully. Adding "preferable to the status quo" means Opp has to defend the current world. "This House believes that" is a normative claim. "This House would" gives you fiat to describe implementation. The phrasing shapes what debate you get.'),
-      el('p',{key:2},"Write 2 to 4 arguments in favor, a clear background section, and a framework for how the judge should evaluate the round. Then write out the best opposition arguments you can think of and your rebuttals to each. This becomes your tight block for MG."),
+      el('p',{key:'intro'},"Case writing is a process, not a one-shot task. Here's the step-by-step that real APDA debaters follow, from blank page to tournament-ready case."),
+      el('p',{key:0,style:{fontWeight:600,color:'#e0e7ef'}},"Step 1: Start with what you know and care about."),
+      el('p',{key:'0a'},"Think of subjects that excite you: economics, philosophy, history, pop culture, technology, a conversation you had last week, something from class. It is easier to write about something you already know or want to explore, because you'll potentially be speaking about it for an entire round and hopefully tournaments to come. Brainstorm broadly first, then narrow."),
+      el('p',{key:1,style:{fontWeight:600,color:'#e0e7ef'}},"Step 2: Research outside your head."),
+      el('p',{key:'1a'},"Google \"debate topics\" or \"pros and cons of X.\" Flip through your textbook. Read a news article. Look up old APDA case lists and posted APDA videos. Talk to your partner, your varsity, or a friend. You're not looking for a word-for-word case statement. You're looking for a spark that you can shape into something debatable."),
+      el('p',{key:2,style:{fontWeight:600,color:'#e0e7ef'}},"Step 3: Get background and test your case statement."),
+      el('p',{key:'2a'},"Do a deeper dive on your topic. Learn the facts, the key players, the history. Everything you learn here goes into presenting case statement in round. Then stress test: Is it already status quo (already true)? Is it tight (impossible to oppose)? Does it need a trigger warning? Is the time-space clear? If any of these are red flags, go back to step one."),
       el('div',{key:3,className:'newbie-callout'}, el('span',null, el('strong',null,'Types of motions: '), 'THBT (This House Believes That) = normative claim, no fiat. THW (This House Would) = policy, you have fiat. THW as [actor] = argue from that actor\'s perspective. THS/O (Supports/Opposes) = neutral observer, good or bad for the world. THR (Regrets) = argue the counterfactual would have been better. THP (Prefers) = compare two worlds.')),
+      el('p',{key:4,style:{fontWeight:600,color:'#e0e7ef'}},"Step 4: Build the skeleton. Three independent points."),
+      el('p',{key:'4a'},"Jot down everything you want to say that supports your case statement. Then organize it into 2 to 3 distinct arguments. Each should be independent, meaning if opp beats one, the others still stand. Don't worry about full warrants yet. Just get the structure."),
+      el('p',{key:5,style:{fontWeight:600,color:'#e0e7ef'}},"Step 5: Add depth. Claims, warrants, and impacts."),
+      el('p',{key:'5a'},"Each point needs a claim (what you're arguing), warrants (why it's true, with specific reasoning), and an impact (what happens if the claim is true, and why it matters). You can pre-empt the opposition within your arguments. Decide which points carry the most weight for your collapse in PMR."),
+      el('p',{key:6,style:{fontWeight:600,color:'#e0e7ef'}},"Step 6: Collaborate. Two heads are better than one."),
+      el('p',{key:'6a'},"Work with your partner, your varsity, or a friend. Read them your case and listen to their reactions. They'll catch holes you missed. If your partner points out that addictive substances have inelastic demand and your case depends on price deterrence, now you know to scope your case differently. This back and forth is where cases get sharp."),
+      el('p',{key:7,style:{fontWeight:600,color:'#e0e7ef'}},"Step 7: Write the tight block and plan your collapse."),
+      el('p',{key:'7a'},"Think of 3 to 5 arguments opp will make and write your responses. This becomes your tight block for MG. Then plan your collapse: the single strongest argument or world-comparison that PMR will use to close the round. A good collapse often looks like \"in any version of this round, our impact still outweighs.\""),
+      el('div',{key:'7b',className:'newbie-callout'}, el('span',null, el('strong',null,'Save your case in multiple places. '), 'Tournament wifi is unreliable and technology fails. Google Docs, a backup on your phone, and a printed copy if possible. You don\'t want to lose all that work.')),
     ]},
     { key:'jargon', icon:'\u{1F4AC}', title:'Core Jargon Decoded', render: () => [
       el('div',{key:0,className:'newbie-term'}, el('span',{className:'term-word'},'Framework'), el('span',{className:'term-def'},'The evaluative lens for the round. "Judge, here\'s HOW to decide who wins." Example: "Prioritize the most vulnerable stakeholders" or "evaluate based on which side produces more liberty."')),
@@ -3806,6 +3835,21 @@ function Newbies() {
       el('div',{key:4,className:'newbie-callout'}, el('span',null, el('strong',null,'The hierarchy of winning: '), 'Frameworks (how to evaluate?) then Burdens (what must each side prove?) then Weighing (whose arguments matter more?) then Arguments (what will happen?) then Warrants (why will it happen?). Win at the highest level you can.')),
       el('p',{key:5},'Layer your responses. Beat the case at a high level, then beat the individual arguments, then beat the warrants. If the judge doesn\'t buy your response A, you still have responses B and C. But note: one good reason beats two or three bad reasons. Only add responses that actually help.'),
       el('p',{key:6},'Use "even if" generously. "Even if they win this argument, we still win because..." This shows the judge you can win even in the worst-case scenario. Take the other team at their best and beat them anyway.'),
+    ]},
+    { key:'nib', icon:'\u2696\uFE0F', title:'Necessary but Insufficient Burdens (NIB)', render: () => [
+      el('p',{key:0},"A Necessary but Insufficient Burden (NIB) is one of the most important and least understood concepts on APDA. Understanding NIBs will immediately make you a more strategic debater and help you recognize when an argument sounds convincing but isn't actually doing the work to win the round."),
+      el('p',{key:1,style:{fontWeight:600,color:'#e0e7ef'}},"What is a NIB?"),
+      el('p',{key:2},"A necessary but insufficient burden is a condition that MUST be true for a side to win, but that alone is NOT ENOUGH to win. Think of it like a key that opens a door: you need the key to get through, but having the key doesn't mean you should walk through the door. The key is necessary but insufficient."),
+      el('p',{key:3,style:{fontWeight:600,color:'#e0e7ef'}},"A concrete example:"),
+      el('p',{key:4},"Imagine the motion is \"THW legalize all drugs.\" Government argues that the War on Drugs has failed (mass incarceration, cartels still thrive, etc.). Opp might respond: \"Even if the War on Drugs has failed, that doesn't mean full legalization is the answer. Maybe decriminalization, or targeted reform, or better enforcement would fix the problems without the risks of full legalization.\" What Gov proved (the War on Drugs failed) is a NIB: it's necessary for their case to work (if the current system were fine, there'd be no reason to change), but it's insufficient to prove that their specific proposal is the right fix."),
+      el('div',{key:5,className:'newbie-callout'}, el('span',null, el('strong',null,'The NIB test: '), 'Ask yourself: "If this argument is true, does Gov/Opp automatically win?" If the answer is no, if there are still other things they need to prove, then the argument is a NIB. It helps their case but it doesn\'t close the deal.')),
+      el('p',{key:6,style:{fontWeight:600,color:'#e0e7ef'}},"How NIBs show up in rounds:"),
+      el('p',{key:7},"\"There is a problem\" is almost always a NIB. Proving a problem exists doesn't prove your solution is the right one. \"The status quo is bad\" is a NIB. It doesn't mean the alternative is better. \"X has happened before\" is a NIB. Historical precedent doesn't guarantee future outcomes. \"People care about this\" is a NIB. Caring about something doesn't tell you which direction to go."),
+      el('p',{key:8,style:{fontWeight:600,color:'#e0e7ef'}},"How to use NIBs strategically:"),
+      el('p',{key:9},"On Gov: Make sure your case doesn't stop at NIBs. If your first argument proves the problem exists, your second argument needs to prove your solution works, and your third needs to prove it's better than alternatives. Don't spend your whole case establishing something that's necessary but not sufficient."),
+      el('p',{key:10},"On Opp: Identifying an opponent's argument as a NIB is devastating. You can say: \"Even if everything they said in their first argument is true, they still haven't proven their case. They showed the problem exists. Great. We agree. But they haven't shown that their solution fixes it, or that it doesn't create worse problems.\" This lets you concede ground without losing anything, because you're showing the judge that the ground you conceded doesn't actually matter."),
+      el('p',{key:11},"On judging: Judges love when debaters understand NIBs because it shows strategic maturity. A debater who can say \"that's necessary but insufficient for their case\" demonstrates a level of analytical clarity that scores well on speaker points."),
+      el('div',{key:12,className:'newbie-callout'}, el('span',null, el('strong',null,'Common NIB traps for new debaters: '), 'Spending 5 minutes of your PMC proving the problem exists, then only 2 minutes on your actual solution. This is called \"proving the NIB\" and it means you\'ve spent most of your speech on something that doesn\'t win you the round by itself. Flip the ratio: establish the problem quickly, then spend your time on why your solution is uniquely good.')),
     ]},
     { key:'speaks', icon:'\u{1F399}', title:'Improving Your Speaks', render: () => [
       el('p',{key:0},"Clearer delivery, not just more style, makes it easier for the judge to follow you. Signpost your arguments: \"Our first independent argument is...\", \"There are three warrants...\", \"This is important because...\" Number your points so the judge can flow them cleanly."),
