@@ -935,156 +935,219 @@ function initDialecticalFlow() {
   if (!container) return;
 
   _p5Instance = new p5(function(p) {
-    const PARTICLE_COUNT = 120;
-    const NOISE_SCALE = 0.0018;
-    const SPEED = 0.35;
-    const FADE_ALPHA = 4;
-    const TRAIL_WEIGHT = 1.2;
+    /* ── Config ──────────────────────────────── */
+    const COUNT = 180;
+    const TRAIL_LEN = 18;
+    const BASE_SPEED = 0.04;
+    const NOISE_SCALE = 0.0012;
+    const FADE = 6;
+    const CONNECTION_DIST = 110;
+    const BG = [10, 14, 24];
+
     let particles = [];
     let time = 0;
     let w, h;
+    let mx = -9999, my = -9999, mActive = false;
 
-    class FlowParticle {
+    /* ── Nebula nodes: slow-drifting glow sources ─ */
+    let nebulae = [];
+    const NEBULA_COUNT = 5;
+
+    /* ── Colors ──────────────────────────────── */
+    const GOV_COLS = [
+      [59, 130, 246],  // blue
+      [96, 165, 250],  // lighter blue
+      [37, 99, 235],   // deeper blue
+    ];
+    const OPP_COLS = [
+      [239, 68, 68],   // red
+      [248, 113, 113], // lighter red
+      [220, 38, 38],   // deeper red
+    ];
+    const CLASH_COL = [251, 191, 36]; // gold
+
+    /* ── Particle class ─────────────────────── */
+    class Particle {
       constructor(side) {
-        this.side = side; // 0 = gov (blue), 1 = opp (red)
-        this.reset();
-        this.x = p.random(w);
-        this.y = p.random(h);
+        this.side = side;
+        this.col = side === 0
+          ? GOV_COLS[Math.floor(Math.random() * GOV_COLS.length)]
+          : OPP_COLS[Math.floor(Math.random() * OPP_COLS.length)];
+        this.trail = [];
+        this.thickness = 0.6 + Math.random() * 1.2;
+        this.reset(true);
       }
-      reset() {
-        if (this.side === 0) {
-          this.x = p.random(w * 0.05, w * 0.45);
-          this.y = p.random(h);
-        } else {
-          this.x = p.random(w * 0.55, w * 0.95);
-          this.y = p.random(h);
-        }
-        this.age = 0;
-        this.maxAge = p.random(200, 600);
+      reset(init) {
+        this.x = init ? p.random(w) : (this.side === 0 ? p.random(-40, w * 0.3) : p.random(w * 0.7, w + 40));
+        this.y = p.random(h);
         this.vx = 0;
         this.vy = 0;
+        this.age = 0;
+        this.maxAge = p.random(300, 900);
+        this.trail = [];
+        this.noiseOff = p.random(10000);
       }
       update() {
-        const offset = this.side * 1000;
-        const angle = p.noise(
-          this.x * NOISE_SCALE + offset,
-          this.y * NOISE_SCALE,
-          time * 0.0003
-        ) * p.TWO_PI * 2.5;
-        // Opposing flow directions
+        const nx = this.x * NOISE_SCALE;
+        const ny = this.y * NOISE_SCALE;
+        const nt = time * 0.000015;
+        // Layered noise for organic movement
+        const a1 = p.noise(nx + this.noiseOff, ny, nt) * p.TWO_PI * 2;
+        const a2 = p.noise(nx * 2.5 + 300, ny * 2.5, nt * 1.5) * p.TWO_PI;
+        const angle = a1 + a2 * 0.3;
         const dir = this.side === 0 ? 1 : -1;
-        this.vx += Math.cos(angle) * SPEED * dir * 0.6;
-        this.vy += Math.sin(angle) * SPEED;
-        this.vx *= 0.92;
-        this.vy *= 0.92;
+        const speed = BASE_SPEED + p.noise(this.noiseOff, time * 0.00008) * 0.04;
+        this.vx += Math.cos(angle) * speed * dir * 0.5;
+        this.vy += Math.sin(angle) * speed * 0.8;
+        // Mouse attraction
+        if (mActive) {
+          const dx = mx - this.x, dy = my - this.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < 250 && d > 1) {
+            const f = 0.25 * (1 - d / 250);
+            this.vx += (dx / d) * f;
+            this.vy += (dy / d) * f;
+          }
+        }
+        this.vx *= 0.995;
+        this.vy *= 0.995;
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > TRAIL_LEN) this.trail.shift();
         this.x += this.vx;
         this.y += this.vy;
         this.age++;
-        if (this.age > this.maxAge || this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) {
-          this.reset();
+        if (this.age > this.maxAge || this.x < -60 || this.x > w + 60 || this.y < -60 || this.y > h + 60) {
+          this.reset(false);
         }
       }
       draw() {
-        const lifeRatio = this.age / this.maxAge;
-        const fadeIn = Math.min(lifeRatio * 5, 1);
-        const fadeOut = Math.min((1 - lifeRatio) * 3, 1);
-        const alpha = fadeIn * fadeOut * 0.35;
-        if (this.side === 0) {
-          p.stroke(59, 130, 246, alpha * 255); // blue
-        } else {
-          p.stroke(239, 68, 68, alpha * 255); // red
+        const life = this.age / this.maxAge;
+        const fade = Math.min(life * 6, 1) * Math.min((1 - life) * 4, 1);
+        if (this.trail.length < 2) return;
+        p.noFill();
+        for (let i = 1; i < this.trail.length; i++) {
+          const t = i / this.trail.length;
+          const alpha = t * fade * 0.45;
+          p.stroke(this.col[0], this.col[1], this.col[2], alpha * 255);
+          p.strokeWeight(this.thickness * t);
+          p.line(this.trail[i - 1].x, this.trail[i - 1].y, this.trail[i].x, this.trail[i].y);
         }
-        p.strokeWeight(TRAIL_WEIGHT + Math.sin(lifeRatio * p.PI) * 0.5);
+        // Bright head
+        const ha = fade * 0.7;
+        p.stroke(this.col[0], this.col[1], this.col[2], ha * 255);
+        p.strokeWeight(this.thickness * 1.5);
         p.point(this.x, this.y);
       }
     }
 
+    /* ── Nebula class ────────────────────────── */
+    class Nebula {
+      constructor() {
+        this.x = p.random(w);
+        this.y = p.random(h);
+        this.r = p.random(150, 350);
+        this.seed = p.random(10000);
+        this.isClash = Math.random() < 0.3;
+        this.col = this.isClash ? CLASH_COL : (Math.random() < 0.5 ? GOV_COLS[0] : OPP_COLS[0]);
+      }
+      draw() {
+        const drift = 40;
+        const dx = p.noise(this.seed, time * 0.00006) * drift - drift / 2;
+        const dy = p.noise(this.seed + 500, time * 0.00006) * drift - drift / 2;
+        const pulse = 0.8 + p.noise(this.seed + 1000, time * 0.00012) * 0.4;
+        const cx = this.x + dx;
+        const cy = this.y + dy;
+        const r = this.r * pulse;
+        p.noStroke();
+        // Outer halo
+        p.fill(this.col[0], this.col[1], this.col[2], 2);
+        p.ellipse(cx, cy, r * 2, r * 2);
+        // Inner glow
+        p.fill(this.col[0], this.col[1], this.col[2], 4);
+        p.ellipse(cx, cy, r, r);
+        // Core
+        p.fill(this.col[0], this.col[1], this.col[2], 7);
+        p.ellipse(cx, cy, r * 0.3, r * 0.3);
+      }
+    }
+
+    /* ── Setup ───────────────────────────────── */
     p.setup = function() {
       w = window.innerWidth;
       h = window.innerHeight;
       const canvas = p.createCanvas(w, h);
       canvas.parent(container);
       p.pixelDensity(1);
-      p.background(10, 14, 24);
+      p.background(BG[0], BG[1], BG[2]);
       p.noiseSeed(42);
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new FlowParticle(i < PARTICLE_COUNT / 2 ? 0 : 1));
+      for (let i = 0; i < COUNT; i++) {
+        particles.push(new Particle(i < COUNT / 2 ? 0 : 1));
+      }
+      for (let i = 0; i < NEBULA_COUNT; i++) {
+        nebulae.push(new Nebula());
       }
     };
 
+    /* ── Draw loop ───────────────────────────── */
     p.draw = function() {
-      // Slow fade to create trails
+      // Fade
       p.noStroke();
-      p.fill(10, 14, 24, FADE_ALPHA);
+      p.fill(BG[0], BG[1], BG[2], FADE);
       p.rect(0, 0, w, h);
-
       time++;
 
-      // Draw particles
+      // Nebulae (behind particles)
+      for (let n = 0; n < nebulae.length; n++) {
+        nebulae[n].draw();
+      }
+
+      // Update and draw particles
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
       }
 
-      // Subtle clash glow at center region
-      if (p.frameCount % 3 === 0) {
-        const cx = w * 0.5 + p.noise(time * 0.001) * w * 0.1 - w * 0.05;
-        const cy = h * 0.5 + p.noise(time * 0.001 + 500) * h * 0.1 - h * 0.05;
-        const glowSize = 2 + p.noise(time * 0.002 + 200) * 3;
-        p.noStroke();
-        p.fill(251, 191, 36, 6);
-        p.ellipse(cx, cy, glowSize * 20, glowSize * 20);
-        p.fill(251, 191, 36, 12);
-        p.ellipse(cx, cy, glowSize * 4, glowSize * 4);
+      // Connection lines between close particles (every other frame for perf)
+      if (p.frameCount % 2 === 0) {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            if (particles[i].side === particles[j].side) continue; // only cross-side connections
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const d = dx * dx + dy * dy;
+            if (d < CONNECTION_DIST * CONNECTION_DIST) {
+              const dist = Math.sqrt(d);
+              const alpha = (1 - dist / CONNECTION_DIST) * 0.08;
+              p.stroke(CLASH_COL[0], CLASH_COL[1], CLASH_COL[2], alpha * 255);
+              p.strokeWeight(0.5);
+              p.line(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+            }
+          }
+        }
       }
 
-      // Ambient noise texture - very faint sparkles
-      if (p.frameCount % 8 === 0) {
-        for (let s = 0; s < 3; s++) {
-          const sx = p.random(w);
-          const sy = p.random(h);
-          p.stroke(255, 255, 255, p.random(3, 10));
-          p.strokeWeight(p.random(0.5, 1));
-          p.point(sx, sy);
+      // Ambient star field
+      if (p.frameCount % 5 === 0) {
+        for (let s = 0; s < 2; s++) {
+          p.stroke(255, 255, 255, p.random(4, 14));
+          p.strokeWeight(p.random(0.3, 1.0));
+          p.point(p.random(w), p.random(h));
         }
       }
     };
 
-    // Mouse interaction: particles gently curve toward cursor
-    let mouseInfluence = { x: -1000, y: -1000, active: false };
+    /* ── Mouse tracking ──────────────────────── */
     document.addEventListener('mousemove', function(e) {
-      mouseInfluence.x = e.clientX;
-      mouseInfluence.y = e.clientY;
-      mouseInfluence.active = true;
+      mx = e.clientX; my = e.clientY; mActive = true;
     });
-    document.addEventListener('mouseleave', function() {
-      mouseInfluence.active = false;
-    });
+    document.addEventListener('mouseleave', function() { mActive = false; });
 
-    // Expose mouse influence to particles (read in update)
-    FlowParticle.prototype._mouseInfluence = mouseInfluence;
-
-    // Patch update to include mouse gravity
-    const origUpdate = FlowParticle.prototype.update;
-    FlowParticle.prototype.update = function() {
-      origUpdate.call(this);
-      if (mouseInfluence.active) {
-        const dx = mouseInfluence.x - this.x;
-        const dy = mouseInfluence.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 200 && dist > 1) {
-          const force = 0.15 * (1 - dist / 200);
-          this.vx += (dx / dist) * force;
-          this.vy += (dy / dist) * force;
-        }
-      }
-    };
-
+    /* ── Resize ──────────────────────────────── */
     p.windowResized = function() {
       w = window.innerWidth;
       h = window.innerHeight;
       p.resizeCanvas(w, h);
-      p.background(10, 14, 24);
+      p.background(BG[0], BG[1], BG[2]);
     };
   });
 }
