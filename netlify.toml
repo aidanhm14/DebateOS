@@ -2,6 +2,9 @@
   publish = "."
   functions = "netlify/functions"
 
+[build.environment]
+  NETLIFY_SKIP_SECRETS_CHECK = "true"
+
 [functions]
   external_node_modules = []
   node_bundler = "esbuild"

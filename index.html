@@ -1102,7 +1102,9 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
           if (parsed.type === 'content_block_delta') {
             if (parsed.delta?.type === 'text_delta' && parsed.delta?.text) {
               fullText += parsed.delta.text;
-              onChunk(fullText);
+              // Strip markdown bold/italic/headers in real-time
+              const cleanText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
+              onChunk(cleanText);
               if (onProgress) {
                 const wordCount = fullText.split(/\s+/).length;
                 const writePct = Math.min(70, (wordCount / expectedWords) * 70);
@@ -1115,7 +1117,32 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
     }
   }
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
+  // Strip any markdown bold/italic that slipped through despite prompt instructions
+  fullText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
   return fullText;
+}
+
+/* ═══════════════════════════════════════════════════
+   FEEDBACK LOOP — Log user revisions to improve algorithm
+   ═══════════════════════════════════════════════════ */
+
+function logFeedback(type, data) {
+  // Log revision patterns and quality signals to Firestore for algorithm improvement
+  try {
+    if (!firebaseDb) return;
+    const collection = firebaseDb.collection('feedback');
+    collection.add({
+      type: type, // 'revision', 'thumbs_up', 'thumbs_down', 'export'
+      data: {
+        motion: data.motion || '',
+        depth: data.depth || '',
+        feedbackText: data.feedbackText || '',
+        section: data.section || '',
+        timestamp: new Date().toISOString(),
+        caseLength: data.caseLength || 0,
+      }
+    }).catch(() => {}); // Silent fail — feedback logging should never break the app
+  } catch(e) {}
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1286,7 +1313,16 @@ ADVANCED STRATEGIC PRINCIPLES (from coaching annotations on real competitive cas
 
 17. CREATIVE FRAMING: The best cases use pop culture, film, literature, sports, and real-world scenarios to make abstract arguments tangible. A case about leaving a band for a solo career (framed as One Direction) is more engaging than an abstract case about individual ambition vs. collective loyalty.
 
-FORMATTING: Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Use plain text only. Title sections as "Argument 1", "Argument 2", etc. Use letters (a, b, c) and roman numerals (i, ii, iii) for sub-points. Write in clean debate outline style.
+COMMON KNOWLEDGE RULE (ANTI-SPEC): In APDA parliamentary debate, all knowledge brought into the round must be common knowledge that any educated college student could reasonably know. Anything too specific or obscure is considered "spec" (specific knowledge), which is unfair because the opposing team cannot engage with facts they couldn't possibly know. This means:
+- DO NOT cite hyper-specific statistics that no one would memorize (e.g., "the GDP of Moldova in Q3 2019 was exactly $3.2 billion"). Instead use directional claims: "Moldova is one of Europe's poorest countries."
+- DO NOT reference obscure court cases, academic papers, or niche policy details that only a specialist would know. Reference well-known examples: Brown v. Board, the 2008 financial crisis, the EU refugee crisis.
+- DO use general knowledge that a well-read college student picks up from classes, news, and conversation: major historical events, basic economic principles, well-known philosophical frameworks, famous psychological studies, widely reported current events.
+- The test: if your opponent heard this fact for the first time in your speech and couldn't respond because they'd never encountered it, that's spec. If they'd say "yeah, I know about that," it's fair game.
+- When in doubt, frame knowledge as reasoning rather than citation: "Think about how monopolies work..." rather than "According to Herfindahl-Hirschman Index calculations..."
+
+FORMATTING: Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics, no * for bullet points. Use plain text only. Title sections as "Argument 1", "Argument 2", etc. Use letters (a, b, c) and roman numerals (i, ii, iii) for sub-points. Write in clean debate outline style. This rule is ABSOLUTE. If you catch yourself writing ** anywhere in the output, stop and remove it immediately.
+
+COMPLETION RULE: You MUST complete the ENTIRE case structure. Do not stop mid-speech. Do not truncate. Every required section must be fully written out. If the case requires a Background, Framework, 3 Arguments, A2 blocks, MG Overview, and PMR architecture, you must write ALL of them. An incomplete case is useless. Finish the entire document no matter what.
 
 STRATEGIC ROUND ARCHITECTURE — This is what separates good cases from winning cases:
 
@@ -1654,8 +1690,8 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     const expectedWords = depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600;
 
     try {
-      const depthMaxTokens = depth === 'competition' ? 16000 : depth === 'standard' ? 10000 : 6000;
-      const depthThinkBudget = depth === 'competition' ? 5000 : depth === 'standard' ? 3000 : 2000;
+      const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
+      const depthThinkBudget = depth === 'competition' ? 8000 : depth === 'standard' ? 4000 : 2000;
       await callClaude(sysPrompt, userPrompt, (text) => {
         setOutput(text);
         if (outputRef.current) {
@@ -1877,23 +1913,71 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
       }, '\uD83D\uDCCB Copy Text'),
       React.createElement('button',{
         className:'btn btn-secondary',
-        onClick:() => {
+        onClick:async () => {
           if (!output) return;
-          // Copy to clipboard first, then open new Google Doc
-          if (navigator.clipboard) navigator.clipboard.writeText(output);
-          // Create a downloadable .txt file the user can upload, or open blank doc
-          const blob = new Blob([output], {type: 'text/plain'});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = (motion ? motion.substring(0, 50).replace(/[^a-zA-Z0-9 ]/g, '') : 'DebateOS Case') + '.txt';
-          a.click();
-          URL.revokeObjectURL(url);
-          // Also open Google Docs so they can paste
+          // Build a rich HTML document so Google Docs preserves formatting
+          const title = motion ? motion.substring(0, 80) : 'DebateOS Case';
+          const lines = output.split('\n');
+          let html = '<html><head><meta charset="utf-8"><title>' + title + '</title></head><body style="font-family:Georgia,serif;font-size:12pt;line-height:1.6">';
+          lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) { html += '<br>'; return; }
+            // Detect section headers (all caps or starts with "Argument", "Framework", "Background", "A2:", "MG")
+            if (/^(BACKGROUND|FRAMEWORK|ARGUMENT \d|A2:|MG OVERVIEW|PMR|FRAMING|OPP ARGUMENTS|CASE STATEMENT|WEIGHING|STRATEGIC|COLLAPSE)/i.test(trimmed) || (trimmed === trimmed.toUpperCase() && trimmed.length > 3 && trimmed.length < 80)) {
+              html += '<h3 style="margin:18px 0 6px;font-size:14pt">' + trimmed + '</h3>';
+            } else {
+              html += '<p style="margin:4px 0">' + trimmed + '</p>';
+            }
+          });
+          html += '</body></html>';
+          // Copy the rich HTML to clipboard so Google Docs picks up formatting
+          try {
+            const blob = new Blob([html], {type: 'text/html'});
+            const plainBlob = new Blob([output], {type: 'text/plain'});
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'text/html': blob,
+                'text/plain': plainBlob
+              })
+            ]);
+          } catch(e) {
+            // Fallback: just copy plain text
+            await navigator.clipboard.writeText(output);
+          }
+          // Open a new Google Doc
           window.open('https://docs.google.com/document/create', '_blank');
+          // Show a toast notification
+          const toast = document.createElement('div');
+          toast.textContent = 'Case copied! Paste into your new doc (Ctrl+V / Cmd+V)';
+          toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:fadeIn .3s ease';
+          document.body.appendChild(toast);
+          setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .5s'; setTimeout(() => toast.remove(), 500); }, 4000);
         },
         style:{ minWidth: 160 },
       }, 'Export to Google Docs'),
+      // Thumbs up/down for feedback loop
+      React.createElement('div',{style:{display:'flex',gap:6,marginLeft:8}},
+        React.createElement('button',{
+          className:'btn btn-secondary',
+          onClick:() => {
+            logFeedback('thumbs_up', { motion, depth, caseLength: output ? output.length : 0 });
+            const el = event.target; el.textContent = '\uD83D\uDC4D Done!'; el.disabled = true;
+            setTimeout(() => { el.textContent = '\uD83D\uDC4D'; el.disabled = false; }, 2000);
+          },
+          style:{minWidth:44,padding:'8px 10px',fontSize:18},
+          title:'This case was good',
+        },'\uD83D\uDC4D'),
+        React.createElement('button',{
+          className:'btn btn-secondary',
+          onClick:() => {
+            logFeedback('thumbs_down', { motion, depth, caseLength: output ? output.length : 0 });
+            const el = event.target; el.textContent = '\uD83D\uDC4E Noted'; el.disabled = true;
+            setTimeout(() => { el.textContent = '\uD83D\uDC4E'; el.disabled = false; }, 2000);
+          },
+          style:{minWidth:44,padding:'8px 10px',fontSize:18},
+          title:'This case needs work',
+        },'\uD83D\uDC4E'),
+      ),
     )
   );
 }
@@ -2010,6 +2094,15 @@ function HighlightableOutput({output, outputRef, streaming, onRevise, motion, de
     };
     setComments(prev => [...prev, entry]);
     setRevising(true);
+
+    // Log this revision to improve the algorithm over time
+    logFeedback('revision', {
+      motion: motion || '',
+      depth: depth || '',
+      feedbackText: userComment,
+      section: highlight ? highlight.substring(0, 200) : 'full_case',
+      caseLength: output ? output.length : 0,
+    });
 
     try {
       if (highlight) {
