@@ -1598,7 +1598,7 @@ COMMON KNOWLEDGE RULE (ANTI-SPEC): In APDA parliamentary debate, all knowledge b
 - The test: if your opponent heard this fact for the first time in your speech and couldn't respond because they'd never encountered it, that's spec. If they'd say "yeah, I know about that," it's fair game.
 - When in doubt, frame knowledge as reasoning rather than citation: "Think about how monopolies work..." rather than "According to Herfindahl-Hirschman Index calculations..."
 
-FORMATTING: Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics, no * for bullet points. Use plain text only. Title sections as "Argument 1", "Argument 2", etc. Use letters (a, b, c) and roman numerals (i, ii, iii) for sub-points. Write in clean debate outline style. This rule is ABSOLUTE. If you catch yourself writing ** anywhere in the output, stop and remove it immediately.
+FORMATTING: Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Title sections as "## Argument 1", "## Argument 2", etc. Use letters (a, b, c) and roman numerals (i, ii, iii) for sub-points. Write in clean debate outline style.
 
 COMPLETION RULE: You MUST complete the ENTIRE case structure. Do not stop mid-speech. Do not truncate. Every required section must be fully written out. If the case requires a Background, Framework, 3 Arguments, A2 blocks, MG Overview, and PMR architecture, you must write ALL of them. An incomplete case is useless. Finish the entire document no matter what.
 
@@ -2038,7 +2038,7 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
 2. Set the scene with cinematic specificity: time period, location, key context, stakes.
 3. Define the actor's constraints, incentives, and psychology if applicable.
 4. Keep it 60-120 words. Be concrete, not generic.
-5. Do NOT use markdown formatting. No **, no #, no *.
+5. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.
 6. Do NOT use em dashes or en dashes.
 
 Write ONLY the background text. No labels, no "Background:" header.`;
@@ -2519,7 +2519,7 @@ function HighlightableOutput({output, outputRef, streaming, onRevise, motion, de
 4. Do NOT include any meta-commentary like "Here's the revised section" — just output the replacement text directly
 5. The replacement should flow naturally with the text before and after it
 
-Return ONLY the replacement text. Nothing else. Do not use markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators.`;
+Return ONLY the replacement text. Nothing else. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
 
         const userPrompt = `Full case for context:\n\n${output}\n\n---\n\nHighlighted section to revise:\n"${highlight}"\n\nUser's instruction: ${userComment}\n\nWrite the replacement text:`;
 
@@ -2551,7 +2551,7 @@ Return ONLY the replacement text. Nothing else. Do not use markdown formatting (
 
       } else {
         // GENERAL REVISION: Rewrite the full case with the instruction
-        const sysPrompt = `You are a debate case editor. The user wants a general revision applied to their entire debate case. Apply their feedback while maintaining the APDA case format structure (numbered arguments, lettered sub-points, roman numeral warrants). Return ONLY the revised full case text, no meta-commentary. Do not use markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators.`;
+        const sysPrompt = `You are a debate case editor. The user wants a general revision applied to their entire debate case. Apply their feedback while maintaining the APDA case format structure (numbered arguments, lettered sub-points, roman numeral warrants). Return ONLY the revised full case text, no meta-commentary. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
         const userPrompt = `Here is the current case:\n\n${output}\n\nUser's revision request: ${userComment}\n\nApply this revision and return the complete updated case.`;
 
         let revisedFull = '';
@@ -2755,7 +2755,7 @@ FAIRNESS CHECK: (1 sentence) Why this dilemma is genuinely hard.
 
 DIFFICULTY: Novice / Intermediate / Advanced
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
 
       userPrompt = `Generate 1 original APDA agent case (character-based motion with detailed background).${picked ? ' Topic area: ' + picked + '.' : ' Pick any topic area.'}\n\nCATEGORY GUIDANCE: ${guide}\n\nMake the character feel like a real person with a real life. The dilemma should be genuinely hard — the kind where you change your mind about which side you'd rather be on while prepping.`;
     } else {
@@ -2789,7 +2789,7 @@ FAIRNESS CHECK: (1 sentence) Why this motion is genuinely balanced.
 
 DIFFICULTY: Novice / Intermediate / Advanced
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
 
       userPrompt = `Generate 1 original APDA debate motion.${picked ? ' Topic area: ' + picked + '.' : ' Pick any topic area.'}\n\nCATEGORY GUIDANCE: ${guide}\n\nBe creative and unexpected. Avoid the most obvious take. The motion should reward depth of thinking.`;
     }
@@ -2816,7 +2816,7 @@ Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for i
 3. Identify the key stakeholders and their interests (1-2 sentences)
 4. Note any important caveats or scope limitations a government team should consider (1-2 sentences)
 
-Keep it to 80-150 words. Be specific, use real facts, policies, and statistics where relevant. Write in the style of a competitive APDA case background section. Do NOT use any markdown formatting. Do not use em dashes, en dashes, or hyphens as separators.`;
+Keep it to 80-150 words. Be specific, use real facts, policies, and statistics where relevant. Write in the style of a competitive APDA case background section. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Motion: ${result}\n\nWrite the background section.`;
       await callClaude(sysPrompt, userPrompt, (text) => setBgText(text), { thinkBudget: 6000, maxTokens: 4000 });
     } catch(e) {
@@ -2871,7 +2871,7 @@ FAIRNESS CHECK: (1 sentence) Why this motion is genuinely balanced.
 
 DIFFICULTY: Novice / Intermediate / Advanced
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators. Use plain text with clear section labels.`;
 
       const userPrompt = `Here are current events to draw from:\n\n${newsData.text}\n\n${picked ? 'Focus on ' + picked + ' angles.' : 'Pick the most debatable story.'}\n\nTurn this into one original APDA debate motion. The motion should be genuinely hard — the kind that splits a room.`;
 
@@ -3105,6 +3105,15 @@ function ArgumentMap({ mapData }) {
   }, [mapData]);
 
   if (!mapData) return null;
+  if (mapData.error) {
+    return el('div',{style:{textAlign:'center',padding:40,color:'#f87171',fontSize:'.9rem',
+      background:'linear-gradient(145deg,#1a0505,#0f172a)',borderRadius:16,marginTop:16,border:'1px solid #ef444430',
+      boxShadow:'0 4px 20px rgba(0,0,0,.3)'}},
+      el('div',{style:{fontSize:'1.1rem',fontWeight:700,marginBottom:12}},'Argument Map Error'),
+      el('div',{style:{color:'#fca5a5',marginBottom:8}},mapData.error),
+      el('div',{style:{color:'#555',fontSize:'.8rem'}},'Try clicking Analyze again. The AI occasionally returns text instead of JSON.')
+    );
+  }
   const gov = mapData.gov || [];
   const opp = mapData.opp || [];
   const clashes = mapData.clashes || [];
@@ -3303,7 +3312,7 @@ Also flag potential traps the other side might set. "If they frame it as a right
 7. THE WINNING NARRATIVE
 In one paragraph, what is the story that wins this round? "At the end of the round, the judge should believe: ___." Give the team a clear, simple narrative they can build toward across all their speeches.
 
-Write in a direct, confident, opinionated voice. You are the coach. You've seen this before. Tell them what to do. Do NOT use any markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators. Use plain text with numbered sections and lettered sub-points.`;
+Write in a direct, confident, opinionated voice. You are the coach. You've seen this before. Tell them what to do. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Motion: ${motion}\nMy side: ${side}\n\nGive me the full round vision.`;
       await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 10000, maxTokens: 8000 });
     } catch(e) {
@@ -3316,7 +3325,7 @@ Write in a direct, confident, opinionated voice. You are the coach. You've seen 
       try {
         const mapSys = `You are a debate round architect. Given a motion and side, generate a structured argument map as valid JSON. The map shows Government arguments, Opposition arguments, and the Clash Points where they interact.
 
-Return ONLY valid JSON with no other text, no markdown, no code fences. The exact schema:
+Return ONLY valid JSON. Do not include any text before or after the JSON object. Do not wrap in code fences. Do not add explanations. Your entire response must be a single valid JSON object with this exact schema:
 
 {"gov":[{"name":"Argument name","desc":"1-2 sentence description","weight":8}],"opp":[{"name":"Argument name","desc":"1-2 sentence description","weight":7}],"clashes":[{"name":"Clash name","desc":"Why this is contested","govLinks":[0,1],"oppLinks":[0],"winner":"Lean Gov"}]}
 
@@ -3338,8 +3347,8 @@ Rules:
         const parsed = JSON.parse(cleaned);
         setMapData(parsed);
       } catch(e) {
-        console.log('Map parse error:', e.message);
-        // silently fail on map - text analysis still shows
+        console.log('Map parse error:', e.message, mapText ? mapText.substring(0,200) : 'no response');
+        setMapData({error: 'Map generation failed: ' + e.message, raw: (mapText || '').substring(0, 100)});
       }
       setMapLoading(false);
   };
@@ -3602,7 +3611,7 @@ For each philosopher, provide a comprehensive treatment:
 
 Write with genuine intellectual depth. You're talking to smart people who want to actually understand the philosophy, not just parrot it. Use concrete examples, real-world applications, and debate-specific context throughout. Be conversational but rigorous.
 
-Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for italics. Use plain text with numbered sections and lettered sub-points. Write in flowing prose with clear section breaks.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Write in flowing prose with clear section breaks.`;
           userPrompt = `Philosopher/School: ${philosopher}${concept ? `\nSpecific focus: ${concept}` : ''}\n\nGive me the full deep dive. I want to actually understand this thinker, not just know their name.`;
 
         } else if (exploreMode === 'apply-motion') {
@@ -3622,7 +3631,7 @@ For the given philosopher and motion, provide:
 4. WEIGHING UNDER THIS FRAMEWORK
    How does this framework tell the judge to compare impacts? What matters more: scope, probability, reversibility, or something else? Give specific weighing language.
 
-Do NOT use markdown formatting. Plain text with numbered sections.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.`;
           userPrompt = `Philosopher: ${philosopher}\nMotion: ${concept || 'THBT the benefits of AI outweigh the risks'}\n\nShow me exactly how to run ${philosopher} on this motion, with actual speech language I can use.`;
 
         } else if (exploreMode === 'head-to-head') {
@@ -3635,7 +3644,7 @@ Provide:
 4. WHO WINS THE FRAMEWORK DEBATE? — If Gov runs one and Opp runs the other, how does the judge decide between frameworks? What are the meta-level arguments for each?
 5. THE SYNTHESIS — Can you combine insights from both? When is hybridization possible vs. when must you commit?
 
-Do NOT use markdown formatting. Plain text with numbered sections.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.`;
           const parts = concept ? concept.split(/\s+vs\.?\s+|\s+and\s+|\s+versus\s+/i) : [];
           const second = parts.length > 1 ? parts[1].trim() : 'Mill';
           userPrompt = `Philosopher 1: ${philosopher}\nPhilosopher 2: ${second}\n${concept ? `Context: ${concept}` : ''}\n\nCompare these two head-to-head. Show me the real philosophical clash, not a surface-level comparison.`;
@@ -3663,7 +3672,7 @@ Generate:
 
 Write everything as actual speech language, not meta-commentary about speech language. The debater should be able to copy this and practice reading it.
 
-Do NOT use markdown formatting. Plain text only.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.`;
           userPrompt = `Philosopher: ${philosopher}${concept ? `\nApplied to: ${concept}` : ''}\n\nBuild me a complete, ready-to-use framework I can deploy in a PM speech.`;
         }
 
@@ -3861,7 +3870,7 @@ Rules:
 - At least one comment MUST evaluate the framework's ability to actually resolve the round
 - At least one comment should be genuinely positive about something that's actually strong
 - Order by position in the case (first excerpt appears earliest)
-- Do not use markdown formatting in feedback`;
+- Use markdown formatting for readability: **bold** for key terms, ## for section headers`;
 
     try {
       let result = '';
@@ -3933,7 +3942,7 @@ Rules:
     ));
 
     try {
-      const sysPrompt = `You are an expert APDA debate case editor. The user has a specific section of their debate case that received feedback. They are now replying with instructions for how to improve it. Rewrite ONLY the highlighted section based on their instruction. Maintain the same style, tone, and format as the surrounding case. Return ONLY the rewritten text, nothing else. Do not use markdown formatting. Do not use em dashes, en dashes, or hyphens as separators.`;
+      const sysPrompt = `You are an expert APDA debate case editor. The user has a specific section of their debate case that received feedback. They are now replying with instructions for how to improve it. Rewrite ONLY the highlighted section based on their instruction. Maintain the same style, tone, and format as the surrounding case. Return ONLY the rewritten text, nothing else. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Full case for context:\n\n${caseText}\n\n---\nSection to revise:\n"${comment.excerpt}"\n\nOriginal feedback: ${comment.feedback}\n\nUser's instruction: ${userReply}\n\nRewrite this section:`;
 
       let revised = '';
@@ -4168,7 +4177,7 @@ function Judge() {
     if (!note.trim()) return;
     setLoadingFeedback(prev => ({...prev, [code]:true}));
     try {
-      const sysPrompt = `You are an experienced APDA judge providing deeply considered feedback on a debate speech. Think through the strategic implications of what the debater did and did not do. Analyze the speech's structure, warranting quality, strategic positioning, and how it interacts with likely opposition arguments. Be specific, reference debate theory (impact calculus, link chains, framework interaction, burden fulfillment, crystallization), and give actionable advice that would genuinely improve the debater's next round. Do not use markdown formatting — no **, no #, no *.`;
+      const sysPrompt = `You are an experienced APDA judge providing deeply considered feedback on a debate speech. Think through the strategic implications of what the debater did and did not do. Analyze the speech's structure, warranting quality, strategic positioning, and how it interacts with likely opposition arguments. Be specific, reference debate theory (impact calculus, link chains, framework interaction, burden fulfillment, crystallization), and give actionable advice that would genuinely improve the debater's next round. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.`;
       const tagStr = speechTags.length > 0 ? `\nTagged moments: ${speechTags.join(', ')}` : '';
       const userPrompt = `Speech: ${speech.title} (${speech.code}, ${speech.time})\nFormat: ${format}${tagStr}\n\nMy flow notes:\n${note}\n\nGive me specific, strategic feedback on this speech.`;
       await callClaude(sysPrompt, userPrompt, (text) => {
@@ -4296,7 +4305,7 @@ YOUR REVIEW:
 
 6. ONE DRILL: If they had 30 minutes before their next round, what specific thing should they practice? Not generic advice like "work on warrants." Something concrete: "Practice explaining your causal chains out loud to someone who doesn't debate. If you can't make the link from A to B to C conversational, your warrant isn't ready."
 
-Write like a coach who genuinely wants this debater to get better. Be tough but constructive. Do not use em dashes, en dashes, or hyphens as separators. Do not use markdown formatting. Use plain conversational prose.`;
+Write like a coach who genuinely wants this debater to get better. Be tough but constructive. Do not use em dashes, en dashes, or hyphens as separators. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.`;
 
     const userPrompt = `Motion: ${motion || '(no motion provided)'}\nSpeech type: ${selectedSpeech.code} (${selectedSpeech.title})\n\nHere is the speech:\n\n${userSpeech}`;
 
@@ -5064,7 +5073,7 @@ End with a brief section on the round as a whole:
 2. Was the round tight or lopsided? If lopsided, what caused it?
 3. What is the single most important skill this debater should drill before their next tournament?
 
-Do NOT use markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators. Write in natural prose with numbered sections and lettered sub-points where needed.`;
+Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
 
     const userPrompt = `MOTION: ${motion}\nPLAYER SIDE: ${side === 'gov' ? 'Government' : 'Opposition'}\n\n` +
       allSpeeches.map((s, i) => `--- ${ROUND_SPEECHES[i].code} (${isPlayerSpeech(i) ? 'PLAYER' : 'AI OPPONENT'}) ---\n${s || '(no speech given)'}`).join('\n\n') +
