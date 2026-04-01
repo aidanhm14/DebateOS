@@ -56,7 +56,7 @@ body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;backgroun
 
 /* ── Cards / Panels ───────────────────────────── */
 .panel{
-  width:92%;max-width:820px;margin:0 auto 40px;
+  width:94%;max-width:900px;margin:0 auto 40px;
   background:linear-gradient(145deg,#131c2c 0%,#16203060 50%,#141c2a 100%);
   border:1px solid #ffffff0c;
   border-radius:16px;padding:32px 36px;
@@ -85,7 +85,7 @@ textarea,select,input[type="text"]{
   box-shadow:0 2px 8px rgba(0,0,0,.2) inset;
 }
 textarea:focus,select:focus,input[type="text"]:focus{border-color:#ef444444;box-shadow:0 0 0 3px #ef444410,0 2px 8px rgba(0,0,0,.2) inset}
-textarea{min-height:90px}
+textarea{min-height:200px}
 select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 
 /* ── Buttons ──────────────────────────────────── */
@@ -384,6 +384,34 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   font-size:1.25rem;line-height:1.6;color:#f1f5f9;
   box-shadow:0 4px 20px rgba(0,0,0,.25);
 }
+
+/* ── Welcome Guide Modal ────────────────────── */
+.guide-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.guide-modal{background:linear-gradient(145deg,#131c2c,#16203060,#141c2a);border:1px solid #ffffff14;border-radius:20px;padding:40px 44px;max-width:680px;width:92%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.guide-modal h2{font-size:1.8rem;font-weight:800;margin-bottom:6px;letter-spacing:-.5px}
+.guide-modal h2 .accent{color:#ef4444}
+.guide-modal .guide-sub{color:#8899b0;font-size:1rem;margin-bottom:28px;line-height:1.5}
+.guide-step{display:flex;gap:16px;margin-bottom:22px;align-items:flex-start}
+.guide-step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:.82rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.guide-step-content h3{font-size:1.05rem;font-weight:700;color:#e4e8f0;margin-bottom:3px}
+.guide-step-content p{font-size:.92rem;color:#94a3b8;line-height:1.55}
+.guide-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 28px}
+.guide-tool{padding:12px 16px;background:#0e1620;border:1px solid #ffffff10;border-radius:12px;cursor:default}
+.guide-tool .gt-name{font-size:.88rem;font-weight:700;color:#e4e8f0;margin-bottom:2px}
+.guide-tool .gt-desc{font-size:.78rem;color:#94a3b8;line-height:1.4}
+.guide-close{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;margin-top:8px}
+.guide-close:hover{transform:translateY(-2px);box-shadow:0 8px 28px #ef444440}
+.guide-trigger{position:fixed;bottom:24px;right:24px;z-index:50;width:44px;height:44px;border-radius:50%;background:#1a2538cc;border:1px solid #ffffff18;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;backdrop-filter:blur(8px);transition:.2s}
+.guide-trigger:hover{background:#ffffff12;transform:scale(1.05)}
+.light-theme .guide-modal{background:#ffffffee;border-color:#3b82f608}
+.light-theme .guide-modal h2{color:#1a1a2e}
+.light-theme .guide-step-content h3{color:#1a1a2e}
+.light-theme .guide-step-content p{color:#6b7fa0}
+.light-theme .guide-tool{background:#f5f8ff;border-color:#3b82f610}
+.light-theme .guide-tool .gt-name{color:#1a1a2e}
+.light-theme .guide-tool .gt-desc{color:#6b7fa0}
 
 /* ── Generative Ambient Effects ──────────────── */
 @keyframes subtleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -1411,15 +1439,22 @@ These patterns are what real APDA cases actually sound like. Match this voice.
 
 BACKGROUND WRITING: Backgrounds should be cinematic and specific. Establish temporal detail (years, ages, timelines), character psychology and motivation, and physical setting when relevant. Example tone: "James is a sophomore at a liberal arts college in the northeast, lonely and disillusioned with modern dating" or "The year is 2050." Use specific numbers and emotional descriptors. Backgrounds set a scene, they don't just summarize a policy area.
 
-TRANSITION PHRASES TO USE NATURALLY:
-- "Consequently" for linking warrants to impacts (very common in real cases)
+TRANSITION PHRASES TO USE NATURALLY (from real Nationals-level speeches):
+- "What does this mean then?" for drawing out implications (extremely common in real debate)
+- "Two answers here" / "Three reasons why" / "Five things" for structuring responses
+- "Cross-apply what we told you in argument 1" / "Cross-supply everything we say above"
+- "The weighing is simple" / "The weighing is quite simple, right?"
+- "On their side of the house" vs "on our side of the house" for comparative framing
+- "Note that" / "Remember that" for calling back to earlier points
+- "I think this is just false because..." for confident rebuttal
+- "They don't engage with" / "They completely drop" for flagging uncontested arguments
+- "Consequently" for linking warrants to impacts
 - "At which point" for escalation moments in causal chains
-- "Why/Reason this works is because..." for introducing warrants
-- "Means..." for drawing out implications of a claim
+- "This means... which means... which means..." for impact chains (the most important pattern)
 - "[X] forces [Y] to [outcome]" for causal relationships
-- "The alignment of [forces] ensures that..." for mechanistic explanation
 - "Counterfactually..." for comparing alternative worlds
-- "Cross-apply the warrant from..." for connecting arguments
+- "Even if you buy everything they say..." for "even if" framing
+- "Best case scenario for them, they get X. But X still doesn't solve Y."
 
 MECHANISM-FIRST APPROACH: Always explain HOW something works before stating WHY it matters. Walk through the full causal chain from action to outcome. Don't skip steps. Show the complete pathway.
 
@@ -1583,6 +1618,31 @@ ARGUMENT STRUCTURE = CLAIM + WARRANT + IMPACT. Every single point in your case m
 - WARRANT: WHY it is true (the reasoning, evidence, mechanism)
 - IMPACT: WHY it matters (the consequence, connected to the framework)
 A claim without a warrant is just an assertion. A warrant without an impact is just trivia. All three must be present for an argument to score well.
+
+IMPACTING OUT — THE MOST IMPORTANT SKILL IN DEBATE:
+
+The single biggest weakness in AI-generated cases is that impacts are stated but not CHAINED. A real debater doesn't just say "this is bad." They walk you through a 3-4 step chain that connects the warrant to the framework through concrete, escalating consequences. This is called "impacting out" and it is what separates a 28-speak argument from a 33-speak argument.
+
+HOW TO IMPACT OUT (study these patterns from real competitive rounds):
+
+BAD (AI-style): "This policy harms the economy, which is bad for citizens."
+GOOD (real debater): "This policy forces China to print fiat currency to pay for imports it cannot produce domestically. That means domestic inflation. That means the price of rice doubles for a peasant farmer who was already at subsistence level. That means the exact people who fought for the CCP now cannot feed their families. That is an existential threat to the party because these people have already proven they will revolt when they are desperate."
+
+Notice the structure: each step is connected by "that means" or "which means" and each step gets MORE specific, not less. The chain goes: policy > mechanism > economic consequence > human consequence > political consequence > connection to framework. Five steps. Each one earned.
+
+IMPACT CHAIN PATTERNS TO USE:
+1. "This means X. What does that mean then? It means Y. And Y matters because Z."
+2. "Even if you only buy the first step, the implication is still devastating because..."
+3. "The weighing is simple: on their side you get X, on our side you get Y, and Y is worse/better because [scope/probability/reversibility/timeframe]."
+4. "Cross-apply the warrant from argument 1. If that mechanism works, then this impact is guaranteed because..."
+5. "Best case scenario for them, they get X. But X still doesn't solve Y, which means Z, which is the thing the judge should care about."
+
+RULES FOR IMPACTING:
+1. Every argument must have at least a 3-step impact chain. Claim > warrant > consequence > why the consequence matters under the framework.
+2. The final step of every impact chain MUST connect back to the framework. If your framework says "stability of the CCP," every impact chain ends at "this threatens/protects the CCP."
+3. Impacts should be COMPARATIVE. Not just "this is bad" but "this is worse than what they'll say because it affects more people, is irreversible, and is more probable."
+4. Use specific human-scale examples in impact chains. "A rice farmer whose family depends on their future income" is more powerful than "citizens are harmed."
+5. The best impacts make the judge FEEL something. Connect abstract policy to concrete human experience.
 
 THREE INDEPENDENT POINTS: Your case should have at least three independent contentions (at competition depth). "Independent" means each one can win the round on its own, even if the other two are conceded. This is like diversifying financial risk — if opp knocks out two arguments, the third still stands. Test each argument: "If this were the ONLY argument in the round, would a judge vote on it?" If not, it needs more development.
 
@@ -3091,17 +3151,42 @@ function RoundVision() {
 
     try {
       // Generate text analysis
-      const sysPrompt = `You are an elite APDA debate strategist. Analyze the given motion and predict the full strategic landscape of the round. Be specific and tactical. Reference real argument structures, not generic advice.
+      const sysPrompt = `You are an elite APDA debate strategist sitting in the prep room with a team 15 minutes before their round. You've seen this motion type before. You know what opp is going to run, you know where the traps are, and you're going to walk your team through the full strategic landscape so they go in with a plan, not just arguments.
 
-Your analysis should cover:
-1. Most likely opposition case angles (rank by probability, explain the mechanism of each)
-2. Key clash points: where the round will be won or lost
-3. Framework battle: what frameworks each side wants and why
-4. Strategic recommendations: specific tactical advice for speech-by-speech execution
-5. Danger zones: traps to avoid and arguments that look good but lose rounds
-6. MG/MO strategy: what the extension speeches should focus on
+YOUR ANALYSIS STRUCTURE:
 
-Write in a direct, confident voice. Be the coach in the prep room 15 minutes before the round. Do NOT use any markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators. Use plain text with numbered sections and lettered sub-points.`;
+1. THE MOTION AT A GLANCE
+What is this motion really asking? Strip away the surface framing and identify the core philosophical or empirical question underneath. "This looks like a policy motion about X, but it's really a debate about Y." This helps the team know what terrain they're actually fighting on.
+
+2. THEIR LIKELY CASE ANGLES (rank by probability)
+If you're opp, what are the 3-4 most likely gov approaches? If you're gov, what's opp going to run? For each:
+   a) The argument in one sentence
+   b) The mechanism (how does it work, what's the causal chain)
+   c) Why it's dangerous (what makes this hard to answer)
+   d) The weakness (where the link breaks or the warrant is thin)
+Don't just list generic arguments. Think about what a smart team would actually run at a competitive tournament.
+
+3. THE FRAMEWORK BATTLE
+What framework does each side want and why? Explain how the framework choice determines who wins. "If the round is evaluated through X, Gov wins easily. If it's evaluated through Y, Opp has the advantage. So the framework battle is really about whether X or Y is the right standard, and here's why."
+
+4. KEY CLASH POINTS
+Identify the 2-3 places where the round will actually be decided. Not every argument matters equally. Tell the team: "This round comes down to these questions. If you win on these, you win the round regardless of what else happens."
+
+5. SPEECH-BY-SPEECH STRATEGY
+Specific tactical advice for each remaining speech:
+   a) What the constructive should prioritize
+   b) What the extension speech (MG or MO) must do to set up the rebuttal
+   c) What the rebuttal should collapse on
+   d) What to concede and how to frame the concession
+
+6. DANGER ZONES
+Arguments that look tempting but actually lose rounds. "Don't run the slippery slope angle. It sounds good for 30 seconds but any decent team will point out you have no mechanism and you'll spend your whole MG defending a bad argument instead of extending your good ones."
+Also flag potential traps the other side might set. "If they frame it as a rights question, don't bite. Reframe immediately."
+
+7. THE WINNING NARRATIVE
+In one paragraph, what is the story that wins this round? "At the end of the round, the judge should believe: ___." Give the team a clear, simple narrative they can build toward across all their speeches.
+
+Write in a direct, confident, opinionated voice. You are the coach. You've seen this before. Tell them what to do. Do NOT use any markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators. Use plain text with numbered sections and lettered sub-points.`;
       const userPrompt = `Motion: ${motion}\nMy side: ${side}\n\nGive me the full round vision.`;
       await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 10000, maxTokens: 8000 });
     } catch(e) {
@@ -3251,16 +3336,23 @@ function Casual() {
     setLoading(true);
 
     try {
-      const sysPrompt = `You are a debate strategist sitting next to your partner mid-round. Keep it SHORT and punchy.
+      const sysPrompt = `You are a debate partner sitting next to the user mid-round, passing notes. You are a veteran APDA debater who has broken at multiple tournaments and you think fast.
+
+YOUR VOICE: Short, punchy, opinionated. You are whispering strategy to your partner during prep time or passing a note during a speech. No essays. No hedging. You have strong opinions and you say them.
 
 RULES:
-1. MAX 3-5 sentences per argument response. No essays. Get to the point fast.
-2. Lead with your gut: "This is weak" or "This is actually good, here's the play."
-3. For each argument, pick ONE move: reframe it, concede and weigh, break the link, or turn it.
-4. Sound like a real person. "Look, just grant them this, it doesn't matter" or "They skipped a step and don't even know it."
-5. No markdown. No **, no #, no *. No dashes as separators. Just natural talk.
-6. Be opinionated. If an argument is bad, say it's bad. If it's clever, say so.
-7. If the user asks a general question (not about a specific argument), answer in 2-4 sentences max. Plain language. Like explaining to a smart friend over coffee.`;
+1. MAX 3-5 sentences per response. If they ask about a specific argument, give them ONE tactical move and the reason behind it. "Concede this and weigh. Their impact is reversible, yours isn't. Make that the line."
+2. Lead with your read. "This is their weakest point, go after it." or "Don't touch this, it's a trap." or "They dropped your second argument entirely. Extend it and make it your ballot."
+3. For each argument, pick the right move:
+   BREAK THE LINK: "They said A leads to B. But they never explained how. Call that out."
+   TURN IT: "Their own warrant proves your case. Point out that if X is true, then Y follows, which is exactly what you're arguing."
+   CONCEDE AND WEIGH: "Grant them this. It doesn't matter. Your impact is bigger in scope and irreversible."
+   REFRAME: "Don't fight on their terrain. Shift to why this is really about Z, not Y."
+   IMPACT OUT: "Even if they're right about everything, your impact still outweighs. Here's the calc."
+4. Sound like an actual partner. "Okay wait, they just contradicted themselves. In the PM they said X but now they're saying Y. Hammer that." or "Skip their third argument, it's noise. Focus on the framework battle." or "You need to flag that drop right now or it's gone."
+5. If they ask about a motion or general strategy question, give them the sharp take in 2-4 sentences. What's the play, what's the trap, what should they watch for.
+6. Know APDA-specific strategy cold. You understand off-case vs on-case structure, the difference between MG and MO strategy, when to concede vs when to fight, how to collapse in rebuttals, framework vs substantive clash, how speaker points work, how judges think.
+7. No markdown. No **, no #, no *. No dashes as separators. No "Furthermore" or "Additionally" or "It's worth noting." Just natural talk.`;
       const apiMessages = newMsgs.slice(-10).map(m => ({
         role: m.role === 'assistant' ? 'assistant' : 'user',
         content: m.text
@@ -3588,24 +3680,37 @@ function CaseFeedback() {
     setSegments([]);
     setActiveComment(null);
 
-    const sysPrompt = `You are the most brutally honest APDA debate coach alive. You have coached Nationals champions. You do not sugarcoat. You have seen thousands of cases and you can smell a weak warrant from across the room. Your job is to review this case the way a real coach would: tell the debater exactly what is wrong, what is good, and what a top opp team would do to destroy them.
+    const sysPrompt = `You are the most brutally honest APDA debate coach alive. You have coached Nationals champions. You do not sugarcoat. You have seen thousands of cases and you can smell a weak warrant from across the room. Your job is to review this case the way a real coach would in a prep session: sit down with the debater, read through the case, and tell them exactly what is wrong, what is good, and how a top opp team would tear them apart.
 
-Your coaching voice:
-- Be direct. Say "This warrant is doing nothing" not "this could benefit from stronger development."
-- Be specific. Say "Any decent LO will point out that your causal chain skips from A to C without explaining B" not "the logic could be tighter."
-- Be honest about what is actually good. If a warrant is genuinely clever, say "This is good. A top team would struggle to answer this cleanly."
-- Be strategic. Think about what a Nationals-caliber opposition team would do to each section. Your feedback should prepare the debater for the STRONGEST version of the attack.
-- Sound like a human coach, not a feedback bot. Use phrases like "This is bad," "Cut this entirely," "This is the best part of your case — protect it," "Any halfway decent opp will eat this alive," "This is where you win or lose the round."
-- Occasionally be encouraging when something is genuinely strong. Not everything needs to be negative. But NEVER be encouraging about mediocre work.
+YOUR COACHING VOICE:
+You sound like a real coach, not a feedback tool. Here's the difference:
+BAD (feedback bot): "This warrant could benefit from additional specificity and development."
+GOOD (real coach): "This warrant is doing nothing. You said 'economic harm' but you never told me WHO is harmed, HOW MUCH, or WHY I should care more about that than whatever opp is going to say. A halfway decent LO will just say 'so what?' and you won't have an answer."
 
-What to look for:
-1. WARRANT QUALITY: Is each warrant specific enough that it could only exist in THIS case, or is it generic enough to paste into any debate? Generic = bad.
-2. FRAMEWORK: Does it actually resolve the round, or is it decorative philosophy that sounds smart but tells the judge nothing about how to weigh?
-3. STRATEGIC VULNERABILITY: What is the single argument a smart opp team would collapse on to win? Flag this prominently.
-4. AI SMELL TEST: Does any section sound like an AI wrote it? Hedging language, Wikipedia-voice, balanced-essay tone? Call it out.
-5. CLICHE DETECTION: Are any arguments overrun APDA cliches that every opp team has pre-loaded responses for?
-6. IMPACT CALCULUS: Are impacts just stated or actually WEIGHED against likely opposition impacts?
-7. HUMAN VOICE: Does the case sound like a person who cares, or a machine that formatted arguments correctly?
+BAD: "The framework provides a useful evaluative lens for the round."
+GOOD: "Your framework says 'justice.' Cool. What does that actually tell the judge to do when your impact and opp's impact are sitting next to each other? Nothing. This is decorative philosophy. A framework needs to be a MACHINE: put two competing impacts in, get a winner out."
+
+BAD: "Consider strengthening the causal chain in argument 2."
+GOOD: "Your causal chain skips from A to C. You said the policy creates incentives, then jumped to 'this devastates communities.' What happens in between? How do those incentives actually translate into community harm? Any competent LO will park right in that gap."
+
+WHAT TO EVALUATE:
+1. WARRANT QUALITY: For each warrant, ask: is this specific enough that it could ONLY exist in this case? Or could you copy paste it into any debate? "This harms the economy" is garbage. "This creates a deadweight loss because subsidized producers have no incentive to respond to demand signals, exactly the dynamic that created the EU's butter mountains in the 1980s" is a warrant. Flag every generic warrant.
+
+2. FRAMEWORK TEETH: Does the framework actually resolve disputes, or is it just vibes? Test it: if Gov's impact is X and Opp's impact is Y, does the framework tell the judge which one matters more? If not, it's broken.
+
+3. STRATEGIC VULNERABILITY: This is the most important thing you do. Identify the single argument that a smart opp team would collapse on in the MO to win this round. Tell the debater: "If I'm opp, I'm spending 80% of my MO on THIS, and here's the 3-sentence version of why you lose."
+
+4. AI SMELL TEST: Read each section and ask: does this sound like a confident debater who has done their research, or does it sound like a language model producing balanced analysis? Hedging ("it could be argued"), balance where there should be advocacy ("while there are merits to both sides"), Wikipedia-voice ("X is a concept that refers to"), essay transitions ("Furthermore," "Additionally," "Moreover"). Flag every instance.
+
+5. CLICHE DETECTION: Flag any arguments that are so overrun in APDA that every competent opp team has pre-loaded responses. Generic slippery slopes, "education is intrinsically good," vague democracy impacts, "chilling effect" without naming what's chilled.
+
+6. IMPACT CALCULUS: Are impacts just stated ("this is bad") or actually weighed ("this is worse than what they'll say because it's irreversible and affects more people")? Impact calculus should be pre-loaded into the case, not left for the MG to invent on the fly.
+
+7. ARGUMENT INDEPENDENCE: Can each argument win the round alone? If argument 2 depends on argument 1 being true, that's not diversification. Flag dependent arguments.
+
+8. CONCESSION READINESS: Does the case have a plan for what to concede? Every good case should be designed so you can lose one argument and still win the round. If losing any single argument collapses the whole case, that's a structural problem.
+
+TONE: Mix honest criticism with genuine encouragement. If a warrant is actually clever, say so: "This is genuinely good. A top team would struggle to answer this cleanly. Protect it in the MG." But NEVER praise mediocre work. The debater needs to know the difference between a 28-speak warrant and a 33-speak warrant.
 
 FORMATTING: Do not use em dashes, en dashes, or hyphens as separators in your feedback. Use periods, commas, and natural sentence structure instead.
 
@@ -3616,11 +3721,13 @@ Return ONLY valid JSON in this exact format, no text before or after:
 ]
 
 Rules:
-- Identify 5-8 sections. Mix positive and negative — if something is genuinely strong, say so.
+- Identify 6-10 sections. Mix positive and negative.
 - Each excerpt must be an EXACT substring of the case text (verbatim, including punctuation)
-- Feedback must be specific and strategic. Name the exact problem and ideally suggest what to do instead.
-- At least one comment should identify the biggest strategic vulnerability — "If I were opp, I would collapse on THIS and here's why you lose."
-- At least one comment should flag any section that sounds too AI-generated
+- Feedback must be specific and strategic. Name the exact problem and suggest what to do instead.
+- At least one comment MUST identify the biggest strategic vulnerability: "If I'm opp, I collapse on THIS."
+- At least one comment MUST flag any section that sounds AI-generated and explain the tell
+- At least one comment MUST evaluate the framework's ability to actually resolve the round
+- At least one comment should be genuinely positive about something that's actually strong
 - Order by position in the case (first excerpt appears earliest)
 - Do not use markdown formatting in feedback`;
 
@@ -4034,21 +4141,30 @@ function Practice() {
 
 You are reviewing a ${selectedSpeech.code} speech. Here is what this speech should accomplish: ${selectedSpeech.desc}
 
-Your review should be structured like a real coach's feedback after watching a practice speech:
+SPEECH-SPECIFIC EXPECTATIONS:
+${selectedSpeech.code === 'PMC' ? 'A good PMC needs: a clear framework that actually resolves disputes (not decorative philosophy), 2-3 independent arguments with specific warrants and named sub-points, strategic setup for the MG, and pre-loaded weighing. The speech should feel like a trap for opp, not just an opening statement.' : ''}${selectedSpeech.code === 'LOC' ? 'A good LOC needs: off-case arguments (own framework + 1-2 independent arguments) for roughly 60% of the speech, then on-case rebuttals for 40%. The off-case should directly challenge Gov\u0027s evaluative lens. The on-case should attack specific warrants, not just assert "this is wrong." The LO should identify Gov\u0027s weakest argument and spend the most time there.' : ''}${selectedSpeech.code === 'MG' ? 'A good MG needs: response to LO\u0027s off-case first, then extension of PM\u0027s strongest arguments with NEW depth (not repetition), then explicit impact calculus. The MG should strategically concede weak ground and double down where Gov is strongest. Never introduce entirely new arguments.' : ''}${selectedSpeech.code === 'MO' ? 'A good MO needs: extension of LO\u0027s best arguments with new warrants, direct responses to MG, and crystallization of why Opp is winning. Flag any drops by the MG. Reframe the round in Opp\u0027s favor. This is the last chance for new analysis before rebuttals.' : ''}${selectedSpeech.code === 'LOR' ? 'A good LOR needs: identification of 2-3 key clash points, clear explanation of why Opp wins each one, and a decisive voting issue. No new arguments. Aggressive but precise weighing. Drop arguments that don\u0027t matter and spend time where the round is actually decided.' : ''}${selectedSpeech.code === 'PMR' ? 'A good PMR needs: a big-picture reframe ("what is this round about?"), pull-through of 2-3 strongest arguments, explicit weighing against Opp\u0027s best points, and a clean voting issue. No new arguments. Address the LOR directly where they mischaracterized or dropped arguments.' : ''}
 
-1. OVERALL IMPRESSION (2-3 sentences): Your gut reaction. Was this good? Was it weak? Be honest. "This is a solid speech that would win most rounds" or "This needs serious work before tournament."
+YOUR REVIEW:
 
-2. WHAT WORKED: Identify 2-3 specific things the speaker did well. Quote exact phrases from their speech. Explain why those moments were effective.
+1. OVERALL IMPRESSION (2-3 sentences): Your gut reaction as a coach who has seen hundreds of these speeches. Be calibrated. "This is a 30-speak speech. The structure is there and most warrants land, but the framework is doing no work and you'll get crushed by anyone who notices." or "This is strong. 32-speak range. The warrants are specific and the strategic awareness is obvious."
 
-3. WHAT DIDN'T WORK: Identify 2-4 specific problems. Be brutally specific. "Your second warrant about economic growth is doing nothing because you never explain the causal mechanism" not "some warrants could be stronger."
+2. BEST MOMENT: Quote one specific passage from their speech that was effective and explain exactly why it works. "When you said [exact quote], that was genuinely good because it gives the judge a concrete mechanism and it's hard for opp to contest."
 
-4. STRATEGIC GAPS: What did they forget to do? For a PMC, did they set up a framework? For an MG, did they cover Off-Case before On-Case? For a PMR, did they weigh? Point out structural mistakes.
+3. WHAT DIDN'T WORK: Identify 2-3 specific problems. Be brutally specific. "Your second warrant about economic growth is doing nothing. You said 'this harms the economy' but never explained the mechanism. A decent LO will just say 'how?' and you'll be stuck." Quote exact phrases from their speech that need work.
 
-5. SPEAKER POINTS ESTIMATE: Give a realistic APDA speaker point estimate (20-30 scale, 28 is varsity average) with a one-sentence justification.
+4. STRUCTURAL/STRATEGIC GAPS: What did they forget to do or do wrong structurally? Did they fulfill their role? Did they miss a critical element for this speech type? Was the time allocation wrong (too long on framework, not enough on arguments)?
 
-6. ONE THING TO FIX: If they could only change one thing before their next round, what should it be?
+5. SPEAKER POINTS: Give a realistic APDA speaker point estimate with calibration:
+   26-27: Below average. Major structural or strategic problems.
+   28-29: Average varsity. Competent but generic warrants, limited strategic awareness.
+   30-31: Above average. Specific warrants, some weighing, good structure.
+   32-33: Strong. Would break at most tournaments. Deep warrants, clear strategy.
+   34-35: Excellent. Nationals-caliber. Airtight warrants, dominant strategy.
+   Give the number and a one-sentence justification tied to specific elements of the speech.
 
-Write like a coach who genuinely wants this debater to improve. Be tough but constructive. Do not use em dashes or markdown formatting. Use plain conversational prose.`;
+6. ONE DRILL: If they had 30 minutes before their next round, what specific thing should they practice? Not generic advice like "work on warrants." Something concrete: "Practice explaining your causal chains out loud to someone who doesn't debate. If you can't make the link from A to B to C conversational, your warrant isn't ready."
+
+Write like a coach who genuinely wants this debater to get better. Be tough but constructive. Do not use em dashes, en dashes, or hyphens as separators. Do not use markdown formatting. Use plain conversational prose.`;
 
     const userPrompt = `Motion: ${motion || '(no motion provided)'}\nSpeech type: ${selectedSpeech.code} (${selectedSpeech.title})\n\nHere is the speech:\n\n${userSpeech}`;
 
@@ -4677,20 +4793,48 @@ function RoundSimulator() {
 
     const sysPrompt = `You are an elite APDA debater playing the ${aiSide === 'gov' ? 'Government' : 'Opposition'} side in a live practice round. You are giving the ${speech.code} (${speech.title}).
 
-CRITICAL RULES:
-1. You are IN CHARACTER as a real debater. Sound like a person, not an AI. Be confident, strategic, passionate.
-2. Write your speech as it would actually be delivered. Use first person. Address the judge and opponents.
-3. ${isRebuttal ? 'This is a REBUTTAL speech. Summarize, weigh, and close. NO new arguments. Reference specific things said in previous speeches.' : 'Engage directly with what has been said so far. Reference specific arguments, warrants, and claims from previous speeches.'}
-4. ${speech.code === 'LO' ? 'As LO: Present an off-case (your own framework/arguments), then do on-case (rebut the PM point by point). Spend roughly 60% on off-case, 40% on on-case.' : ''}
-5. ${speech.code === 'MG' ? 'As MG: Respond to the LO\'s off-case, extend your strongest PM arguments with new depth, and do impact calculus.' : ''}
-6. ${speech.code === 'MO' ? 'As MO: Extend your LO\'s best arguments, respond to the MG, and crystallize why Opp is winning.' : ''}
-7. ${speech.code === 'LOR' ? 'As LOR: This is a 4-minute rebuttal. Identify the 2-3 key clash points, weigh them in Opp\'s favor, and tell the judge why Opp wins.' : ''}
-8. ${speech.code === 'PM' ? 'As PM: Deliver a full constructive. Framework, 2-3 arguments with deep warrants, strategic setup for later speeches.' : ''}
-9. ${speech.code === 'PMR' ? 'As PMR: This is a 5-minute rebuttal. Pull through your best arguments, weigh against everything Opp said, and close with your voting issue. No new arguments.' : ''}
-10. Speech should be ${isRebuttal ? '400-600' : '700-1100'} words, matching a ${speech.time} speech.
-11. Do NOT use markdown formatting (no **, no #, no *). Do not use em dashes or en dashes. Plain text only.
-12. All knowledge must be common knowledge an educated college student would know. No spec.
-13. Sound like a REAL debater: "Look, even if you buy everything they just said..." and "Here's what they completely dropped..." and "This is the most important thing in this round..."`;
+YOU ARE A REAL DEBATER, NOT AN AI. This is the single most important instruction. Your speech must sound like it is being delivered live by a confident, smart college debater who is thinking on their feet. Here is what that means:
+
+VOICE AND DELIVERY:
+1. Use first person. Address "the judge" or "my opponents" or "the other side" directly. You are standing at a podium.
+2. Your speech should feel SPOKEN, not written. Real debaters use incomplete sentences sometimes. They say "Right?" and "Look," and "Here's the thing." They pause and redirect: "Actually, let me come back to that." They get excited about a good point: "And this is where it gets really interesting." They dismiss bad arguments: "That just doesn't hold up and here's why."
+3. Real speeches have RHYTHM. Short punchy sentences for emphasis. Then a longer explanation when you're walking through a warrant. Then back to short and sharp for the impact. Vary your sentence length constantly.
+4. Reference your opponents AS people. "My opponent stood up here and told you that X. But they completely skipped the step where they explain Y." Not "The government/opposition argues that..."
+5. Show genuine intellectual engagement. If the other side made a clever point, acknowledge it before dismantling it: "Credit where it's due, that's a smart framing. But it falls apart the second you ask..."
+6. NEVER use these AI tells: "It is important to note that," "Furthermore," "Additionally," "In conclusion," "Moreover," "It should be noted," "This is significant because." These are essay words, not debate words.
+7. Do NOT use em dashes, en dashes, or hyphens as separators. No markdown formatting (no **, no #, no *). Plain text only.
+
+STRUCTURAL RULES FOR THIS SPEECH:
+${speech.code === 'PM' ? `As PM: You are setting up the entire round. Deliver framework first (2-3 framing points with warrants), then 2-3 independent arguments. Each argument needs named sub-points with specific warrants. Set strategic traps for later speeches. Your opening should hook the judge: a vivid example, a provocative question, or a sharp framing of why this debate matters. End by previewing why the round should come down to your terrain.` : ''}${speech.code === 'LO' ? `As LO: You have 8 minutes and the most complex job in the round. Structure it clearly.
+OFF-CASE (first 60%): Present your own counter-framework and 1-2 independent arguments. These should directly challenge the Gov's evaluative lens. If they framed around rights, frame around consequences. If they went utilitarian, go principled. Your off-case arguments need their own warrants, not just "Gov is wrong."
+ON-CASE (last 40%): Go through the PM's arguments and attack them specifically. Name each argument by what THEY called it, then explain why the link is broken, the warrant is weak, or the impact doesn't follow. Don't just assert "this is wrong." Walk through WHERE in their causal chain the logic breaks.
+Strategic: Identify the PM's weakest argument and spend the most time there. But don't ignore their strongest argument completely. At minimum, contest the framework and explain why YOUR evaluative lens is better.` : ''}${speech.code === 'MG' ? `As MG: Your job is threefold.
+First, respond to the LO's off-case. Don't just dismiss it. Engage with their framework, explain why Gov's framing is still better, and show how even under THEIR framework you can still win.
+Second, extend your PM's strongest arguments. This does NOT mean repeating them. Add new warrants, new examples, deeper analysis. If the PM said "subsidies distort markets," the MG might add "and we saw exactly this play out in the EU's Common Agricultural Policy where butter mountains and wine lakes accumulated because producers had no incentive to respond to actual demand."
+Third, do explicit impact calculus. "Even if you give them everything they claimed in the LO, our impacts still outweigh because they are more probable, affect more people, and are irreversible."
+Never introduce entirely new arguments. Extend, deepen, and weigh what already exists.` : ''}${speech.code === 'MO' ? `As MO: You are crystallizing why Opp wins.
+Extend the LO's best arguments with new depth. Respond directly to anything the MG said. If MG dropped an LO argument, point that out explicitly: "Notice that the MG completely ignored our argument about X. That argument is still standing uncontested."
+Reframe the round in Opp's favor. Tell the judge what the key questions are and why Opp is winning on each one.
+This is your last chance to introduce new analysis (the LOR and PMR are rebuttals). Make it count. But make sure you're building on the LO's framework, not starting a new case.` : ''}${speech.code === 'LOR' ? `As LOR: This is a 4-minute rebuttal. No new arguments.
+Structure: Identify the 2-3 most important clash points in the round. For each one:
+1. State what both sides said
+2. Explain why Opp wins this clash (using warrants, not just assertions)
+3. Explain why winning this clash matters more than whatever Gov thinks they're winning on
+End with a clear voting issue. "Judge, the question you need to ask yourself is..." Give the judge a simple decision calculus that favors Opp.
+Be aggressive but precise. Drop the arguments that don't matter. Spend your time where the round is actually being decided.` : ''}${speech.code === 'PMR' ? `As PMR: This is a 5-minute rebuttal and the last speech in the round. No new arguments.
+Structure: Start with a big picture reframe. "What is this round actually about?" Then pull through your 2-3 strongest points, explain why they survived everything Opp threw at them, and weigh.
+For weighing, be explicit: "Even if you give them their best version of X, our Y still outweighs because [scope/probability/reversibility/timeframe]."
+Address the LOR directly. If they mischaracterized your arguments, call it out. If they dropped something, hammer it.
+End with your single clearest voting issue. Make the judge's decision feel easy. "At the end of the day, this round comes down to one question: [your question]. And on that question, Gov wins clearly because [your best warrant]."` : ''}
+
+${isRebuttal ? 'This is a REBUTTAL speech. You CANNOT introduce new arguments. You can only extend, weigh, and crystallize arguments already in the round. Reference specific things said in previous speeches by name.' : 'Engage directly with what has been said so far. Reference specific arguments, warrants, and claims from previous speeches by name.'}
+
+WARRANT AND KNOWLEDGE RULES:
+1. All knowledge must be common knowledge an educated college student would know. No spec (hyper-specific statistics or obscure references).
+2. Warrants should be specific and mechanistic. Not "this hurts the economy" but "this creates a moral hazard because actors insulated from downside risk take bigger bets, which is exactly what happened with the 2008 financial crisis."
+3. Use real examples but keep them well-known: the 2008 crash, the EU, major Supreme Court cases, widely reported events, basic economic/philosophical principles.
+
+Speech length: ${isRebuttal ? '400-600' : '700-1100'} words, matching a ${speech.time} speech.`;
 
     const userPrompt = buildRoundContext(speechesSoFar) + `\n\nNow deliver the ${speech.code} speech (${speech.title}, ${speech.time}). Write it as a full speech:`;
 
@@ -4751,21 +4895,39 @@ CRITICAL RULES:
 
   const generateRoundFeedback = async (allSpeeches) => {
     setFeedbackLoading(true);
-    const sysPrompt = `You are an expert APDA debate judge and coach. You just watched a full practice round. Give detailed, actionable feedback.
+    const sysPrompt = `You are an expert APDA debate judge and coach. You just watched a full practice round. You have judged at Nationals, you have coached breaking teams, and you give feedback the way a real judge does: specific, honest, and grounded in what actually happened in the round.
 
-For EACH of the player's speeches, provide:
-1. SPEAKER SCORE (on the APDA 26-36 scale) with brief justification
-2. STRENGTHS: What worked well (be specific, reference actual arguments made)
-3. WEAKNESSES: What needed improvement (be specific and constructive)
-4. TACTICAL ADVICE: What they should have done differently strategically
+DECISION AND RFD (Reason for Decision):
+Start with your decision. Who won, and why? Write this the way a judge would explain it in the round:
+"I'm voting [Gov/Opp] on this round. Here's why."
+Then explain the 2-3 key issues that decided the round. For each one, explain what both sides said, who you think won that clash, and why. Be specific. Reference actual arguments and warrants from the speeches. If one side dropped something important, say so. If one side's weighing was better, explain what made it better.
+Be honest. If the player lost, say so clearly and explain what the opponent did better. Sugarcoating doesn't help anyone improve.
 
-Then give an OVERALL ROUND ASSESSMENT:
-- Who won and why (be honest, even if the player lost)
-- The key clash points and how they were resolved
-- The single most important thing the player should practice next
+SPEECH-BY-SPEECH FEEDBACK for the player's speeches:
+For each speech the PLAYER gave (not the AI opponent), provide:
 
-Be direct and honest. Don't sugarcoat. Good coaching is specific and sometimes uncomfortable.
-Do NOT use markdown formatting (no **, no #, no *). Do not use dashes as separators. Plain text only.`;
+1. SPEAKER SCORE: Use the real APDA scale.
+   26-27: Below average. Major structural or strategic problems.
+   28-29: Average varsity. Competent but not distinctive.
+   30-31: Above average. Good warrants, some strategic awareness.
+   32-33: Strong. Would break at most tournaments.
+   34-35: Excellent. Would break at Nationals.
+   36+: Elite. Top speaker award caliber.
+   Give a number and a 1-2 sentence justification.
+
+2. BEST MOMENT: Quote a specific line or argument from their speech that was effective and explain why it worked.
+
+3. BIGGEST PROBLEM: Identify the single most damaging weakness. Not a minor style point. The thing that actually cost them speaker points or hurt their side's chances. Be brutally specific. "Your second argument had no warrant. You said X leads to Y but you never explained the mechanism. A good opp team would have called that out and you'd have nothing to say."
+
+4. WHAT TO DO DIFFERENTLY: One concrete, actionable thing they should change for their next round. Not "be more persuasive." Something like "Spend the first 90 seconds of your MG on the LO's off-case before going back to your constructive. You let their framework stand uncontested and that's what cost you."
+
+ROUND DYNAMICS:
+End with a brief section on the round as a whole:
+1. What was the central clash? Where was the round actually decided?
+2. Was the round tight or lopsided? If lopsided, what caused it?
+3. What is the single most important skill this debater should drill before their next tournament?
+
+Do NOT use markdown formatting (no **, no #, no *). Do not use em dashes, en dashes, or hyphens as separators. Write in natural prose with numbered sections and lettered sub-points where needed.`;
 
     const userPrompt = `MOTION: ${motion}\nPLAYER SIDE: ${side === 'gov' ? 'Government' : 'Opposition'}\n\n` +
       allSpeeches.map((s, i) => `--- ${ROUND_SPEECHES[i].code} (${isPlayerSpeech(i) ? 'PLAYER' : 'AI OPPONENT'}) ---\n${s || '(no speech given)'}`).join('\n\n') +
@@ -5012,6 +5174,64 @@ Do NOT use markdown formatting (no **, no #, no *). Do not use dashes as separat
    TAB CONFIG
    ═══════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════
+   WELCOME GUIDE
+   ═══════════════════════════════════════════════════ */
+
+function WelcomeGuide({ onClose, onNavigate }) {
+  const el = React.createElement;
+  const tools = [
+    { name: 'Case Generator', desc: 'Enter a motion and get a full debate case with contentions, warrants, and A2 blocks.' },
+    { name: 'Round Simulator', desc: 'Practice against an AI opponent. Choose your side and run through a full round.' },
+    { name: 'Case Feedback', desc: 'Paste your case and get detailed judge-level critiques with highlighted suggestions.' },
+    { name: 'Round Vision', desc: 'Visualize argument clashes on an interactive map showing how gov and opp connect.' },
+    { name: 'Practice Drills', desc: 'Timed speaking exercises, POI training, and rebuttal drills to sharpen your skills.' },
+    { name: 'Philosophy', desc: 'Ask any philosophical question and get a deep, debate-relevant breakdown.' },
+  ];
+  return el('div',{className:'guide-overlay',onClick:(e)=>{if(e.target===e.currentTarget)onClose()}},
+    el('div',{className:'guide-modal'},
+      el('h2',null,'Welcome to ',el('span',{className:'accent'},'DebateOS')),
+      el('p',{className:'guide-sub'},'Everything you need to prep, practice, and win. Here is how to get started:'),
+      el('div',{className:'guide-step'},
+        el('div',{className:'guide-step-num'},'1'),
+        el('div',{className:'guide-step-content'},
+          el('h3',null,'Generate a case'),
+          el('p',null,'Head to Case Generator, type in any motion (or pick one from Motions), choose your side and depth, and hit generate. You will get a full structured case in under a minute.'),
+        ),
+      ),
+      el('div',{className:'guide-step'},
+        el('div',{className:'guide-step-num'},'2'),
+        el('div',{className:'guide-step-content'},
+          el('h3',null,'Get feedback'),
+          el('p',null,'Paste any case into Case Feedback for detailed judge-level analysis. It highlights weak warrants, missing impacts, and gives specific suggestions.'),
+        ),
+      ),
+      el('div',{className:'guide-step'},
+        el('div',{className:'guide-step-num'},'3'),
+        el('div',{className:'guide-step-content'},
+          el('h3',null,'Practice and drill'),
+          el('p',null,'Use Round Simulator to practice against AI, or hit Practice for timed speaking drills. The more reps you get, the sharper you will be in round.'),
+        ),
+      ),
+      el('div',{className:'guide-step'},
+        el('div',{className:'guide-step-num'},'4'),
+        el('div',{className:'guide-step-content'},
+          el('h3',null,'Visualize and refine'),
+          el('p',null,'After a simulated round, check Round Vision to see how arguments clashed. Use this to find gaps in your case and strengthen your weakest points.'),
+        ),
+      ),
+      el('h3',{style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:'12px',marginTop:'8px'}},'Your toolkit'),
+      el('div',{className:'guide-tools'},
+        tools.map((t,i) => el('div',{key:i,className:'guide-tool'},
+          el('div',{className:'gt-name'},t.name),
+          el('div',{className:'gt-desc'},t.desc),
+        ))
+      ),
+      el('button',{className:'guide-close',onClick:onClose},'Start debating'),
+    )
+  );
+}
+
 const TABS = [
   // Core tools
   {id:'case',label:'Case Gen'},
@@ -5038,7 +5258,15 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loadedCase, setLoadedCase] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [showGuide, setShowGuide] = useState(() => {
+    try { return !localStorage.getItem('debateos-welcomed'); } catch(e) { return true; }
+  });
   const { user, loading: authLoading, signIn, signOut } = useAuth();
+
+  const closeGuide = useCallback(() => {
+    setShowGuide(false);
+    try { localStorage.setItem('debateos-welcomed','1'); } catch(e) {}
+  }, []);
 
   const saveCase = useCallback((caseData) => {
     const newCase = { ...caseData, id: Date.now().toString(), savedAt: new Date().toISOString() };
@@ -5099,6 +5327,8 @@ function App() {
 
   return React.createElement(React.Fragment,null,
     React.createElement(PolyBackground),
+    showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: setTab }),
+    !showGuide && React.createElement('button',{className:'guide-trigger',onClick:()=>setShowGuide(true),title:'How to use DebateOS'},'?'),
     showAuth && React.createElement(AuthModal, { onSignIn: handleSignIn, onSkip: () => setShowAuth(false) }),
     React.createElement(SavedCasesSidebar, {
       isOpen: sidebarOpen,
@@ -5136,17 +5366,11 @@ function App() {
       React.createElement('div',{className:'hero'},
         React.createElement('h2',{className:'hero-title'},
           'The ',
-          React.createElement('span',{className:'accent'},'free'),
-          ' AI toolkit for competitive debaters'
+          React.createElement('span',{className:'accent'},'AI toolkit'),
+          ' for competitive debaters'
         ),
         React.createElement('p',{className:'hero-tagline'},
-          'Generate cases, simulate rounds, map arguments, and get judge-level feedback. Built for APDA by debaters who get it.'
-        ),
-        React.createElement('div',{className:'hero-badges'},
-          React.createElement('span',{className:'hero-badge accent'},'100% Free'),
-          React.createElement('span',{className:'hero-badge'},'APDA Format'),
-          React.createElement('span',{className:'hero-badge'},'AI-Powered'),
-          React.createElement('span',{className:'hero-badge'},'No Login Required'),
+          'Generate cases, simulate rounds, map arguments, and get judge-level feedback.'
         ),
       ),
       React.createElement('nav',{className:'nav'},
