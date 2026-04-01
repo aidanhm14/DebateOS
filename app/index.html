@@ -344,6 +344,9 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 }
 .output.streaming-active{overflow-anchor:auto}
 .output *{margin:0;padding:0}
+.output strong{color:#fbbf24;font-weight:700}
+.output em{color:#94a3b8;font-style:italic}
+.output p{margin:8px 0;line-height:1.65}
 .output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422}
 .output h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
 .output .section{margin-bottom:12px}
@@ -1044,13 +1047,25 @@ function PolyBackground() {
 /* API key is stored server-side in Netlify environment variables */
 
 /* ── Clean markdown artifacts from AI output ────── */
-function cleanOutput(text) {
-  if (!text) return text;
-  return text
-    .replace(/\n{3,}/g, '\n\n')
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/\*([^*]+)\*/g, '$1')
-    .replace(/^#{1,4}\s+/gm, '');
+function cleanOutput(text, asHtml) {
+  if (!text) return text || '';
+  let t = text.replace(/\n{3,}/g, '\n\n');
+  if (!asHtml) {
+    // Plain text: strip markdown
+    return t.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s+/gm, '');
+  }
+  // HTML mode: convert markdown to formatted HTML
+  t = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  t = t.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+  t = t.replace(/^###\s+(.+)$/gm, '</p><h4 style="color:#f87171;margin:16px 0 6px;font-size:1.04rem;font-weight:600">$1</h4><p>');
+  t = t.replace(/^##\s+(.+)$/gm, '</p><h3 style="color:#fbbf24;margin:22px 0 8px;font-size:1.12rem;font-weight:700;padding-bottom:5px;border-bottom:1px solid #fbbf2420">$1</h3><p>');
+  t = t.replace(/^#\s+(.+)$/gm, '</p><h3 style="color:#60a5fa;margin:24px 0 8px;font-size:1.18rem;font-weight:700;padding-bottom:6px;border-bottom:1px solid #60a5fa20">$1</h3><p>');
+  t = t.replace(/\n\n/g, '</p><p style="margin:12px 0">');
+  t = t.replace(/\n/g, '<br>');
+  t = '<p style="margin:0">' + t + '</p>';
+  t = t.replace(/<p[^>]*><\/p>/g, '');
+  return t;
 }
 
 // Throttled streaming: batches rapid onChunk calls into one React update per frame
@@ -1070,7 +1085,7 @@ function createStreamThrottle(onChunk, outputRef) {
       // Write directly to DOM for instant visual feedback without React re-render
       if (outputRef && outputRef.current) {
         const el = outputRef.current;
-        el.textContent = cleanOutput(latestText);
+        el.innerHTML = cleanOutput(latestText, true);
         // Auto-scroll if near bottom
         if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
           el.scrollTop = el.scrollHeight;
@@ -1282,8 +1297,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
             if (parsed.delta?.type === 'text_delta' && parsed.delta?.text) {
               fullText += parsed.delta.text;
               // Strip markdown bold/italic/headers in real-time
-              const cleanText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
-              onChunk(cleanText);
+              onChunk(fullText);
               if (onProgress) {
                 const wordCount = fullText.split(/\s+/).length;
                 const writePct = Math.min(70, (wordCount / expectedWords) * 70);
@@ -1375,7 +1389,6 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
   // Strip any markdown bold/italic that slipped through despite prompt instructions
-  fullText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
   return fullText;
 }
 
@@ -2573,7 +2586,7 @@ Return ONLY the replacement text. Nothing else. Do not use markdown formatting (
           ref:outputRef,
           onMouseUp: streaming ? undefined : handleMouseUp,
           style:{whiteSpace:'pre-line'}
-        }, cleanOutput(output)),
+        , dangerouslySetInnerHTML:{__html:cleanOutput(output, true)}}),
         // Highlight popup
         popup && React.createElement('div',{
           className:'highlight-popup',
@@ -2979,9 +2992,7 @@ Do NOT use any markdown formatting. No ** for bold, no # for headers, no * for i
       ),
 
       // Output
-      motionOutput && el('div',{className:'output',style:{marginTop:20,textAlign:'left'}},
-        cleanOutput(motionOutput)
-      ),
+      motionOutput && el('div',{className:'output',style:{marginTop:20,textAlign:'left'},dangerouslySetInnerHTML:{__html:cleanOutput(motionOutput, true)}}),
 
       // Action bar after generation
       motionOutput && !motionStreaming && !motionLoading && el('div',{
@@ -3319,7 +3330,13 @@ Rules:
         await callClaude(mapSys, mapUser, (text) => { mapText = text; }, { thinkBudget: 6000, maxTokens: 8000 });
         // Parse JSON from response (handle possible markdown fences)
         let cleaned = mapText.trim();
+        // Robust JSON extraction: strip fences, find JSON object
         if (cleaned.startsWith('```')) cleaned = cleaned.replace(/^```\w*\n?/, '').replace(/\n?```$/, '');
+        // Find the actual JSON object between first { and last }
+        const jsonStart = cleaned.indexOf('{');
+        const jsonEnd = cleaned.lastIndexOf('}');
+        if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON found');
+        cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
         const parsed = JSON.parse(cleaned);
         setMapData(parsed);
       } catch(e) {
@@ -3366,9 +3383,14 @@ Rules:
 
     // Map placeholder when no API
     view === 'map' && !mapData && !mapLoading && output && el('div',{
-      style:{textAlign:'center',padding:40,color:'#666',fontSize:'.9rem',
-        background:'#131b2c',borderRadius:12,marginTop:16,border:'1px solid #ffffff10'}
-    }, 'Argument map requires an API key. The map is being generated alongside your analysis.'),
+      style:{textAlign:'center',padding:40,color:'#888',fontSize:'.9rem',
+        background:'linear-gradient(145deg,#111827,#0f172a)',borderRadius:16,marginTop:16,border:'1px solid #ffffff15',
+        boxShadow:'0 4px 20px rgba(0,0,0,.3)'}
+    },
+      el('div',{style:{fontSize:'2rem',marginBottom:12,opacity:.4}},'\uD83D\uDDFA\uFE0F'),
+      el('div',null,'The argument map is being generated. If it doesn\'t appear, try clicking Analyze again.'),
+      el('div',{style:{marginTop:8,fontSize:'.8rem',color:'#555'}},'Map generation requires the AI to return structured JSON, which occasionally needs a retry.')
+    ),
 
     // Text output
     view === 'text' && output && el('div',null,
@@ -3490,7 +3512,7 @@ RULES:
           border: `1px solid ${m.role==='user' ? '#ef444433' : '#ffffff12'}`,
           borderRadius: 12, padding:'12px 16px',
           maxWidth:'80%', fontSize:'.92rem', lineHeight:1.45, whiteSpace:'pre-line'
-        }}, cleanOutput(m.text))
+        , dangerouslySetInnerHTML:{__html:cleanOutput(m.text, true)}})
       ),
       loading && React.createElement('div',{style:{alignSelf:'flex-start',color:'#888',fontSize:'.85rem'}},
         React.createElement('span',{className:'spinner'}),'Thinking...'
@@ -4200,7 +4222,7 @@ function Judge() {
             borderRadius:8,border:'1px solid #ffffff08',
             fontSize:'.88rem',lineHeight:1.4,color:'#ccc',whiteSpace:'pre-line'
           }
-        },cleanOutput(feedback[speech.code]))
+        , dangerouslySetInnerHTML:{__html:cleanOutput(feedback[speech.code], true)}})
       )
     )
   );
@@ -4377,9 +4399,7 @@ Write like a coach who genuinely wants this debater to get better. Be tough but 
 
     // Feedback output
     feedback && el('div',{className:'practice-feedback'},
-      el('div',{className:'output'},
-        cleanOutput(feedback)
-      ),
+      el('div',{className:'output',dangerouslySetInnerHTML:{__html:cleanOutput(feedback, true)}}),
       !loading && el('div',{className:'practice-feedback-actions'},
         el('button',{
           className:'btn btn-secondary',
