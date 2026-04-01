@@ -9,9 +9,7 @@
   external_node_modules = []
   node_bundler = "esbuild"
 
-# Extend function timeout for streaming AI responses
-[functions."claude"]
-  timeout = 60
+# Claude API proxy now runs as edge function for better streaming support
 
 [functions."perplexity"]
   timeout = 30

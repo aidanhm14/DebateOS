@@ -1242,6 +1242,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   let thinkingChars = 0;
   let lastProgressUpdate = 0;
   let lastProgressPct = -1;
+  let stopReason = 'end_turn';
 
   while (true) {
     const { done, value } = await reader.read();
@@ -1296,10 +1297,82 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
               }
             }
           }
+          // Track stop reason for continuation logic
+          if (parsed.type === 'message_delta' && parsed.delta?.stop_reason) {
+            stopReason = parsed.delta.stop_reason;
+          }
         } catch(e) {}
       }
     }
   }
+
+  // ── AUTO-CONTINUATION: if generation was cut off, continue where it left off ──
+  let continuations = 0;
+  while (stopReason === 'max_tokens' && continuations < 3) {
+    continuations++;
+    stopReason = 'end_turn';
+    if (onProgress) onProgress({ phase: 'writing', percent: Math.min(95, 80 + continuations * 5) });
+
+    const contBody = {
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: safeMaxTokens,
+      stream: true,
+      thinking: { type: 'enabled', budget_tokens: Math.max(1024, Math.min(2000, safeBudget)) },
+      system: systemPrompt,
+      messages: [
+        ...messages,
+        { role: 'assistant', content: fullText },
+        { role: 'user', content: 'Continue generating from exactly where you left off. Do not repeat any text that was already written. Pick up mid-sentence if needed.' }
+      ],
+    };
+
+    let contResponse;
+    try {
+      contResponse = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contBody),
+      });
+    } catch(e) { break; }
+    if (!contResponse.ok) break;
+
+    const contReader = contResponse.body.getReader();
+    const contDecoder = new TextDecoder();
+    let contBuffer = '';
+    let contInThinking = false;
+
+    while (true) {
+      const { done: contDone, value: contValue } = await contReader.read();
+      if (contDone) break;
+      contBuffer += contDecoder.decode(contValue, { stream: true });
+      const contLines = contBuffer.split('\n');
+      contBuffer = contLines.pop() || '';
+      for (const contLine of contLines) {
+        if (contLine.startsWith('data: ')) {
+          const contData = contLine.slice(6);
+          if (contData === '[DONE]') break;
+          try {
+            const cp = JSON.parse(contData);
+            if (cp.type === 'content_block_start') {
+              contInThinking = cp.content_block?.type === 'thinking';
+            }
+            if (cp.type === 'content_block_stop') {
+              contInThinking = false;
+            }
+            if (cp.type === 'content_block_delta' && !contInThinking && cp.delta?.type === 'text_delta' && cp.delta?.text) {
+              fullText += cp.delta.text;
+              const cleanText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
+              onChunk(cleanText);
+            }
+            if (cp.type === 'message_delta' && cp.delta?.stop_reason) {
+              stopReason = cp.delta.stop_reason;
+            }
+          } catch(e) {}
+        }
+      }
+    }
+  }
+
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
   // Strip any markdown bold/italic that slipped through despite prompt instructions
   fullText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
@@ -1980,7 +2053,7 @@ Write ONLY the background text. No labels, no "Background:" header.`;
 
     try {
       const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
-      const depthThinkBudget = depth === 'competition' ? 8000 : depth === 'standard' ? 4000 : 2000;
+      const depthThinkBudget = depth === 'competition' ? 4000 : depth === 'standard' ? 2000 : 1024;
       await callClaude(sysPrompt, userPrompt, (text) => {
         throttle.update(text);
       }, { thinkBudget: depthThinkBudget, maxTokens: depthMaxTokens, expectedWords, onProgress: (p) => setProgress(p) });
