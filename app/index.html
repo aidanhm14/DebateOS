@@ -1376,8 +1376,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
             }
             if (cp.type === 'content_block_delta' && !contInThinking && cp.delta?.type === 'text_delta' && cp.delta?.text) {
               fullText += cp.delta.text;
-              const cleanText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
-              onChunk(cleanText);
+              onChunk(fullText);
             }
             if (cp.type === 'message_delta' && cp.delta?.stop_reason) {
               stopReason = cp.delta.stop_reason;
@@ -3401,7 +3400,7 @@ Rules:
     // Text output
     view === 'text' && output && el('div',null,
       el('div',{className:'output'},
-        el('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output)}})
+        el('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output, true)}})
       ),
       !loading && el(SaveToDocsButton,{text:output,filename:'Round Vision ' + motion.substring(0,40)})
     )
@@ -3745,7 +3744,7 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
     ),
     output && React.createElement('div',{className:'phil-output'},
       React.createElement('div',{className:'output'},
-        React.createElement('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output)}})
+        React.createElement('div',{dangerouslySetInnerHTML:{__html:cleanOutput(output, true)}})
       ),
       !loading && React.createElement(SaveToDocsButton,{text:output,filename:'Philosophy ' + philosopher})
     )
