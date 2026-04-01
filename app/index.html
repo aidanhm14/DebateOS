@@ -1590,12 +1590,14 @@ ADVANCED STRATEGIC PRINCIPLES (from coaching annotations on real competitive cas
 
 17. CREATIVE FRAMING: The best cases use pop culture, film, literature, sports, and real-world scenarios to make abstract arguments tangible. A case about leaving a band for a solo career (framed as One Direction) is more engaging than an abstract case about individual ambition vs. collective loyalty.
 
-COMMON KNOWLEDGE RULE (ANTI-SPEC): In APDA parliamentary debate, all knowledge brought into the round must be common knowledge that any educated college student could reasonably know. Anything too specific or obscure is considered "spec" (specific knowledge), which is unfair because the opposing team cannot engage with facts they couldn't possibly know. This means:
-- DO NOT cite hyper-specific statistics that no one would memorize (e.g., "the GDP of Moldova in Q3 2019 was exactly $3.2 billion"). Instead use directional claims: "Moldova is one of Europe's poorest countries."
-- DO NOT reference obscure court cases, academic papers, or niche policy details that only a specialist would know. Reference well-known examples: Brown v. Board, the 2008 financial crisis, the EU refugee crisis.
-- DO use general knowledge that a well-read college student picks up from classes, news, and conversation: major historical events, basic economic principles, well-known philosophical frameworks, famous psychological studies, widely reported current events.
-- The test: if your opponent heard this fact for the first time in your speech and couldn't respond because they'd never encountered it, that's spec. If they'd say "yeah, I know about that," it's fair game.
-- When in doubt, frame knowledge as reasoning rather than citation: "Think about how monopolies work..." rather than "According to Herfindahl-Hirschman Index calculations..."
+COMMON KNOWLEDGE RULE (ANTI-SPEC): In APDA parliamentary debate, all knowledge brought into the round must be common knowledge that any educated college student could reasonably know. Anything too specific or obscure is considered "spec" (specific knowledge). This is a HARD RULE:
+- NEVER USE STATISTICS. Do not write percentages, dollar amounts, population figures, or any numerical data unless the user explicitly provided those numbers in the background field. No "95% of X" or "$2.3 billion" or "40% increase." These are always spec because your opponent cannot verify or engage with numbers you pulled from memory.
+- Instead of stats, use directional claims and intuitive reasoning: "Moldova is one of Europe's poorest countries" not "Moldova's GDP is $3.2 billion." Say "this disproportionately affects low-income communities" not "67% of those affected earn below the poverty line."
+- DO NOT reference obscure court cases, academic papers, or niche policy details. Stick to well-known examples: Brown v. Board, the 2008 financial crisis, the EU refugee crisis.
+- DO use general knowledge that a well-read college student picks up from classes, news, and conversation: major historical events, basic economic principles, well-known philosophical frameworks, widely reported current events.
+- The test: if your opponent heard this claim and couldn't engage because they'd never encountered it, that's spec. If they'd say "yeah, I know about that," it's fair game.
+- Frame knowledge as REASONING, not citation: "Think about how monopolies work..." rather than "According to the Herfindahl-Hirschman Index..."
+- The ONLY exception: if the user provides specific data in the Background field, you may use those exact numbers because the user is vouching for them as common knowledge in their circuit.
 
 FORMATTING: Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Title sections as "## Argument 1", "## Argument 2", etc. Use letters (a, b, c) and roman numerals (i, ii, iii) for sub-points. Write in clean debate outline style.
 
@@ -2776,7 +2778,7 @@ Avoid overused APDA topics: generic social media bans, standard drug legalizatio
 
 Generate EXACTLY ONE motion. Provide:
 
-BACKGROUND: (50-100 words) Factual context grounding the motion in reality. Specific statistics, mechanisms, or recent developments that make this timely.
+BACKGROUND: (50-100 words) Factual context grounding the motion in reality. Common knowledge mechanisms, well-known examples, or widely reported developments that make this timely. No specific statistics unless provided by the user.
 
 CASE STATEMENT: The formal APDA motion phrasing. Make it precise and well-scoped.
 
@@ -2815,7 +2817,7 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
 3. Identify the key stakeholders and their interests (1-2 sentences)
 4. Note any important caveats or scope limitations a government team should consider (1-2 sentences)
 
-Keep it to 80-150 words. Be specific, use real facts, policies, and statistics where relevant. Write in the style of a competitive APDA case background section. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
+Keep it to 80-150 words. Be specific, use real facts and policies. Do NOT use specific statistics or numbers unless the user provided them — all facts must be common knowledge. Write in the style of a competitive APDA case background section. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Motion: ${result}\n\nWrite the background section.`;
       await callClaude(sysPrompt, userPrompt, (text) => setBgText(text), { thinkBudget: 6000, maxTokens: 4000 });
     } catch(e) {
@@ -3322,32 +3324,55 @@ Write in a direct, confident, opinionated voice. You are the coach. You've seen 
     // Generate argument map
     setMapLoading(true);
       try {
-        const mapSys = `You are a debate round architect. Given a motion and side, generate a structured argument map as valid JSON. The map shows Government arguments, Opposition arguments, and the Clash Points where they interact.
+        const mapSys = `Output ONLY a JSON object. No text before or after. No code fences. Just JSON.
 
-Return ONLY valid JSON. Do not include any text before or after the JSON object. Do not wrap in code fences. Do not add explanations. Your entire response must be a single valid JSON object with this exact schema:
+Schema: {"gov":[{"name":"string","desc":"string","weight":number}],"opp":[{"name":"string","desc":"string","weight":number}],"clashes":[{"name":"string","desc":"string","govLinks":[numbers],"oppLinks":[numbers],"winner":"string"}]}
 
-{"gov":[{"name":"Argument name","desc":"1-2 sentence description","weight":8}],"opp":[{"name":"Argument name","desc":"1-2 sentence description","weight":7}],"clashes":[{"name":"Clash name","desc":"Why this is contested","govLinks":[0,1],"oppLinks":[0],"winner":"Lean Gov"}]}
+gov: 3-4 Government arguments. name is a short label, desc is 1 sentence, weight is 1-10.
+opp: 3-4 Opposition arguments. Same format.
+clashes: 2-3 points where gov and opp arguments collide. govLinks/oppLinks are 0-based indices into the gov/opp arrays. winner is one of: "Lean Gov", "Lean Opp", "Toss-up".
 
-Rules:
-- gov: 3-5 arguments the Government side would run. Weight 1-10 (10 = strongest).
-- opp: 3-5 arguments the Opposition would run. Weight 1-10.
-- clashes: 3-5 key clash points where arguments collide. govLinks and oppLinks are indices into the gov and opp arrays showing which arguments feed into this clash. winner is "Lean Gov", "Lean Opp", "Toss-up", or "Key battleground".
-- Be specific to this exact motion, not generic debate advice.
-- Make the arguments detailed enough that a debater could use them as starting points.`;
+Be specific to the motion. Arguments should be real strategic angles a competitive debater would run.`;
         const mapUser = `Motion: ${motion}\nSide: ${side}\n\nGenerate the argument map JSON.`;
         let mapText = '';
         await callClaude(mapSys, mapUser, (text) => { mapText = text; }, { thinkBudget: 6000, maxTokens: 8000 });
-        // Parse JSON from response (handle possible markdown fences)
-        let cleaned = mapText.trim();
-        if (cleaned.startsWith('```')) cleaned = cleaned.replace(/^```\w*\n?/, '').replace(/\n?```$/, '');
-        var js0 = cleaned.indexOf('{'), js1 = cleaned.lastIndexOf('}');
-        if (js0 === -1 || js1 === -1) throw new Error('No JSON');
-        cleaned = cleaned.substring(js0, js1 + 1);
+        // Parse JSON from response - be aggressive about finding it
+        let cleaned = (mapText || '').trim();
+        // Strip code fences, leading text, trailing text
+        cleaned = cleaned.replace(/^[\s\S]*?(?=\{)/, '');
+        var js1 = cleaned.lastIndexOf('}');
+        if (js1 === -1) throw new Error('No JSON object found in response');
+        cleaned = cleaned.substring(0, js1 + 1);
+        // Fix common JSON issues from AI
+        cleaned = cleaned.replace(/,\s*([}\]])/g, '$1'); // trailing commas
         const parsed = JSON.parse(cleaned);
+        // Validate minimum structure
+        if (!parsed.gov || !parsed.opp) throw new Error('Missing gov or opp arrays');
+        if (!Array.isArray(parsed.gov) || !Array.isArray(parsed.opp)) throw new Error('gov and opp must be arrays');
+        // Ensure clashes exist with defaults
+        if (!parsed.clashes || !Array.isArray(parsed.clashes)) parsed.clashes = [];
         setMapData(parsed);
       } catch(e) {
-        console.log('Map parse error:', e.message, mapText ? mapText.substring(0,200) : 'no response');
-        setMapData({error: 'Map generation failed: ' + e.message, raw: (mapText || '').substring(0, 100)});
+        console.log('Map parse error (attempt 1):', e.message, mapText ? mapText.substring(0,200) : 'no response');
+        // Retry once with a more forceful prompt
+        try {
+          let retryText = '';
+          await callClaude(
+            'Output ONLY valid JSON. Nothing else. Schema: {"gov":[{"name":"str","desc":"str","weight":5}],"opp":[{"name":"str","desc":"str","weight":5}],"clashes":[{"name":"str","desc":"str","govLinks":[0],"oppLinks":[0],"winner":"Toss-up"}]}',
+            'Motion: ' + motion + '. Side: ' + side + '. Generate 3 gov args, 3 opp args, 2 clashes. JSON only.',
+            (text) => { retryText = text; },
+            { thinkBudget: 2000, maxTokens: 4000 }
+          );
+          let rc = (retryText || '').trim().replace(/^[\s\S]*?(?=\{)/, '');
+          var rj1 = rc.lastIndexOf('}');
+          rc = rc.substring(0, rj1 + 1).replace(/,\s*([}\]])/g, '$1');
+          const rp = JSON.parse(rc);
+          if (rp.gov && rp.opp) { setMapData(rp); }
+          else { throw new Error('Invalid structure'); }
+        } catch(e2) {
+          console.log('Map parse error (attempt 2):', e2.message);
+          setMapData({error: 'Map generation failed after 2 attempts. Try clicking Analyze again.', raw: (mapText || '').substring(0, 100)});
+        }
       }
       setMapLoading(false);
   };
