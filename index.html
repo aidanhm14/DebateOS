@@ -296,19 +296,6 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .argmap-tab-toggle button:hover{border-color:#ffffff25}
 @keyframes flowDash{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}
 
-/* light theme */
-.light-theme .argmap-container{background:radial-gradient(ellipse at 30% 20%,#f0f4ff 0%,#f8faff 50%,#ffffff 100%);border-color:#3b82f612;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.light-theme .argmap-node.gov{background:linear-gradient(135deg,#eff6ff,#dbeafe80);border-color:#3b82f630;color:#1d4ed8;box-shadow:0 2px 8px #3b82f608}
-.light-theme .argmap-node.opp{background:linear-gradient(135deg,#fef2f2,#fecaca80);border-color:#ef444430;color:#dc2626;box-shadow:0 2px 8px #ef444408}
-.light-theme .argmap-node.clash{background:linear-gradient(135deg,#fffbeb,#fef3c780);border-color:#f59e0b30;color:#b45309;box-shadow:0 2px 8px #f59e0b08}
-.light-theme .argmap-col-header.gov{color:#2563eb}.light-theme .argmap-col-header.gov::after{background:linear-gradient(90deg,transparent,#2563eb,transparent)}
-.light-theme .argmap-col-header.clash{color:#b45309}.light-theme .argmap-col-header.clash::after{background:linear-gradient(90deg,transparent,#b45309,transparent)}
-.light-theme .argmap-col-header.opp{color:#dc2626}.light-theme .argmap-col-header.opp::after{background:linear-gradient(90deg,transparent,#dc2626,transparent)}
-.light-theme .argmap-tab-toggle button{background:#f5f8ff;border-color:#3b82f612;color:#6b7fa0}
-.light-theme .argmap-tab-toggle button.active{background:#2563eb10;border-color:#2563eb40;color:#2563eb}
-.light-theme .argmap-node .node-weight-bar{background:#00000008}
-.light-theme .argmap-legend{color:#8895a8}
-
 /* ── Newbies Tab ──────────────────────────────── */
 .newbie-hero{text-align:left;padding:20px 0 32px}
 .newbie-hero h2{font-size:2rem;font-weight:800;color:#f1f5f9;margin-bottom:6px;letter-spacing:-.02em}
@@ -415,138 +402,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#ffffff22;border-radius:3px}
 
-/* ── Theme Toggle ─────────────────────────────── */
-.theme-toggle{
-  position:fixed;top:18px;right:24px;z-index:50;background:#1a2538cc;border:1px solid #ffffff18;
-  border-radius:10px;padding:8px 14px;font-size:1.1rem;cursor:pointer;transition:.2s;
-  line-height:1;backdrop-filter:blur(8px);
-}
-.light-theme .theme-toggle{background:#ffffffcc;border-color:#00000012}
-.theme-toggle:hover{background:#ffffff12}
-
-/* ── Light Theme (Blue/White) ─────────────────── */
-body.light-theme{background:#f0f4fa;color:#1a1a2e}
-.light-theme .bg-canvas{background:#f0f4fa}
-.light-theme #debate-flow-bg{opacity:.4}
-.light-theme .panel{background:#ffffffee;border-color:#3b82f608;color:#1a1a2e}
-.light-theme .panel-inner{background:#f5f8ff;border-color:#3b82f608}
-.light-theme textarea,.light-theme select,.light-theme input[type="text"]{
-  background:#f5f8ff;color:#1a1a2e;border-color:#3b82f618;
-}
-.light-theme textarea:focus,.light-theme select:focus,.light-theme input[type="text"]:focus{border-color:#3b82f666}
-.light-theme .logo .green{color:#2563eb}
-.light-theme .logo .white{color:#1a1a2e}
-.light-theme .subtitle{color:#6b7fa0}
-.light-theme .nav-btn{color:#6b7fa0}
-.light-theme .nav-btn:hover{color:#1e40af;border-color:#3b82f622}
-.light-theme .nav-btn.active{color:#2563eb;border-color:#2563eb;background:#2563eb10}
-.light-theme .nav-divider{background:#00000010}
-.light-theme .hero-title{color:#1a1a2e}
-.light-theme .hero-title .accent{color:#dc2626}
-.light-theme .hero-tagline{color:#6b7fa0}
-.light-theme .hero-badge{border-color:#00000010;color:#6b7fa0;background:#00000004}
-.light-theme .hero-badge.accent{border-color:#dc262620;color:#dc2626;background:#dc262608}
-.light-theme .chip{border-color:#3b82f618;color:#6b7fa0}
-.light-theme .chip:hover{border-color:#3b82f640;color:#1e3a5f}
-.light-theme .chip.active{border-color:#3b82f6;color:#2563eb;background:#3b82f610}
-.light-theme .speech-card{background:#f8faff;border-color:#3b82f610;border-left-color:#3b82f6;box-shadow:none}
-.light-theme .speech-badge{background:#3b82f6}
-.light-theme .tag{background:#3b82f606;border-color:#3b82f612;color:#6b7fa0}
-.light-theme .tag.active{background:#2563eb12;border-color:#2563eb;color:#1d4ed8}
-.light-theme .feedback-btn{border-color:#3b82f6;color:#3b82f6}
-.light-theme .feedback-btn:hover{background:#3b82f610}
-.light-theme .output{background:#f8faff;border-color:#3b82f608;color:#1a1a2e}
-.light-theme .output-wrapper{background:#f8faff;border-color:#3b82f610;box-shadow:0 2px 12px rgba(0,0,0,.04)}
-.light-theme .revision-sidebar{background:#f5f8ffee;border-color:#3b82f608}
-.light-theme .revision-header{color:#2563eb}
-.light-theme .revision-comment{background:#3b82f604;border-color:#3b82f60a}
-.light-theme .revision-comment .rc-text{color:#333}
-.light-theme .revision-comment .rc-user{color:#2563eb}
-.light-theme .revision-comment .rc-ai{color:#059669}
-.light-theme .revision-input textarea{background:#fff;border-color:#3b82f612;color:#1a1a2e}
-.light-theme .revision-input textarea:focus{border-color:#2563eb66}
-.light-theme .btn-primary{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
-.light-theme .fb-layout{background:#f8faff;border-color:#3b82f610}
-.light-theme .fb-case{color:#1a1a2e}
-.light-theme .fb-sidebar{background:#f0f4ff;border-color:#3b82f610}
-.light-theme .fb-sidebar-header{color:#2563eb;border-color:#3b82f610}
-.light-theme .fb-comment{background:#fff;border-color:#3b82f60a;color:#333}
-.light-theme .fb-comment.active{border-color:#059669;background:#05966908}
-.light-theme .fb-comment-text{color:#444}
-.light-theme .fb-highlight{background:#fbbf2420;border-bottom-color:#fbbf2488}
-.light-theme .fb-highlight.active{background:#05966918;border-bottom-color:#059669}
-.light-theme .fb-reply-box{background:#f8faff;border-color:#3b82f610}
-.light-theme .fb-reply-ai{background:#05966908;border-color:#05966920}
-.light-theme .btn-primary:hover{box-shadow:0 6px 24px #3b82f644}
-.light-theme .btn-orange{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
-.light-theme .btn-orange:hover{box-shadow:0 6px 24px #2563eb44}
-.light-theme .btn-secondary{background:#3b82f60a;color:#1a1a2e;border-color:#3b82f615}
-.light-theme .btn-secondary:hover{background:#3b82f614}
-.light-theme .btn-purple{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
-.light-theme .btn-purple:hover{box-shadow:0 6px 24px #6366f144}
-.light-theme .depth-card{border-color:#3b82f612;background:#f5f8ff}
-.light-theme .depth-card:hover{background:#eef4ff;border-color:#3b82f630}
-.light-theme .depth-card.active{border-color:#2563eb;background:#2563eb08}
-.light-theme .depth-card::before{background:linear-gradient(135deg,#2563eb08,#2563eb02)}
-.light-theme .depth-card .depth-title{color:#1a1a2e}
-.light-theme .depth-card.active .depth-title{color:#2563eb}
-.light-theme .depth-card .depth-desc{color:#6b7fa0}
-.light-theme .res-card{background:#f5f8ff;border-color:#3b82f610;color:#1a1a2e;box-shadow:0 2px 12px rgba(0,0,0,.04)}
-.light-theme .newbie-toc-item{background:#f5f8ff;border-color:#3b82f610}
-.light-theme .newbie-toc-item:hover{background:#eef4ff;border-color:#3b82f630}
-.light-theme .newbie-toc-item .toc-label{color:#334155}
-.light-theme .newbie-section-header{background:#f5f8ff;border-color:#3b82f610}
-.light-theme .newbie-section-header:hover{background:#eef4ff;border-color:#3b82f630;transform:translateX(2px)}
-.light-theme .newbie-section-header.open{background:#f0f5ff}
-.light-theme .newbie-section-body{background:#f8faff;border-color:#3b82f60a}
-.light-theme .newbie-section h3{color:#1e293b}
-.light-theme .newbie-section .arrow{color:#2563eb}
-.light-theme .newbie-section-body{background:#f8faff;border-color:#3b82f610}
-.light-theme .newbie-section p,.light-theme .newbie-section li{color:#475569}
-.light-theme .newbie-hero h2{color:#1e293b}
-.light-theme .newbie-hero .hero-subtitle{color:#2563eb}
-.light-theme .newbie-hero .honest{color:#475569}
-.light-theme .newbie-callout{background:#2563eb08;border-left-color:#2563eb}
-.light-theme .newbie-callout strong{color:#2563eb}
-.light-theme .newbie-term .term-word{color:#1d4ed8}
-.light-theme .newbie-term .term-def{color:#475569}
-.light-theme .newbie-table th{background:#2563eb08;color:#2563eb;border-bottom-color:#2563eb18}
-.light-theme .newbie-table td{color:#475569;border-bottom-color:#3b82f60a}
-.light-theme .thinking-logo .green{color:#2563eb}
-.light-theme .thinking-logo .white{color:#1a1a2e}
-.light-theme .thinking-status{color:#6b7fa0}
-.light-theme .thinking-dots span{background:#3b82f6}
-.light-theme .highlight-popup{background:#fff;border-color:#2563eb88;box-shadow:0 8px 24px #00000018}
-.light-theme .highlight-popup button{background:#2563eb;color:#fff}
-.light-theme .highlight-popup button:hover{background:#3b82f6}
-.light-theme .sidebar-highlight-ref{background:#2563eb08;color:#1d4ed8;border-left-color:#2563eb}
-.light-theme .res-expanded .res-bg{background:#f5f8ff;border-color:#3b82f608;color:#4a5568}
-.light-theme .stream-indicator{background:#f8fafff0;color:#2563eb}
-.light-theme .stream-dot{background:#3b82f6}
-.light-theme .field-label{color:#2563eb}
-.light-theme .field-label.green{color:#2563eb}
-.light-theme .theme-toggle{background:#ffffffcc;border-color:#3b82f612}
-.light-theme .theme-toggle:hover{background:#3b82f60a}
-.light-theme ::-webkit-scrollbar-thumb{background:#3b82f620}
-.light-theme .newbie-quote{border-left-color:#6366f1;background:#6366f108}
-
-/* ── Light: Practice Tab ──────────────────────── */
-.light-theme .practice-intro{color:#6b7fa0}
-.light-theme .practice-card{border-color:#3b82f612;background:#f5f8ff}
-.light-theme .practice-card:hover{border-color:#3b82f630;background:#eef4ff}
-.light-theme .practice-card.active{border-color:#2563eb;background:#2563eb08}
-.light-theme .practice-card .pc-code{color:#1a1a2e}
-.light-theme .practice-card.active .pc-code{color:#2563eb}
-.light-theme .practice-card .pc-title{color:#6b7fa0}
-.light-theme .practice-card .pc-meta{color:#94a3b8}
-.light-theme .practice-card .pc-side.gov{background:#05966912;color:#059669}
-.light-theme .practice-card .pc-side.opp{background:#dc262610;color:#dc2626}
-.light-theme .practice-textarea{background:#f8faff;color:#1a1a2e;border-color:#3b82f618;box-shadow:0 2px 8px rgba(0,0,0,.04) inset}
-.light-theme .practice-textarea:focus{border-color:#2563eb66;box-shadow:0 0 0 3px #2563eb10}
-.light-theme .practice-textarea::placeholder{color:#94a3b8}
-.light-theme .practice-stats{color:#6b7fa0}
-.light-theme .practice-feedback{background:#f8faff;border-color:#3b82f610;box-shadow:0 2px 12px rgba(0,0,0,.04)}
-.light-theme .practice-feedback-actions{border-top-color:#3b82f60a}
+/* Light theme removed — dark mode only */
 
 /* ── Saved Cases Sidebar ─────────────────────── */
 .cases-toggle{
@@ -555,8 +411,6 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
   line-height:1;backdrop-filter:blur(8px);color:#e0e0e8;
 }
 .cases-toggle:hover{background:#ffffff12}
-.light-theme .cases-toggle{background:#ffffffcc;border-color:#3b82f612;color:#1a1a2e}
-.light-theme .cases-toggle:hover{background:#3b82f60a}
 
 .cases-sidebar{
   position:fixed;top:0;left:0;z-index:40;width:300px;height:100vh;
@@ -565,21 +419,17 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
   transform:translateX(-100%);transition:transform .25s ease;
 }
 .cases-sidebar.open{transform:translateX(0)}
-.light-theme .cases-sidebar{background:#f0f4faf8;border-right-color:#3b82f610}
 
 .cases-sidebar-header{
   padding:20px 20px 16px;border-bottom:1px solid #ffffff10;
   display:flex;justify-content:space-between;align-items:center;
 }
-.light-theme .cases-sidebar-header{border-bottom-color:#3b82f610}
 .cases-sidebar-header h3{font-size:1.05rem;font-weight:700;color:#ef4444;letter-spacing:.5px}
-.light-theme .cases-sidebar-header h3{color:#2563eb}
 .cases-sidebar-close{
   background:none;border:none;color:#888;font-size:1.3rem;cursor:pointer;padding:4px 8px;
   border-radius:6px;transition:.15s;
 }
 .cases-sidebar-close:hover{color:#fff;background:#ffffff12}
-.light-theme .cases-sidebar-close:hover{color:#1a1a2e;background:#00000008}
 
 .cases-list{flex:1;overflow-y:auto;padding:12px}
 .cases-empty{
@@ -592,20 +442,16 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 }
 .case-item:hover{background:#ffffff08;border-color:#ffffff0a}
 .case-item.active{background:#ef444410;border-color:#ef444430}
-.light-theme .case-item:hover{background:#3b82f606;border-color:#3b82f610}
-.light-theme .case-item.active{background:#2563eb10;border-color:#2563eb30}
 
 .case-item-title{
   font-size:.95rem;font-weight:600;color:#e0e0e8;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;
 }
-.light-theme .case-item-title{color:#1a1a2e}
 .case-item-meta{font-size:.78rem;color:#94a3b8;display:flex;justify-content:space-between;align-items:center}
 .case-item-depth{
   font-size:.68rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
   color:#f59e0b;background:#f59e0b12;padding:2px 8px;border-radius:4px;
 }
-.light-theme .case-item-depth{color:#2563eb;background:#2563eb10}
 
 .case-item-delete{
   background:none;border:none;color:#94a3b8;font-size:.85rem;cursor:pointer;
@@ -628,7 +474,6 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 }
 .cases-search input:focus{border-color:#ef444466}
 .cases-search input::placeholder{color:#64748b}
-.light-theme .cases-search input{background:#f5f8ff;color:#1a1a2e;border-color:#3b82f618}
 
 /* ── Export Button ───────────────────────────── */
 .btn-export{
@@ -705,9 +550,6 @@ body.light-theme{background:#f0f4fa;color:#1a1a2e}
 .profile-badge:hover{background:#ffffff12}
 .profile-avatar{width:24px;height:24px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#0f1724}
 .profile-name{font-size:.82rem;color:#cbd5e1;font-weight:500}
-.light-theme .profile-badge{background:#ffffffcc;border-color:#3b82f612}
-.light-theme .profile-name{color:#1a1a2e}
-.light-theme .profile-avatar{background:#3b82f6;color:#fff}
 
 /* ── Forum Tab ───────────────────────────────── */
 .forum-post{
@@ -3409,30 +3251,16 @@ function Casual() {
     setLoading(true);
 
     try {
-      const sysPrompt = `You are the strategic brain of the best APDA debater in the country. The user is telling you what the other team just argued. Think through this like you are sitting next to your partner between speeches, scribbling notes, whispering "okay here's what we do."
+      const sysPrompt = `You are a debate strategist sitting next to your partner mid-round. Keep it SHORT and punchy.
 
-Your personality: You are confident, occasionally cocky, genuinely excited when you spot a devastating turn, and openly dismissive of bad arguments. You say things like "this is a bad argument and here's why," "oh this is actually clever, here's how to handle it," "they're going to wish they never brought this up," and "look, just grant them this, it doesn't matter." You have OPINIONS about which arguments are good and which are garbage.
-
-For EACH argument the user describes, do ONE of these (always pick the strongest available move):
-
-ACKNOWLEDGE and REFRAME: "We actually agree, and that's exactly why we win." Show how their own argument, taken to its logical conclusion, proves your point. This is the most devastating move when available.
-
-CONCEDE and WEIGH: "Give them this. It doesn't matter." Grant the point entirely, then explain with specific weighing calculus (scope, probability, reversibility, timeframe) why it changes nothing. This knifes their case because they wasted time winning something irrelevant.
-
-DISPUTE at LINK LEVEL: "Their mechanism is broken. Here's where." Identify the exact link in their causal chain that fails. Provide a counter-warrant with a real-world example. Be specific about WHY the link breaks.
-
-TURN: "This actually proves our side." The nuclear option. Show how their own logic, evidence, or framework leads to YOUR conclusion. The best turns make the opposition wish they had never raised the argument.
-
-How to write:
-- Start with a gut reaction: is this argument actually threatening, or is it noise? Be honest. "This is their best argument — take it seriously" or "This is weak, here's how to expose it."
-- Sound like a real person thinking out loud. Not an essay. Not a report. A debater in the zone.
-- Say "this is bad" when an argument is bad. Say "this is actually smart" when it is.
-- No markdown formatting. No **, no #, no *. Natural prose with debate terminology.
-- Be opinionated. If one response is clearly better than the others, say so: "Don't waste time disputing this — just concede and weigh. It's not worth the oxygen."
-- If the opponent's argument has an obvious flaw, be blunt: "They skipped a step in their causal chain and they don't even know it."
-- If the argument is genuinely strong, respect it: "Okay this is actually good. Here's the only clean answer..."
-- Keep it tight. Real in-round strategy is not an essay. Get to the point.
-- Never use em dashes, en dashes, or hyphens as separators. Use periods, commas, and natural phrasing instead.`;
+RULES:
+1. MAX 3-5 sentences per argument response. No essays. Get to the point fast.
+2. Lead with your gut: "This is weak" or "This is actually good, here's the play."
+3. For each argument, pick ONE move: reframe it, concede and weigh, break the link, or turn it.
+4. Sound like a real person. "Look, just grant them this, it doesn't matter" or "They skipped a step and don't even know it."
+5. No markdown. No **, no #, no *. No dashes as separators. Just natural talk.
+6. Be opinionated. If an argument is bad, say it's bad. If it's clever, say so.
+7. If the user asks a general question (not about a specific argument), answer in 2-4 sentences max. Plain language. Like explaining to a smart friend over coffee.`;
       const apiMessages = newMsgs.slice(-10).map(m => ({
         role: m.role === 'assistant' ? 'assistant' : 'user',
         content: m.text
@@ -3446,7 +3274,7 @@ How to write:
           updated[msgIdx] = {role:'assistant', text: text};
           return updated;
         });
-      }, { messages: apiMessages, thinkBudget: 8000, maxTokens: 8000 });
+      }, { messages: apiMessages, thinkBudget: 4000, maxTokens: 2000 });
     } catch(e) {
       setMessages(prev => [...prev, {role:'assistant', text:'Error: '+e.message}]);
     }
@@ -5206,16 +5034,11 @@ const TABS = [
 
 function App() {
   const [tab, setTab] = useState('case');
-  const [theme, setTheme] = useState('dark');
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loadedCase, setLoadedCase] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
   const { user, loading: authLoading, signIn, signOut } = useAuth();
-
-  useEffect(() => {
-    document.body.className = theme === 'light' ? 'light-theme' : '';
-  }, [theme]);
 
   const saveCase = useCallback((caseData) => {
     const newCase = { ...caseData, id: Date.now().toString(), savedAt: new Date().toISOString() };
@@ -5303,12 +5126,6 @@ function App() {
             React.createElement('div',{className:'profile-avatar',style:{background:'#64748b'}}, '\uD83D\uDC64'),
             React.createElement('span',{className:'profile-name'}, 'Sign in'),
           ),
-      // Theme toggle - fixed top right
-      React.createElement('button',{
-        className:'theme-toggle',
-        onClick:()=>setTheme(prev => prev==='dark'?'light':'dark'),
-        title: theme==='dark' ? 'Switch to light mode' : 'Switch to dark mode',
-      }, theme==='dark' ? '\u2600\uFE0F' : '\uD83C\uDF19'),
       React.createElement('div',{className:'header'},
         React.createElement('h1',{className:'logo'},
           React.createElement('span',{className:'green'},'Debate'),
