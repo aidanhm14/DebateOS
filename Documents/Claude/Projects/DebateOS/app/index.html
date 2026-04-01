@@ -1280,9 +1280,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
           if (parsed.type === 'content_block_delta') {
             if (parsed.delta?.type === 'text_delta' && parsed.delta?.text) {
               fullText += parsed.delta.text;
-              // Strip markdown bold/italic/headers in real-time
-              const cleanText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
-              onChunk(cleanText);
+              onChunk(fullText);
               if (onProgress) {
                 const wordCount = fullText.split(/\s+/).length;
                 const writePct = Math.min(70, (wordCount / expectedWords) * 70);
@@ -1301,8 +1299,6 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
     }
   }
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
-  // Strip any markdown bold/italic that slipped through despite prompt instructions
-  fullText = fullText.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1').replace(/^#{1,6}\s/gm, '');
   return fullText;
 }
 
