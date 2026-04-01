@@ -779,10 +779,10 @@ const FORMATS = {
   'APDA': {
     label: 'APDA (2v2)',
     speeches: [
-      { code:'PM', title:'Prime Minister Constructive', time:'7 min', side:'gov' },
-      { code:'LO', title:'Leader of Opposition', time:'8 min', side:'opp' },
-      { code:'MG', title:'Member of Government', time:'8 min', side:'gov' },
-      { code:'MO', title:'Member of Opposition', time:'8 min', side:'opp' },
+      { code:'PM', title:'Prime Minister Constructive', time:'7:30', side:'gov' },
+      { code:'LO', title:'Leader of Opposition', time:'8:30', side:'opp' },
+      { code:'MG', title:'Member of Government', time:'8:30', side:'gov' },
+      { code:'MO', title:'Member of Opposition', time:'8:30', side:'opp' },
       { code:'LOR', title:'Leader of Opposition Rebuttal', time:'4 min', side:'opp' },
       { code:'PMR', title:'Prime Minister Rebuttal', time:'5 min', side:'gov' },
     ]
@@ -1601,7 +1601,7 @@ COMMON KNOWLEDGE RULE (ANTI-SPEC): In APDA parliamentary debate, all knowledge b
 
 FORMATTING: Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Title sections as "## Argument 1", "## Argument 2", etc. Use letters (a, b, c) and roman numerals (i, ii, iii) for sub-points. Write in clean debate outline style.
 
-COMPLETION RULE: You MUST complete the ENTIRE case structure. Do not stop mid-speech. Do not truncate. Every required section must be fully written out. If the case requires a Background, Framework, 3 Arguments, A2 blocks, MG Overview, and PMR architecture, you must write ALL of them. An incomplete case is useless. Finish the entire document no matter what.
+COMPLETION RULE: You MUST complete the ENTIRE case structure. Do not stop mid-speech. Do not truncate. Every required section must be fully written out. If the case includes a Background, Framework, Arguments, A2 blocks, and optionally MG strategy notes or PMR architecture, you must write ALL included sections completely. An incomplete case is useless. Finish the entire document no matter what.
 
 STRATEGIC ROUND ARCHITECTURE — This is what separates good cases from winning cases:
 
@@ -1772,7 +1772,7 @@ PATTERN 6: LAYERED ARGUMENT DEPTH WITH NUMBERED SUB-POINTS
 Real competitive cases use deep nesting: arguments have sub-claims (a, b, c), each sub-claim has warrants (i, ii, iii), and sometimes sub-warrants (1, 2, 3). A moral dilemma case about a doctor choosing between patients goes: Argument 1 > Sub-point 1.1 (oath as binding obligation) > Warrant 1.1.1 (explanation) > Impact 1.1.2 (consequences). This depth is what separates a 28-speak case from a 33-speak case. Don't just make claims. Warrant them, then warrant the warrants.
 
 PATTERN 7: MG SPIKES
-The best cases have pre-planned MG spikes: arguments that are intentionally held back from the PMC to be deployed in the MG when opp has already committed to a line of attack. A case about the Chilean No Campaign includes a spike about Pinochet controlling media that is designed to be dropped in MG after opp has committed to the realist approach. Build 1-2 spikes into every competition-depth case.
+The best cases have pre-planned MG spikes: arguments that are intentionally held back from the PMC to be deployed in the MG when opp has already committed to a line of attack. A case about the Chilean No Campaign includes a spike about Pinochet controlling media that is designed to be dropped in MG after opp has committed to the realist approach. Consider including 1-2 spikes for competition-depth cases when the motion lends itself to strategic holdback. Not every case needs MG spikes. Sometimes a full, front-loaded PMC with 3 strong arguments is the right call, especially for straightforward policy or moral cases. Use spikes when opp is likely to commit to a predictable line of attack that you can punish in extension.
 
 PATTERN 8: OPP CHOICE ARCHITECTURE
 Some of the most innovative cases give opp a genuine choice that creates a double bind. A historical case presents two approaches (realist vs. optimist campaign strategy) and lets opp choose which to defend, but the PMC is designed so that both choices walk into prepared ground. Consider whether the motion lends itself to an opp-choice structure where you can prepare for both paths.
@@ -2672,6 +2672,7 @@ function Resolutions() {
   const [motionCategory, setMotionCategory] = useState('any');
   const [motionOutput, setMotionOutput] = useState(null);
   const [motionLoading, setMotionLoading] = useState(false);
+  const [mProgress, setMProgress] = useState(null);
   const [motionStreaming, setMotionStreaming] = useState(false);
   const [newsContext, setNewsContext] = useState(null);
   const [fetchingNews, setFetchingNews] = useState(false);
@@ -2796,10 +2797,11 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
     }
 
     try {
-      await callClaude(sysPrompt, userPrompt, (text) => setMotionOutput(text), { thinkBudget: 10000, maxTokens: 8000 });
+      await callClaude(sysPrompt, userPrompt, (text) => setMotionOutput(text), { thinkBudget: 10000, maxTokens: 8000, expectedWords: 1200, onProgress: (p) => setMProgress(p) });
     } catch(e) {
       setMotionOutput('Error: ' + e.message);
     }
+    setMProgress(null);
     setMotionLoading(false);
     setMotionStreaming(false);
   };
@@ -3269,6 +3271,8 @@ function RoundVision() {
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState('map');
   const [mapLoading, setMapLoading] = useState(false);
+  const [vProgress, setVProgress] = useState(null);
+  const [mapProgress, setMapProgress] = useState(null);
 
   const analyze = async () => {
     if (!motion.trim()) return;
@@ -3315,11 +3319,12 @@ In one paragraph, what is the story that wins this round? "At the end of the rou
 
 Write in a direct, confident, opinionated voice. You are the coach. You've seen this before. Tell them what to do. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
       const userPrompt = `Motion: ${motion}\nMy side: ${side}\n\nGive me the full round vision.`;
-      await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 10000, maxTokens: 8000 });
+      await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 10000, maxTokens: 8000, expectedWords: 2000, onProgress: (p) => setVProgress(p) });
     } catch(e) {
       setOutput('Error: ' + e.message);
     }
     setLoading(false);
+    setVProgress(null);
 
     // Generate argument map
     setMapLoading(true);
@@ -3335,7 +3340,7 @@ clashes: 2-3 points where gov and opp arguments collide. govLinks/oppLinks are 0
 Be specific to the motion. Arguments should be real strategic angles a competitive debater would run.`;
         const mapUser = `Motion: ${motion}\nSide: ${side}\n\nGenerate the argument map JSON.`;
         let mapText = '';
-        await callClaude(mapSys, mapUser, (text) => { mapText = text; }, { thinkBudget: 6000, maxTokens: 8000 });
+        await callClaude(mapSys, mapUser, (text) => { mapText = text; }, { thinkBudget: 6000, maxTokens: 8000, expectedWords: 400, onProgress: (p) => setMapProgress(p) });
         // Parse JSON from response - be aggressive about finding it
         let cleaned = (mapText || '').trim();
         // Strip code fences, leading text, trailing text
@@ -3374,6 +3379,7 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
           setMapData({error: 'Map generation failed after 2 attempts. Try clicking Analyze again.', raw: (mapText || '').substring(0, 100)});
         }
       }
+      setMapProgress(null);
       setMapLoading(false);
   };
 
@@ -3395,6 +3401,23 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
     el('div',{style:{marginTop:20}},
       el('button',{className:'btn btn-primary',onClick:analyze,disabled:loading||mapLoading},
         loading ? el('span',null,el('span',{className:'spinner'}),'Analyzing...') : 'Analyze Round'
+      ),
+      loading && vProgress && vProgress.percent > 0 && el('div',{style:{marginTop:12}},
+        el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
+          el('span',{style:{fontSize:'.78rem',color:'#94a3b8',letterSpacing:'.5px',textTransform:'uppercase',fontWeight:600}},
+            vProgress.phase === 'thinking' ? 'Analyzing round' : 'Writing analysis'
+          ),
+          el('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
+            vProgress.percent + '%'
+          )
+        ),
+        el('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
+          el('div',{style:{
+            height:'100%',width:vProgress.percent+'%',
+            background:'linear-gradient(90deg,#ef4444,#06b6d4)',
+            borderRadius:2,transition:'width .3s ease'
+          }})
+        )
       )
     ),
 
@@ -3406,7 +3429,18 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
 
     // Map loading state
     view === 'map' && mapLoading && el('div',{style:{textAlign:'center',padding:40,color:'#ef4444',fontSize:'.9rem'}},
-      el('span',{className:'spinner'}), ' Building argument map...'
+      el('span',{className:'spinner'}), ' Building argument map...',
+      mapProgress && mapProgress.percent > 0 && el('div',{style:{marginTop:16,maxWidth:280,margin:'16px auto 0'}},
+        el('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:4}},
+          el('span',{style:{fontSize:'.75rem',color:'#64748b'}},
+            mapProgress.phase === 'thinking' ? 'Thinking' : 'Building'
+          ),
+          el('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700}}, mapProgress.percent+'%')
+        ),
+        el('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
+          el('div',{style:{height:'100%',width:mapProgress.percent+'%',background:'linear-gradient(90deg,#ef4444,#06b6d4)',borderRadius:2,transition:'width .3s ease'}})
+        )
+      )
     ),
 
     // Argument Map
@@ -3590,7 +3624,12 @@ function Philosophy() {
     'Kant','Mill','Rawls','Nozick','Marx','Foucault','Nietzsche',
     'Aristotle','Hegel','Sartre','de Beauvoir','Nagarjuna','Fanon',
     'Hobbes','Locke','Hume','Wittgenstein','Arendt','Butler',
-    'Sen','Nussbaum','Habermas','Gramsci','Camus','Kierkegaard'
+    'Sen','Nussbaum','Habermas','Gramsci','Camus','Kierkegaard',
+    'Baudrillard','Deleuze','Derrida','Zizek','Debord','Levinas',
+    'Agamben','Spivak','Said','hooks','Mbembe','Badiou',
+    'Machiavelli','Rousseau','Bentham','Popper','Kuhn','Rorty',
+    'Chomsky','Dewey','James','Peirce','Confucius','Laozi',
+    'Plato','Epicurus','Epictetus','Marcus Aurelius','Aquinas','Spinoza'
   ];
 
   const modes = {
@@ -3700,7 +3739,7 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
           userPrompt = `Philosopher: ${philosopher}${concept ? `\nApplied to: ${concept}` : ''}\n\nBuild me a complete, ready-to-use framework I can deploy in a PM speech.`;
         }
 
-      await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 12000, maxTokens: 10000 });
+      await callClaude(sysPrompt, userPrompt, (text) => setOutput(text), { thinkBudget: 12000, maxTokens: 10000, expectedWords: 1500, onProgress: (p) => setPProgress(p) });
     } catch(e) {
       setOutput('Error: ' + e.message);
     }
@@ -3765,6 +3804,23 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
         exploreMode === 'apply-motion' ? 'Apply Framework' :
         exploreMode === 'head-to-head' ? 'Compare Frameworks' :
         'Build Framework'
+      ),
+      loading && pProgress && pProgress.percent > 0 && React.createElement('div',{style:{marginTop:12}},
+        React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
+          React.createElement('span',{style:{fontSize:'.78rem',color:'#94a3b8',letterSpacing:'.5px',textTransform:'uppercase',fontWeight:600}},
+            pProgress.phase === 'thinking' ? 'Thinking' : 'Exploring'
+          ),
+          React.createElement('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
+            pProgress.percent + '%'
+          )
+        ),
+        React.createElement('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
+          React.createElement('div',{style:{
+            height:'100%',width:pProgress.percent+'%',
+            background:'linear-gradient(90deg,#ef4444,#06b6d4)',
+            borderRadius:2,transition:'width .3s ease'
+          }})
+        )
       )
     ),
     output && React.createElement('div',{className:'phil-output'},
@@ -3900,7 +3956,7 @@ Rules:
       let result = '';
       await callClaude(sysPrompt, `Here is the case to review:\n\n${caseText}`, (text) => {
         result = text;
-      }, { thinkBudget: 10000, maxTokens: 16000 });
+      }, { thinkBudget: 10000, maxTokens: 16000 , expectedWords: 1500, onProgress: (p) => setJProgress(p)});
 
       // Parse JSON from response
       const jsonMatch = result.match(/\[[\s\S]*\]/);
@@ -3947,6 +4003,7 @@ Rules:
       setError('Error analyzing case: ' + e.message);
       setAnalyzed(false);
     }
+    setJProgress(null);
     setLoading(false);
   };
 
@@ -4032,8 +4089,21 @@ Rules:
           ? el('span', null, el('span',{className:'spinner'}), 'Thinking deeply about your case...')
           : 'Get Feedback'
         ),
-        caseText.trim() && el('span', {style:{color:'#94a3b8',fontSize:'.82rem'}},
+        caseText.trim() && !loading && el('span', {style:{color:'#94a3b8',fontSize:'.82rem'}},
           caseText.split(/\s+/).length + ' words'
+        ),
+        loading && jProgress && jProgress.percent > 0 && el('div',{style:{flex:'1 1 100%',marginTop:8}},
+          el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
+            el('span',{style:{fontSize:'.78rem',color:'#94a3b8',letterSpacing:'.5px',textTransform:'uppercase',fontWeight:600}},
+              jProgress.phase === 'thinking' ? 'Reading your case' : jProgress.phase === 'done' ? 'Complete' : 'Writing feedback'
+            ),
+            el('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
+              jProgress.percent + '%'
+            )
+          ),
+          el('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
+            el('div',{style:{height:'100%',width:jProgress.percent+'%',background:'linear-gradient(90deg,#ef4444,#06b6d4)',borderRadius:2,transition:'width .3s ease'}})
+          )
         )
       ),
       el(ErrorToast, {message: error, onDismiss: () => setError(null)})
@@ -4192,6 +4262,40 @@ function Judge() {
   };
 
   const [loadingFeedback, setLoadingFeedback] = useState({});
+  const [roundEval, setRoundEval] = useState(null);
+  const [roundEvalLoading, setRoundEvalLoading] = useState(false);
+  const [reProgress, setReProgress] = useState(null);
+  const allFilled = speeches.every(s => (notes[s.code] || '').trim().length > 0);
+  const evaluateRound = async () => {
+    setRoundEvalLoading(true);
+    setRoundEval('');
+    setReProgress({phase:'thinking',percent:0});
+    try {
+      const sysPrompt = `You are a senior APDA judge delivering a comprehensive Round Evaluation (RFD). You have observed all 6 speeches in this round. Provide:
+
+1. DECISION: Who wins and why (Gov or Opp). Be decisive.
+2. KEY CLASH POINTS: Identify the 2-3 issues where the round was actually decided. For each, explain who won it and why.
+3. SPEECH-BY-SPEECH ASSESSMENT: Brief evaluation of each speech's strategic contribution. What did each speaker do well? What did they miss? How did their speech affect the round trajectory?
+4. SPEAKER POINTS: Suggest speaker point ranges (25-30 scale) for each speaker with brief justification.
+5. ADVICE: One key improvement for each speaker that would have changed the round.
+
+Be direct, specific, and reference actual content from the notes. Write like a real judge giving an RFD, not a textbook. Use markdown formatting for readability.`;
+      let allNotes = '';
+      for (const speech of speeches) {
+        const note = notes[speech.code] || '';
+        const speechTags = tags[speech.code] || [];
+        allNotes += '## ' + speech.title + ' (' + speech.code + ')\n';
+        if (speechTags.length > 0) allNotes += 'Tags: ' + speechTags.join(', ') + '\n';
+        allNotes += note + '\n\n';
+      }
+      const userPrompt = 'Format: ' + format + '\n\nHere are my flow notes for the entire round:\n\n' + allNotes + '\nDeliver your RFD.';
+      await callClaude(sysPrompt, userPrompt, (text) => setRoundEval(text), { thinkBudget: 12000, maxTokens: 10000, expectedWords: 1500, onProgress: (p) => setReProgress(p) });
+    } catch(e) {
+      setRoundEval('Error: ' + e.message);
+    }
+    setReProgress(null);
+    setRoundEvalLoading(false);
+  };
 
   const getFeedback = async (code) => {
     const speech = speeches.find(s=>s.code===code);
@@ -4254,6 +4358,39 @@ function Judge() {
           }
         ,dangerouslySetInnerHTML:{__html:cleanOutput(feedback[speech.code], true)}})
       )
+    ),
+    React.createElement('div',{style:{marginTop:32,paddingTop:24,borderTop:'1px solid #ffffff0a'}},
+      React.createElement('button',{
+        className:'btn btn-primary',
+        style:{width:'100%',padding:'14px 24px',fontSize:'1rem',fontWeight:700,opacity:allFilled?1:0.4,cursor:allFilled?'pointer':'not-allowed'},
+        disabled:!allFilled||roundEvalLoading,
+        onClick:evaluateRound
+      },
+        roundEvalLoading
+          ? React.createElement('span',null,React.createElement('span',{className:'spinner'}),' Evaluating round...')
+          : '\u2696\uFE0F Evaluate Whole Round'
+      ),
+      !allFilled && React.createElement('p',{style:{color:'#64748b',fontSize:'.82rem',textAlign:'center',marginTop:8}},
+        'Fill in notes for all 6 speeches to unlock round evaluation'
+      ),
+      roundEvalLoading && reProgress && reProgress.percent > 0 && React.createElement('div',{style:{marginTop:12}},
+        React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
+          React.createElement('span',{style:{fontSize:'.78rem',color:'#94a3b8',letterSpacing:'.5px',textTransform:'uppercase',fontWeight:600}},
+            reProgress.phase === 'thinking' ? 'Analyzing round' : 'Writing RFD'
+          ),
+          React.createElement('span',{style:{fontSize:'.82rem',color:'#ef4444',fontWeight:700,fontVariantNumeric:'tabular-nums'}},
+            reProgress.percent + '%'
+          )
+        ),
+        React.createElement('div',{style:{height:3,background:'#ffffff0a',borderRadius:2,overflow:'hidden'}},
+          React.createElement('div',{style:{height:'100%',width:reProgress.percent+'%',background:'linear-gradient(90deg,#ef4444,#06b6d4)',borderRadius:2,transition:'width .3s ease'}})
+        )
+      ),
+      roundEval && React.createElement('div',{
+        className:'output',
+        style:{marginTop:16,padding:18,background:'#0f1724',borderRadius:10,border:'1px solid #ffffff08',fontSize:'.9rem',lineHeight:1.5},
+        dangerouslySetInnerHTML:{__html:cleanOutput(roundEval, true)}
+      })
     )
   );
 }
@@ -4278,10 +4415,10 @@ function buildJudgeFeedback(speech, note, activeTags) {
 function Practice() {
   const el = React.createElement;
   const SPEECHES = [
-    {code:'PMC',title:'Prime Minister Constructive',time:'7 min',side:'gov',desc:'Present your case: framework, background, and 2-3 arguments with warrants.'},
-    {code:'LOC',title:'Leader of Opposition Constructive',time:'8 min',side:'opp',desc:'Present Off-Case arguments then rebut Government\'s case On-Case.'},
-    {code:'MG',title:'Member of Government',time:'8 min',side:'gov',desc:'Respond to LOC attacks. Off-Case first, then On-Case defense.'},
-    {code:'MO',title:'Member of Opposition',time:'8 min',side:'opp',desc:'Respond to MG, extend Off-Case, address anything LO missed from PMC.'},
+    {code:'PMC',title:'Prime Minister Constructive',time:'7:30',side:'gov',desc:'Present your case: framework, background, and 2-3 arguments with warrants.'},
+    {code:'LOC',title:'Leader of Opposition Constructive',time:'8:30',side:'opp',desc:'Present Off-Case arguments then rebut Government\'s case On-Case.'},
+    {code:'MG',title:'Member of Government',time:'8:30',side:'gov',desc:'Respond to LOC attacks. Off-Case first, then On-Case defense.'},
+    {code:'MO',title:'Member of Opposition',time:'8:30',side:'opp',desc:'Respond to MG, extend Off-Case, address anything LO missed from PMC.'},
     {code:'LOR',title:'Leader of Opposition Rebuttal',time:'4 min',side:'opp',desc:'Summarize Opp case, give ballots, weigh aggressively. No new arguments.'},
     {code:'PMR',title:'Prime Minister Rebuttal',time:'5 min',side:'gov',desc:'Final word. Summarize, weigh, pull through drops. No new arguments.'},
   ];
@@ -4334,10 +4471,11 @@ Write like a coach who genuinely wants this debater to get better. Be tough but 
     const userPrompt = `Motion: ${motion || '(no motion provided)'}\nSpeech type: ${selectedSpeech.code} (${selectedSpeech.title})\n\nHere is the speech:\n\n${userSpeech}`;
 
     try {
-      await callClaude(sysPrompt, userPrompt, (text) => setFeedback(text), { thinkBudget: 8000, maxTokens: 6000 });
+      await callClaude(sysPrompt, userPrompt, (text) => setFeedback(text), { thinkBudget: 8000, maxTokens: 6000, expectedWords: 1000, onProgress: (p) => setSpProgress(p) });
     } catch(e) {
       setFeedback('Error: ' + e.message);
     }
+    setSpProgress(null);
     setLoading(false);
   };
 
@@ -4473,10 +4611,10 @@ function Newbies() {
         el('tbody',null,
           el('tr',null, el('td',null,'Background + Case Statement'), el('td',null,'Gov reads aloud'), el('td',null,'~2 min')),
           el('tr',null, el('td',null,'Points of Clarification (POCs)'), el('td',null,'Both'), el('td',null,'Up to 15 min')),
-          el('tr',null, el('td',null,'PM Constructive (PMC)'), el('td',null,'Government'), el('td',null,'7 min')),
-          el('tr',null, el('td',null,'Leader of Opp Constructive (LOC)'), el('td',null,'Opposition'), el('td',null,'8 min')),
-          el('tr',null, el('td',null,'Member of Government (MG)'), el('td',null,'Government'), el('td',null,'8 min')),
-          el('tr',null, el('td',null,'Member of Opposition (MO)'), el('td',null,'Opposition'), el('td',null,'8 min')),
+          el('tr',null, el('td',null,'PM Constructive (PMC)'), el('td',null,'Government'), el('td',null,'7:30')),
+          el('tr',null, el('td',null,'Leader of Opp Constructive (LOC)'), el('td',null,'Opposition'), el('td',null,'8:30')),
+          el('tr',null, el('td',null,'Member of Government (MG)'), el('td',null,'Government'), el('td',null,'8:30')),
+          el('tr',null, el('td',null,'Member of Opposition (MO)'), el('td',null,'Opposition'), el('td',null,'8:30')),
           el('tr',null, el('td',null,'LO Rebuttal (LOR)'), el('td',null,'Opposition'), el('td',null,'4 min')),
           el('tr',null, el('td',null,'PM Rebuttal (PMR)'), el('td',null,'Government'), el('td',null,'5 min')),
         )
@@ -4554,6 +4692,34 @@ function Newbies() {
       el('p',{key:10},"On Opp: Identifying an opponent's argument as a NIB is devastating. You can say: \"Even if everything they said in their first argument is true, they still haven't proven their case. They showed the problem exists. Great. We agree. But they haven't shown that their solution fixes it, or that it doesn't create worse problems.\" This lets you concede ground without losing anything, because you're showing the judge that the ground you conceded doesn't actually matter."),
       el('p',{key:11},"On judging: Judges love when debaters understand NIBs because it shows strategic maturity. A debater who can say \"that's necessary but insufficient for their case\" demonstrates a level of analytical clarity that scores well on speaker points."),
       el('div',{key:12,className:'newbie-callout'}, el('span',null, el('strong',null,'Common NIB traps for new debaters: '), 'Spending 5 minutes of your PMC proving the problem exists, then only 2 minutes on your actual solution. This is called \"proving the NIB\" and it means you\'ve spent most of your speech on something that doesn\'t win you the round by itself. Flip the ratio: establish the problem quickly, then spend your time on why your solution is uniquely good.')),
+    ]},
+    { key:'theory', icon:'\u2699\uFE0F', title:'Theory Arguments', render: () => [
+      el('p',{key:0},"Theory arguments are about the rules and norms of debate itself, not the substance of the motion. When you run theory, you're arguing that the other team has done something structurally unfair that makes the round impossible to win on substance. Theory is a procedural check on bad behavior."),
+      el('p',{key:1,style:{fontWeight:600,color:'#e0e7ef'}},"When to run theory:"),
+      el('p',{key:2},"The most common theory argument on APDA is a tight call. If Government's case is so narrow that Opposition literally cannot argue the other side, that's a theory issue. Other theory arguments include: the case is truistic (true by definition, so there's nothing to debate), the case shifts (Government changed their position mid-round), the case is a-topical (doesn't actually relate to the motion in a motions round), or the time-space is unfair (set in a context that requires specialized knowledge Opposition couldn't reasonably have)."),
+      el('p',{key:3,style:{fontWeight:600,color:'#e0e7ef'}},"How to structure a theory argument:"),
+      el('p',{key:4},"Theory has its own framework. You need to prove: (1) an interpretation of what the rules require, (2) a violation showing the other team broke that rule, (3) standards explaining why that rule matters for fair debate, and (4) a voter telling the judge what to do about it (usually vote against the violating team). Keep it clean and structured. Judges get frustrated when theory is messy."),
+      el('p',{key:5,style:{fontWeight:600,color:'#e0e7ef'}},"The tight call specifically:"),
+      el('p',{key:6},"A case is tight when Opposition has no reasonable ground to argue. The test is not whether Opp finds it hard, but whether a competent debater could construct a meaningful opposition. If you tight call, you need to explain what arguments Opp would make and why the case forecloses all of them. Judges are skeptical of tight calls, so the bar is high. Don't tight call just because you can't think of arguments in the moment."),
+      el('div',{key:7,className:'newbie-callout'}, el('span',null, el('strong',null,'Theory is a last resort, not a first option. '), "Judges generally prefer substantive debate. If you can beat the case on substance, do that instead of running theory. Running theory when you have substantive ground looks weak. Save it for when the round genuinely cannot be won on the merits.")),
+      el('p',{key:8,style:{fontWeight:600,color:'#e0e7ef'}},"Common theory terms:"),
+      el('div',{key:9,className:'newbie-term'}, el('span',{className:'term-word'},'Tight'), el('span',{className:'term-def'},'The case gives Opp no reasonable ground. The most common theory argument on APDA.')),
+      el('div',{key:10,className:'newbie-term'}, el('span',{className:'term-word'},'Truism'), el('span',{className:'term-def'},'The case is true by definition. There is nothing to debate because the resolution is self-evidently correct.')),
+      el('div',{key:11,className:'newbie-term'}, el('span',{className:'term-word'},'Case Shift / Moving Target'), el('span',{className:'term-def'},'Government changes their position between speeches. What PM said is different from what MG defends.')),
+      el('div',{key:12,className:'newbie-term'}, el('span',{className:'term-word'},'Time-Space'), el('span',{className:'term-def'},'The specific context (time period, location, actor) of the case. Unfair if it requires knowledge Opp could not reasonably have.')),
+      el('div',{key:13,className:'newbie-term'}, el('span',{className:'term-word'},'Voter'), el('span',{className:'term-def'},'The reason the judge should vote on theory rather than substance. Usually fairness or education.')),
+    ]},
+    { key:'spec', icon:'\u{1F50D}', title:'Specificity Arguments (Spec)', render: () => [
+      el('p',{key:0},"Specificity arguments, called spec on APDA, are about whether Government has defined their case clearly enough for a fair debate. Where theory argues the case is structurally unfair, spec argues that Government has been too vague about what they're actually defending."),
+      el('p',{key:1,style:{fontWeight:600,color:'#e0e7ef'}},"What spec looks like:"),
+      el('p',{key:2},"Government says 'THW legalize marijuana' but doesn't specify: Legal for whom? At what age? Sold where? Taxed how? What about driving under the influence? If Government hasn't specified these things, Opposition might argue that the case is under-specified and that Gov can shift to whatever interpretation is most convenient in MG."),
+      el('p',{key:3,style:{fontWeight:600,color:'#e0e7ef'}},"The two sides of spec:"),
+      el('p',{key:4},"Opposition runs spec to force Government to commit to specific details that can be attacked. Government responds that reasonable assumptions should be made (the 'reasonable person standard'), that POCs existed for clarification, or that the level of specificity is appropriate for a 7-minute speech. Both sides have legitimate points."),
+      el('p',{key:5,style:{fontWeight:600,color:'#e0e7ef'}},"When spec works and when it doesn't:"),
+      el('p',{key:6},"Spec is strongest when Government's vagueness gives them an unfair strategic advantage, like being able to shift their position to dodge attacks. It's weakest when Opposition is just asking for unnecessary details that don't affect the core debate. Judges generally expect a reasonable level of specificity but don't require Government to have a 50-page policy brief."),
+      el('div',{key:7,className:'newbie-callout'}, el('span',null, el('strong',null,'POCs are your first line of defense. '), "If you think Government's case is vague, ask about it during Points of Clarification BEFORE the round starts. If you had the chance to ask and didn't, judges are less sympathetic to spec arguments later. Use POCs strategically to either get the clarification you need or to set up a spec argument by showing that Gov refused to clarify.")),
+      el('p',{key:8,style:{fontWeight:600,color:'#e0e7ef'}},"Spec vs. Theory:"),
+      el('p',{key:9},"Spec and theory are related but different. Theory says the case is fundamentally unfair (tight, truistic, etc.). Spec says the case might be fair but Government hasn't given enough detail for Opposition to engage meaningfully. You can run both, but they're separate arguments with separate standards. Don't conflate them."),
     ]},
     { key:'speaks', icon:'\u{1F399}', title:'Improving Your Speaks', render: () => [
       el('p',{key:0},"Clearer delivery, not just more style, makes it easier for the judge to follow you. Signpost your arguments: \"Our first independent argument is...\", \"There are three warrants...\", \"This is important because...\" Number your points so the judge can flow them cleanly."),
@@ -4842,10 +5008,10 @@ function Forum({ user, onSignIn }) {
    ═══════════════════════════════════════════════════ */
 
 const ROUND_SPEECHES = [
-  { code:'PM', title:'Prime Minister Constructive', side:'gov', time:'7 min', player:true, order:0 },
-  { code:'LO', title:'Leader of Opposition', side:'opp', time:'8 min', player:false, order:1 },
-  { code:'MG', title:'Member of Government', side:'gov', time:'8 min', player:true, order:2 },
-  { code:'MO', title:'Member of Opposition', side:'opp', time:'8 min', player:false, order:3 },
+  { code:'PM', title:'Prime Minister Constructive', side:'gov', time:'7:30', player:true, order:0 },
+  { code:'LO', title:'Leader of Opposition', side:'opp', time:'8:30', player:false, order:1 },
+  { code:'MG', title:'Member of Government', side:'gov', time:'8:30', player:true, order:2 },
+  { code:'MO', title:'Member of Opposition', side:'opp', time:'8:30', player:false, order:3 },
   { code:'LOR', title:'Leader of Opp Rebuttal', side:'opp', time:'4 min', player:false, order:4 },
   { code:'PMR', title:'PM Rebuttal', side:'gov', time:'5 min', player:true, order:5 },
 ];
