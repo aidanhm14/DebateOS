@@ -3885,6 +3885,7 @@ function CaseFeedback() {
   const caseRef = useRef(null);
 
   const [error, setError] = useState('');
+    const [jProgress, setJProgress] = useState(null);
 
   const analyze = async () => {
     if (!caseText.trim()) return;
