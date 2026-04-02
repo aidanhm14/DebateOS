@@ -1,6 +1,7 @@
 [build]
-  publish = "."
-  functions = "netlify/functions"
+  base = "app"
+  publish = "app"
+  functions = "app/netlify/functions"
 
 [build.environment]
   NETLIFY_SKIP_SECRETS_CHECK = "true"
@@ -8,8 +9,3 @@
 [functions]
   external_node_modules = []
   node_bundler = "esbuild"
-
-# Claude API proxy now runs as edge function for better streaming support
-
-[functions."perplexity"]
-  timeout = 30
