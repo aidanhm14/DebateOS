@@ -5,7 +5,7 @@ let db = null;
 export function getDb() {
   if (db) return db;
 
-  const serviceAccount = Netlify.env.get('GOOGLE_SERVICE_ACCOUNT');
+  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
   if (!serviceAccount) throw new Error('GOOGLE_SERVICE_ACCOUNT not configured');
 
   const creds = JSON.parse(serviceAccount);

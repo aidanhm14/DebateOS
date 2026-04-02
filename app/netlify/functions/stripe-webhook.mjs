@@ -6,8 +6,8 @@ export default async (request) => {
     return new Response('Method not allowed', { status: 405 });
   }
 
-  const stripe = new Stripe(Netlify.env.get('STRIPE_SECRET_KEY'));
-  const webhookSecret = Netlify.env.get('STRIPE_WEBHOOK_SECRET');
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   // Get raw body for signature verification
   const rawBody = await request.text();
@@ -179,8 +179,8 @@ export default async (request) => {
  * Map a Stripe price ID to our plan name.
  */
 function getPlanFromPrice(priceId) {
-  const individualPrice = Netlify.env.get('STRIPE_PRICE_INDIVIDUAL');
-  const teamPrice = Netlify.env.get('STRIPE_PRICE_TEAM');
+  const individualPrice = process.env.STRIPE_PRICE_INDIVIDUAL;
+  const teamPrice = process.env.STRIPE_PRICE_TEAM;
 
   if (priceId === individualPrice) return 'individual';
   if (priceId === teamPrice) return 'team';

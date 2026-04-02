@@ -29,15 +29,15 @@ export default async (request) => {
   const planId = body.plan; // "team" or "school"
 
   const priceMap = {
-    individual: Netlify.env.get('STRIPE_PRICE_INDIVIDUAL'),
-    team: Netlify.env.get('STRIPE_PRICE_TEAM'),
+    individual: process.env.STRIPE_PRICE_INDIVIDUAL,
+    team: process.env.STRIPE_PRICE_TEAM,
   };
 
   const priceId = priceMap[planId];
   if (!priceId) return errorResponse('Invalid plan. Choose "individual" or "team".', 400);
 
-  const stripe = new Stripe(Netlify.env.get('STRIPE_SECRET_KEY'));
-  const siteUrl = Netlify.env.get('SITE_URL') || 'https://debateos1.netlify.app';
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const siteUrl = process.env.SITE_URL || 'https://debateos1.netlify.app';
 
   const session = await stripe.checkout.sessions.create({
     customer: team.stripeCustomerId,

@@ -29,8 +29,8 @@ export default async (request) => {
     return errorResponse('No billing account found', 400);
   }
 
-  const stripe = new Stripe(Netlify.env.get('STRIPE_SECRET_KEY'));
-  const siteUrl = Netlify.env.get('SITE_URL') || 'https://debateos1.netlify.app';
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const siteUrl = process.env.SITE_URL || 'https://debateos1.netlify.app';
 
   const session = await stripe.billingPortal.sessions.create({
     customer: team.stripeCustomerId,

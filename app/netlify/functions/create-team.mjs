@@ -31,7 +31,7 @@ export default async (request) => {
   if (!teamName) return errorResponse('Team name is required');
 
   // Create Stripe customer
-  const stripe = new Stripe(Netlify.env.get('STRIPE_SECRET_KEY'));
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const customer = await stripe.customers.create({
     email,
     name: teamName,
