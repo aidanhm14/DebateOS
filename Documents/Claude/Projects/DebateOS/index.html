@@ -630,6 +630,18 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   .depth-card{min-width:unset}
 }
 
+/* -- Complexity Slider -- */
+.complexity-slider-wrap{margin-top:8px}
+.complexity-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:linear-gradient(90deg,#22c55e 0%,#fbbf24 50%,#ef4444 100%);outline:none;opacity:.9;transition:opacity .2s}
+.complexity-slider:hover{opacity:1}
+.complexity-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);border:2px solid #ef4444;transition:.15s}
+.complexity-slider::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 2px 12px rgba(239,68,68,.4)}
+.complexity-slider::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);border:2px solid #ef4444}
+.complexity-labels{display:flex;justify-content:space-between;margin-top:8px;padding:0 4px}
+.complexity-label{font-size:.72rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#596880;cursor:pointer;transition:.2s;padding:4px 6px;border-radius:6px}
+.complexity-label:hover{color:#e0e7ef}
+.complexity-label.active{color:#ef4444;background:#ef444412}
+.complexity-desc{margin-top:10px;font-size:.92rem;color:#cbd5e1;line-height:1.5;padding:12px 16px;background:#0e1620;border:1px solid #ffffff10;border-radius:10px}
 </style>
 </head>
 <body>
@@ -1201,6 +1213,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   // If maxTokens is too small for thinking, bump it up
   const safeMaxTokens = Math.max(maxTokens, safeBudget + 1024);
 
+  const apiKey = opts.apiKey || window.__DEBATEOS_API_KEY || null;
   const body = {
     model: 'claude-sonnet-4-20250514',
     max_tokens: safeMaxTokens,
@@ -1215,9 +1228,13 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   let response;
   const startTime = Date.now();
   try {
-    response = await fetch('/api/claude', {
+    const fetchUrl = apiKey ? 'https://api.anthropic.com/v1/messages' : '/api/claude';
+    const fetchHeaders = apiKey
+      ? { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }
+      : { 'Content-Type': 'application/json' };
+    response = await fetch(fetchUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: fetchHeaders,
       body: JSON.stringify(body),
     });
   } catch(fetchErr) {
@@ -1330,12 +1347,56 @@ function logFeedback(type, data) {
    ═══════════════════════════════════════════════════ */
 
 const DEPTH_CONFIGS = {
-  quick: { label:'Quick', words:'~600', time:'3 min', desc:'Skeleton outline with key claims', maxTokens:4000 },
-  standard: { label:'Standard', words:'~1200', time:'5 min', desc:'Solid case with warrants', maxTokens:8000 },
-  competition: { label:'Competition', words:'~1800+', time:'7-8 min', desc:'Full case with deep warrants, A2 blocks, MG overview', maxTokens:16000 },
+  skeleton: { label:'Skeleton', words:'~300', time:'1 min', desc:'Bare outline with key claims only', maxTokens:2000, thinkBudget:1024, level:1 },
+  quick: { label:'Quick', words:'~600', time:'3 min', desc:'Outline with brief warrants', maxTokens:4000, thinkBudget:2000, level:2 },
+  standard: { label:'Standard', words:'~1200', time:'5 min', desc:'Solid case with warrants and examples', maxTokens:8000, thinkBudget:4000, level:3 },
+  competition: { label:'Competition', words:'~1800+', time:'7-8 min', desc:'Full case with deep warrants, A2 blocks, MG overview', maxTokens:16000, thinkBudget:8000, level:4 },
+  nationals: { label:'Nationals', words:'~2500+', time:'7-8 min', desc:'Maximum depth: full round architecture, spikes, PMR strategy', maxTokens:32000, thinkBudget:12000, level:5 },
 };
 
 function buildSystemPrompt(depth) {
+  const level = DEPTH_CONFIGS[depth]?.level || 3;
+
+  // LEVEL 1-2: Minimal prompt. Saves ~90% input tokens.
+  if (level <= 2) {
+    return `You are an elite APDA debate case writer. Write confident, specific cases that sound like a real debater, not an AI.
+
+KEY RULES:
+1. NO HEDGING. State claims confidently. Never "it could be argued" or "evidence suggests."
+2. You are an ADVOCATE. Make your side overwhelmingly correct.
+3. Use real examples with specific names, dates, countries.
+4. NO markdown (no **, #, *). Plain text. Use a/b/c and i/ii/iii for nesting.
+5. NO dashes as separators. Use periods and colons.
+6. COMMON KNOWLEDGE ONLY. No hyper-specific stats.
+7. Every point needs CLAIM + WARRANT + IMPACT.
+8. Be SUCCINCT. Every sentence earns its place.
+
+${level === 1 ? 'SKELETON depth (~300 words). Bare outline: numbered claims with 1-sentence warrants. No A2 blocks. No MG overview.' : 'QUICK depth (~600 words). Brief warrants (1-2 sentences). Include basic A2 notes.'}`;
+  }
+
+  // LEVEL 3: Medium prompt. Core rules without advanced strategy.
+  if (level === 3) {
+    return `You are an elite APDA case writer. Confident, specific, deeply warranted. Sound human, not AI.
+
+ANTI-AI RULES:
+1. KILL HEDGING. "This proves" not "it could be argued." Be an advocate.
+2. UNEQUAL DEPTH. Spend 50-60% energy on your killer argument.
+3. SPECIFIC WARRANTS with real mechanisms and examples.
+4. HUMAN VOICE. "Here is the thing about X" / "This is where their case falls apart."
+5. NO CLICHES. No generic slippery slope or vague democracy impacts.
+6. FRAMEWORK DOES WORK. Resolves arguments, not decoration.
+7. BUILD BACKWARDS. Opp responses walk into your strongest terrain.
+8. NO dashes as separators. Use periods, colons, natural phrases.
+
+STRUCTURE: Background (if provided) > Resolution > Caveats > Framework (sub-points + warrants) > 3 independent arguments (named sub-claims, 2-4 sentence warrants, examples) > A2 blocks (link, impact, turn)
+
+IMPACT CHAINS: 3+ steps using "this means... which means..."
+FORMATTING: NO markdown. Plain text. a/b/c, i/ii/iii nesting.
+COMMON KNOWLEDGE only.
+COMPLETE the entire case. Do not truncate.`;
+  }
+
+  // LEVEL 4-5: Full original prompt below
   const base = `You are an elite APDA (American Parliamentary Debate Association) case writer. You write cases in the format used by top competitive APDA debaters. Your writing voice is confident, specific, and deeply warranted — you sound like an actual debater who has done extensive research, not a language model producing generic analysis.
 
 STOP WRITING LIKE AN AI — READ THIS FIRST:
@@ -1851,7 +1912,7 @@ function CaseGenerator({ onSave, loadedCase, onClearLoaded }) {
   const [background, setBackground] = useState('');
   const [format, setFormat] = useState('APDA');
   const [side, setSide] = useState('Government');
-  const [depth, setDepth] = useState('competition');
+  const [depth, setDepth] = useState('standard');
   const [output, setOutput] = useState(null);
   const [loading, setLoading] = useState(false);
   const [streaming, setStreaming] = useState(false);
@@ -1881,6 +1942,7 @@ function CaseGenerator({ onSave, loadedCase, onClearLoaded }) {
 
   const checkContext = async (genMode) => {
     if (!motion.trim()) return;
+    if ((DEPTH_CONFIGS[depth]?.level || 3) <= 2) { generateCase(genMode); return; }
     setContextHint(null);
     setCheckingContext(true);
     setError(null);
@@ -1939,7 +2001,7 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     let activeBg = background;
     const bgCheck = (background || '').trim().toLowerCase();
     const userDeclinedBg = bgCheck === 'n/a' || bgCheck === 'na' || bgCheck === 'none' || bgCheck === 'no';
-    if (!bgCheck && !userDeclinedBg) {
+    if (!bgCheck && !userDeclinedBg && (DEPTH_CONFIGS[depth]?.level || 3) >= 3) {
       try {
         const bgSys = `You are an elite APDA debate case architect. Given a motion, generate a vivid, specific BACKGROUND with an ACTOR for a debate case. Your background should:
 
@@ -1975,8 +2037,9 @@ Write ONLY the background text. No labels, no "Background:" header.`;
     }, outputRef);
 
     try {
-      const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
-      const depthThinkBudget = depth === 'competition' ? 8000 : depth === 'standard' ? 4000 : 2000;
+      const depthCfg = DEPTH_CONFIGS[depth] || DEPTH_CONFIGS.standard;
+      const depthMaxTokens = depthCfg.maxTokens || 8000;
+      const depthThinkBudget = depthCfg.thinkBudget || 4000;
       await callClaude(sysPrompt, userPrompt, (text) => {
         throttle.update(text);
       }, { thinkBudget: depthThinkBudget, maxTokens: depthMaxTokens, expectedWords, onProgress: (p) => setProgress(p) });
@@ -1992,6 +2055,7 @@ Write ONLY the background text. No labels, no "Background:" header.`;
   // Run tightness check whenever output finishes generating
   useEffect(() => {
     if (!output || loading || streaming) { setTightness(null); return; }
+    if ((DEPTH_CONFIGS[depth]?.level || 3) <= 2) return;
     let cancelled = false;
     const checkTightness = async () => {
       try {
@@ -2074,17 +2138,33 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
       // Depth selector
       React.createElement('div',{style:{marginTop:20}},
         React.createElement('label',{className:'field-label'},'Depth'),
-        React.createElement('div',{className:'depth-selector'},
-          Object.entries(DEPTH_CONFIGS).map(([key, cfg]) =>
-            React.createElement('div',{
-              key:key,
-              className:'depth-card'+(depth===key?' active':''),
-              onClick:()=>setDepth(key)
+        React.createElement('div',{className:'complexity-slider-wrap'},
+          React.createElement('input',{
+            type:'range', min:1, max:5, step:1,
+            value: DEPTH_CONFIGS[depth]?.level || 3,
+            onChange: (e) => {
+              const lvl = parseInt(e.target.value);
+              const key = Object.keys(DEPTH_CONFIGS).find(k => DEPTH_CONFIGS[k].level === lvl);
+              if (key) setDepth(key);
             },
-              React.createElement('div',{className:'depth-title'},cfg.label),
-              React.createElement('div',{className:'depth-desc'},cfg.desc),
-              React.createElement('div',{className:'depth-words'},cfg.words+' · '+cfg.time)
+            className:'complexity-slider'
+          }),
+          React.createElement('div',{className:'complexity-labels'},
+            Object.entries(DEPTH_CONFIGS).map(([key, cfg]) =>
+              React.createElement('span',{
+                key:key,
+                className:'complexity-label'+(depth===key?' active':''),
+                onClick:()=>setDepth(key)
+              }, cfg.label)
             )
+          ),
+          React.createElement('div',{className:'complexity-desc'},
+            React.createElement('span',{style:{color:'#ef4444',fontWeight:700}}, DEPTH_CONFIGS[depth]?.label || ''),
+            ' \u2014 ',
+            DEPTH_CONFIGS[depth]?.desc || '',
+            React.createElement('span',{style:{color:'#94a3b8',marginLeft:8,fontSize:'.82rem',fontStyle:'italic'}}, (DEPTH_CONFIGS[depth]?.words||'') + ' \u00b7 ' + (DEPTH_CONFIGS[depth]?.time||''))
+          )
+        )
           )
         )
       ),
@@ -2315,6 +2395,17 @@ function ThinkingAnimation({mode, progress}) {
     React.createElement('div',{className:'thinking-logo'},
       React.createElement('span',{className:'green'},'Debate'),
       React.createElement('span',{className:'white'},'OS'),
+              React.createElement('span',{
+                className:'api-key-header-status',
+                style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:'4px',marginLeft:12,fontWeight:600,
+                  background:userApiKey?'#22c55e20':'#f59e0b20',
+                  color:userApiKey?'#22c55e':'#f59e0b',
+                  cursor:'pointer',letterSpacing:'.5px'},
+                onClick:()=>{
+                  const newKey=prompt('Enter Anthropic API key:',userApiKey||'');
+                  if(newKey!==null)setUserApiKey(newKey.trim());
+                }
+              }, userApiKey ? 'KEY SET' : 'NO KEY'),
     ),
     React.createElement('div',{className:'thinking-dots'},
       React.createElement('span'),
@@ -5309,6 +5400,8 @@ const TABS = [
 ];
 
 function App() {
+  const [userApiKey, setUserApiKey] = useState('');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(true);
   const [tab, setTab] = useState('case');
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -5323,6 +5416,9 @@ function App() {
     setShowGuide(false);
     try { localStorage.setItem('debateos-welcomed','1'); } catch(e) {}
   }, []);
+
+  // Sync API key to global for callClaude
+  useEffect(() => { window.__DEBATEOS_API_KEY = userApiKey || null; }, [userApiKey]);
 
   const saveCase = useCallback((caseData) => {
     const newCase = { ...caseData, id: Date.now().toString(), savedAt: new Date().toISOString() };
@@ -5383,6 +5479,23 @@ function App() {
 
   return React.createElement(React.Fragment,null,
     React.createElement(PolyBackground),
+    // API Key Gate - blocks app until key is provided
+    !userApiKey && React.createElement('div',{className:'api-key-overlay'},
+      React.createElement('div',{className:'api-key-overlay-box'},
+        React.createElement('h2',null,'Enter Your API Key'),
+        React.createElement('p',null,'DebateOS requires an Anthropic API key to generate cases. Your key is stored locally and never sent to our servers.'),
+        React.createElement('input',{
+          type:'password',
+          className:'api-key-input',
+          placeholder:'sk-ant-...',
+          value:userApiKey,
+          onChange:(e)=>setUserApiKey(e.target.value.trim()),
+          onKeyDown:(e)=>{if(e.key==='Enter'&&e.target.value.trim())setUserApiKey(e.target.value.trim())},
+          autoFocus:true
+        }),
+        React.createElement('a',{href:'https://console.anthropic.com/settings/keys',target:'_blank',rel:'noopener'},'Get an API key from console.anthropic.com')
+      )
+    ),
     showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: setTab }),
     !showGuide && React.createElement('button',{className:'guide-trigger',onClick:()=>setShowGuide(true),title:'How to use DebateOS'},'?'),
     showAuth && React.createElement(AuthModal, { onSignIn: handleSignIn, onSkip: () => setShowAuth(false) }),
