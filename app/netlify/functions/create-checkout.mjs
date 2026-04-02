@@ -29,12 +29,12 @@ export default async (request) => {
   const planId = body.plan; // "team" or "school"
 
   const priceMap = {
+    individual: Netlify.env.get('STRIPE_PRICE_INDIVIDUAL'),
     team: Netlify.env.get('STRIPE_PRICE_TEAM'),
-    school: Netlify.env.get('STRIPE_PRICE_SCHOOL'),
   };
 
   const priceId = priceMap[planId];
-  if (!priceId) return errorResponse('Invalid plan. Choose "team" or "school".', 400);
+  if (!priceId) return errorResponse('Invalid plan. Choose "individual" or "team".', 400);
 
   const stripe = new Stripe(Netlify.env.get('STRIPE_SECRET_KEY'));
   const siteUrl = Netlify.env.get('SITE_URL') || 'https://debateos1.netlify.app';

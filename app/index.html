@@ -6150,8 +6150,8 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginTop:24}},
       ...[
         {name:'Trial',price:'Free',requests:'25/mo',members:'3 members',highlight:false},
-        {name:'Team',price:'$5/mo',requests:'500/mo',members:'10 members',highlight:true},
-        {name:'School',price:'$15/mo',requests:'2,000/mo',members:'50 members',highlight:false},
+        {name:'Individual',price:'$5/mo',requests:'500/mo',members:'1 member',highlight:true},
+        {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false},
       ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
         p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},'Most Popular'),
         el('h3',{style:{color:'#e4e8f0',fontSize:'1.1rem',fontWeight:700,marginBottom:4}},p.name),
@@ -6166,7 +6166,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
 
   const usagePct = team.usageLimit ? Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100)) : 0;
   const isOwner = team.role === 'owner';
-  const planColors = {trial:'#f59e0b',team:'#3b82f6',school:'#8b5cf6'};
+  const planColors = {trial:'#f59e0b',individual:'#3b82f6',team:'#8b5cf6'};
   const planColor = planColors[team.plan] || '#94a3b8';
 
   return el('div', {className:'panel'},
@@ -6192,8 +6192,8 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       el('div', {style:{fontWeight:700,color:'#f59e0b',fontSize:'.9rem',marginBottom:4}}, 'Upgrade your plan'),
       el('p', {style:{color:'#94a3b8',fontSize:'.82rem',marginBottom:12}}, 'Get more requests and team slots.'),
       el('div', {style:{display:'flex',gap:8}},
-        el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'8px 16px',background:'#3b82f6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Team \u2014 $5/mo'),
-        el('button', {onClick:()=>openCheckout('school'),disabled:actionLoading,style:{padding:'8px 16px',background:'#8b5cf6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'School \u2014 $15/mo'),
+        el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'8px 16px',background:'#3b82f6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Individual \u2014 $5/mo'),
+        el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'8px 16px',background:'#8b5cf6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Team \u2014 $30/mo'),
       ),
     ),
     el('div', {style:{marginBottom:20}},
@@ -6556,7 +6556,7 @@ function App() {
           'Sign in with Google'
         ),
         React.createElement('div',{style:{display:'flex',gap:16,justifyContent:'center',marginTop:16}},
-          ...[{name:'Free Trial',desc:'25 requests/mo'},{name:'Team $5/mo',desc:'500 requests/mo'},{name:'School $15/mo',desc:'2,000 requests/mo'}].map(p =>
+          ...[{name:'Free Trial',desc:'25 requests/mo'},{name:'Individual $5/mo',desc:'500 requests/mo'},{name:'Team $30/mo',desc:'2,000 requests/mo'}].map(p =>
             React.createElement('div',{key:p.name,style:{fontSize:'.72rem',color:'#64748b',textAlign:'center'}},
               React.createElement('div',{style:{fontWeight:700,color:'#94a3b8',marginBottom:2}},p.name),
               p.desc

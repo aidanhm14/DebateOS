@@ -179,12 +179,12 @@ export default async (request) => {
  * Map a Stripe price ID to our plan name.
  */
 function getPlanFromPrice(priceId) {
+  const individualPrice = Netlify.env.get('STRIPE_PRICE_INDIVIDUAL');
   const teamPrice = Netlify.env.get('STRIPE_PRICE_TEAM');
-  const schoolPrice = Netlify.env.get('STRIPE_PRICE_SCHOOL');
 
+  if (priceId === individualPrice) return 'individual';
   if (priceId === teamPrice) return 'team';
-  if (priceId === schoolPrice) return 'school';
-  return 'team'; // default fallback
+  return 'individual'; // default fallback
 }
 
 /**

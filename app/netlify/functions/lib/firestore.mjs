@@ -22,8 +22,8 @@ export function getDb() {
 // Plan tier definitions
 export const PLANS = {
   trial:  { requests: 25,   members: 3,  priceMonthly: 0 },
-  team:   { requests: 500,  members: 10, priceMonthly: 500 },
-  school: { requests: 2000, members: 50, priceMonthly: 1500 },
+  individual: { requests: 500,  members: 1,  priceMonthly: 500 },
+  team:       { requests: 2000, members: 50, priceMonthly: 3000 },
 };
 
 /**
