@@ -11,13 +11,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><style>
 /* ── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
-body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0e18;color:#e8ecf4;font-size:18px}
+body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:#0a0e18;color:#e8ecf4;font-size:18px}
 
-/* ── Background ──────────────────────────────── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.case-output p,.case-output li,.case-output h1,.case-output h2,.case-output h3,.case-output h4,.case-output blockquote,.output-box p,.output-box li,.output-box h2,.output-box h3,.round-sim-output p,.round-sim-output li,.round-sim-output h2,.round-sim-output h3,.philosophy-output p,.philosophy-output li,.feedback-output p,.feedback-output li,.judge-output p,.judge-output li,.casual-output p,.casual-output li{animation:fadeInUp 0.45s ease-out both}.case-output p:nth-child(1){animation-delay:0s}.case-output p:nth-child(2){animation-delay:0.05s}.case-output p:nth-child(3){animation-delay:0.1s}.case-output p:nth-child(4){animation-delay:0.15s}.case-output p:nth-child(5){animation-delay:0.2s}.case-output li:nth-child(1){animation-delay:0s}.case-output li:nth-child(2){animation-delay:0.04s}.case-output li:nth-child(3){animation-delay:0.08s}.case-output li:nth-child(4){animation-delay:0.12s}.case-output li:nth-child(5){animation-delay:0.16s}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:#0a0e18}
 #debate-flow-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 #debate-flow-bg canvas{display:block;width:100%!important;height:100%!important}
