@@ -6,5 +6,5 @@
   NETLIFY_SKIP_SECRETS_CHECK = "true"
 
 [functions]
-  external_node_modules = []
+  external_node_modules = ["@google-cloud/firestore", "stripe"]
   node_bundler = "esbuild"
