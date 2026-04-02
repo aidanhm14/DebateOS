@@ -11,13 +11,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><style>
 /* ── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
-body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0e18;color:#e8ecf4;font-size:18px}
+body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:#0a0e18;color:#e8ecf4;font-size:18px}
 
-/* ── Background ──────────────────────────────── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.stream-new{animation:fadeIn 0.4s ease-out both}.case-output ol,.output-box ol,.round-sim-output ol,.philosophy-output ol,.feedback-output ol,.judge-output ol,.casual-output ol{list-style-type:decimal;padding-left:1.5em;margin:0.3em 0}.case-output ol ol,.output-box ol ol,.round-sim-output ol ol,.philosophy-output ol ol,.feedback-output ol ol,.judge-output ol ol,.casual-output ol ol{list-style-type:lower-alpha}.case-output ol ol ol,.output-box ol ol ol,.round-sim-output ol ol ol{list-style-type:lower-roman}.case-output ol ol ol ol,.output-box ol ol ol ol,.round-sim-output ol ol ol ol{list-style-type:decimal}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:#0a0e18}
 #debate-flow-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 #debate-flow-bg canvas{display:block;width:100%!important;height:100%!important}
@@ -1075,7 +1075,7 @@ function createStreamThrottle(onChunk, outputRef) {
   let latestText = '';
   let rafId = null;
   let lastCommit = 0;
-  const COMMIT_INTERVAL = 60; // ms between React state updates
+  const COMMIT_INTERVAL = Infinity; // only commit on finish()
 
   function flush() {
     rafId = null;
@@ -1087,9 +1087,9 @@ function createStreamThrottle(onChunk, outputRef) {
       // Write directly to DOM for instant visual feedback without React re-render
       if (outputRef && outputRef.current) {
         const el = outputRef.current;
-        el.innerHTML = cleanOutput(latestText, true);
+        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){_t.children[_pc].classList.add('stream-new'); el.appendChild(_t.children[_pc]);}
         // Auto-scroll if near bottom
-        if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
+        if (el.scrollHeight - el.scrollop - el.clientHeight < 150) {
           el.scrollTop = el.scrollHeight;
         }
       }
@@ -3885,6 +3885,7 @@ function CaseFeedback() {
   const caseRef = useRef(null);
 
   const [error, setError] = useState('');
+    const [jProgress, setJProgress] = useState(null);
 
   const analyze = async () => {
     if (!caseText.trim()) return;
