@@ -638,11 +638,12 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 
 /* ===== LIGHT / DAY THEME ===== */
-body.light-theme{background:#f0f4fc!important;color:#1a1a2e!important}
+html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!important}body.light-theme{background:#f0f4fc!important;color:#1a1a2e!important}
 .light-theme .app{background:#f0f4fc!important}
-.light-theme .bg-canvas{background:#e8eef8!important}
-.light-theme .bg-canvas canvas{opacity:0.12!important}
-.light-theme #debate-flow-bg canvas{filter:invert(0.85) hue-rotate(180deg);opacity:0.18!important}
+.light-theme .bg-canvas{background:#f0f4fc!important}
+.light-theme .bg-canvas canvas{display:none!important}
+.light-theme #debate-flow-bg{background:#f0f4fc!important}
+.light-theme #debate-flow-bg canvas{display:none!important}
 .light-theme .logo{color:#2563eb!important}
 .light-theme .subtitle{color:#6b7fa0!important}
 .light-theme .nav-btn{background:#ffffff!important;color:#475569!important;border-color:#e2e8f0!important}
@@ -6039,7 +6040,7 @@ function App() {
   const [userApiKey, setUserApiKey] = useState(() => { try { return localStorage.getItem('debateos-byok') || '' } catch(e) { return '' } });
   const [theme, setTheme] = useState(() => { try { return localStorage.getItem('debateos-theme') || 'dark' } catch(e) { return 'dark' } });
   useEffect(() => { try { localStorage.setItem('debateos-byok', userApiKey) } catch(e) {} }, [userApiKey]);
-  useEffect(() => { try { localStorage.setItem('debateos-theme', theme) } catch(e) {} document.body.classList.toggle('light-theme', theme === 'light'); }, [theme]);
+  useEffect(() => { try { localStorage.setItem('debateos-theme', theme) } catch(e) {} document.body.classList.toggle('light-theme', theme === 'light'); document.documentElement.style.background = theme === 'light' ? '#f0f4fc' : '#0a0e18'; }, [theme]);
   useEffect(() => { window.__DEBATEOS_API_KEY = userApiKey || null; }, [userApiKey]);
   const [tab, setTab] = useState('case');
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
