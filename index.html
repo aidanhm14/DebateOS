@@ -17,7 +17,7 @@
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
 body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:#0a0e18;color:#e8ecf4;font-size:18px}
 
-@keyframes fadeInUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.case-output p,.case-output li,.case-output h1,.case-output h2,.case-output h3,.case-output h4,.case-output blockquote,.output-box p,.output-box li,.output-box h2,.output-box h3,.round-sim-output p,.round-sim-output li,.round-sim-output h2,.round-sim-output h3,.philosophy-output p,.philosophy-output li,.feedback-output p,.feedback-output li,.judge-output p,.judge-output li,.casual-output p,.casual-output li{animation:fadeInUp 0.45s ease-out both}.case-output p:nth-child(1){animation-delay:0s}.case-output p:nth-child(2){animation-delay:0.05s}.case-output p:nth-child(3){animation-delay:0.1s}.case-output p:nth-child(4){animation-delay:0.15s}.case-output p:nth-child(5){animation-delay:0.2s}.case-output li:nth-child(1){animation-delay:0s}.case-output li:nth-child(2){animation-delay:0.04s}.case-output li:nth-child(3){animation-delay:0.08s}.case-output li:nth-child(4){animation-delay:0.12s}.case-output li:nth-child(5){animation-delay:0.16s}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.stream-new{animation:fadeIn 0.4s ease-out both}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:#0a0e18}
 #debate-flow-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 #debate-flow-bg canvas{display:block;width:100%!important;height:100%!important}
@@ -1087,7 +1087,7 @@ function createStreamThrottle(onChunk, outputRef) {
       // Write directly to DOM for instant visual feedback without React re-render
       if (outputRef && outputRef.current) {
         const el = outputRef.current;
-        el.innerHTML = cleanOutput(latestText, true);
+        const _pc = el.children.length; el.innerHTML = cleanOutput(latestText, true); for(let _i = _pc; _i < el.children.length; _i++) el.children[_i].classList.add('stream-new');
         // Auto-scroll if near bottom
         if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
           el.scrollTop = el.scrollHeight;
