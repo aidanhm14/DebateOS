@@ -5,10 +5,34 @@ let db = null;
 export function getDb() {
   if (db) return db;
 
-  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
+  let serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
   if (!serviceAccount) throw new Error('GOOGLE_SERVICE_ACCOUNT not configured');
 
-  const creds = JSON.parse(serviceAccount);
+  // Handle common env var issues:
+  // 1. Netlify may wrap the value in extra quotes
+  serviceAccount = serviceAccount.trim();
+  if (serviceAccount.startsWith('"') && serviceAccount.endsWith('"')) {
+    serviceAccount = serviceAccount.slice(1, -1);
+  }
+  if (serviceAccount.startsWith("'") && serviceAccount.endsWith("'")) {
+    serviceAccount = serviceAccount.slice(1, -1);
+  }
+  // 2. Escaped newlines in private_key need to be real newlines
+  serviceAccount = serviceAccount.replace(/\\\\n/g, '\\n');
+
+  let creds;
+  try {
+    creds = JSON.parse(serviceAccount);
+  } catch (e) {
+    // Log first 50 chars for debugging (no secrets leaked — just structure)
+    const preview = serviceAccount.substring(0, 50);
+    throw new Error(`GOOGLE_SERVICE_ACCOUNT is not valid JSON. Starts with: ${preview}...`);
+  }
+
+  if (!creds.project_id || !creds.client_email || !creds.private_key) {
+    throw new Error('GOOGLE_SERVICE_ACCOUNT missing required fields (project_id, client_email, private_key)');
+  }
+
   db = new Firestore({
     projectId: creds.project_id,
     credentials: {
