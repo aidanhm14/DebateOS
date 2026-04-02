@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ef4444">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DebateOS — AI-powered debate toolkit</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -712,6 +717,13 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 /* ===== END LIGHT THEME ===== */
 </style>
 <script data-goatcounter="https://aidanhm31.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
 </head>
 <body>
 <div id="root"></div>
@@ -6016,6 +6028,399 @@ function WelcomeGuide({ onClose, onNavigate }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════
+   TEAM DASHBOARD — team management, billing, usage
+   ═══════════════════════════════════════════════════ */
+
+function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
+  const el = React.createElement;
+  const [creating, setCreating] = useState(false);
+  const [teamName, setTeamName] = useState('');
+  const [members, setMembers] = useState([]);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [msg, setMsg] = useState('');
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const getToken = async () => user ? await user.getIdToken() : null;
+
+  useEffect(() => {
+    if (!team) return;
+    (async () => {
+      try {
+        const token = await getToken();
+        const res = await fetch('/api/teams/members', { headers: { Authorization: 'Bearer ' + token } });
+        if (res.ok) { const data = await res.json(); setMembers(data.members || []); }
+      } catch {}
+    })();
+  }, [team]);
+
+  const createTeam = async () => {
+    if (!teamName.trim()) return;
+    setActionLoading(true); setMsg('');
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/teams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ name: teamName.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setMsg('Team created! You have a 14-day free trial.');
+      onTeamCreated(data);
+    } catch (err) { setMsg('Error: ' + err.message); }
+    setActionLoading(false);
+  };
+
+  const inviteMember = async () => {
+    if (!inviteEmail.trim()) return;
+    setActionLoading(true); setMsg('');
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/teams/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ email: inviteEmail.trim().toLowerCase() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setMsg(data.message); setInviteEmail('');
+      const res2 = await fetch('/api/teams/members', { headers: { Authorization: 'Bearer ' + token } });
+      if (res2.ok) { const d = await res2.json(); setMembers(d.members || []); }
+    } catch (err) { setMsg('Error: ' + err.message); }
+    setActionLoading(false);
+  };
+
+  const removeMember = async (memberId) => {
+    if (!confirm('Remove this member?')) return;
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/teams/members?memberId=' + memberId, {
+        method: 'DELETE', headers: { Authorization: 'Bearer ' + token },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setMembers(prev => prev.filter(m => m.id !== memberId));
+      setMsg('Member removed.');
+    } catch (err) { setMsg('Error: ' + err.message); }
+  };
+
+  const openCheckout = async (plan) => {
+    setActionLoading(true);
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      window.location.href = data.url;
+    } catch (err) { setMsg('Error: ' + err.message); setActionLoading(false); }
+  };
+
+  const openPortal = async () => {
+    setActionLoading(true);
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/billing/portal', {
+        method: 'POST', headers: { Authorization: 'Bearer ' + token },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      window.location.href = data.url;
+    } catch (err) { setMsg('Error: ' + err.message); setActionLoading(false); }
+  };
+
+  if (teamLoading) return el('div', {className:'panel', style:{textAlign:'center',padding:60}}, 'Loading...');
+
+  if (!user) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Sign in to manage your team'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Sign in with Google to create or join a debate team.'),
+  );
+
+  if (!team) return el('div', {className:'panel'},
+    el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:8}}, 'Get Started'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem',marginBottom:24}}, 'Create a team to start using DebateOS. Every team gets a 14-day free trial.'),
+    el('div', {style:{display:'flex',gap:8,marginBottom:16}},
+      el('input', {value:teamName, onChange:e=>setTeamName(e.target.value), placeholder:'Team name (e.g. Springfield Debate)', style:{flex:1,padding:'10px 14px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.9rem',outline:'none'}}),
+      el('button', {onClick:createTeam, disabled:actionLoading||!teamName.trim(), style:{padding:'10px 20px',background:'#ef4444',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',opacity:actionLoading?.5:1}}, actionLoading?'Creating...':'Create Team'),
+    ),
+    el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginTop:24}},
+      ...[
+        {name:'Trial',price:'Free',requests:'25/mo',members:'3 members',highlight:false},
+        {name:'Individual',price:'$5/mo',requests:'500/mo',members:'1 member',highlight:true},
+        {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false},
+      ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
+        p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},'Most Popular'),
+        el('h3',{style:{color:'#e4e8f0',fontSize:'1.1rem',fontWeight:700,marginBottom:4}},p.name),
+        el('div',{style:{fontSize:'1.5rem',fontWeight:800,color:'#fff',marginBottom:8}},p.price),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},p.requests+' requests'),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},p.members),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},'All tools included'),
+      ))
+    ),
+    msg && el('div', {style:{marginTop:16,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
+  );
+
+  const usagePct = team.usageLimit ? Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100)) : 0;
+  const isOwner = team.role === 'owner';
+  const planColors = {trial:'#f59e0b',individual:'#3b82f6',team:'#8b5cf6'};
+  const planColor = planColors[team.plan] || '#94a3b8';
+
+  return el('div', {className:'panel'},
+    el('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:24,flexWrap:'wrap',gap:12}},
+      el('div', null,
+        el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, team.teamName || 'Your Team'),
+        el('span', {style:{fontSize:'.75rem',padding:'3px 10px',borderRadius:20,fontWeight:700,background:planColor+'20',color:planColor,textTransform:'uppercase',letterSpacing:'.5px'}}, team.plan + ' plan'),
+        team.status === 'trialing' && team.trialEndsAt && el('span',{style:{fontSize:'.78rem',color:'#f59e0b',marginLeft:12}}, 'Trial ends ' + new Date(team.trialEndsAt).toLocaleDateString()),
+      ),
+      isOwner && el('button', {onClick:team.stripeSubscriptionId?openPortal:()=>openCheckout('team'), style:{padding:'8px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.82rem',fontWeight:600,cursor:'pointer'}}, team.stripeSubscriptionId?'Manage Billing':'Upgrade Plan'),
+    ),
+    el('div', {style:{marginBottom:28}},
+      el('div', {style:{display:'flex',justifyContent:'space-between',marginBottom:6}},
+        el('span', {style:{color:'#94a3b8',fontSize:'.85rem'}}, 'Usage this period'),
+        el('span', {style:{color:'#e4e8f0',fontSize:'.85rem',fontWeight:600}}, (team.usageThisPeriod||0) + ' / ' + (team.usageLimit||0) + ' requests'),
+      ),
+      el('div', {style:{height:8,background:'#ffffff08',borderRadius:4,overflow:'hidden'}},
+        el('div', {style:{height:'100%',width:usagePct+'%',background:usagePct>90?'#ef4444':usagePct>70?'#f59e0b':'#22c55e',borderRadius:4,transition:'width .3s ease'}}),
+      ),
+      team.currentPeriodEnd && el('div',{style:{color:'#64748b',fontSize:'.75rem',marginTop:4}},'Resets ' + new Date(team.currentPeriodEnd).toLocaleDateString()),
+    ),
+    team.plan === 'trial' && el('div', {style:{padding:16,background:'#f59e0b10',border:'1px solid #f59e0b30',borderRadius:10,marginBottom:24}},
+      el('div', {style:{fontWeight:700,color:'#f59e0b',fontSize:'.9rem',marginBottom:4}}, 'Upgrade your plan'),
+      el('p', {style:{color:'#94a3b8',fontSize:'.82rem',marginBottom:12}}, 'Get more requests and team slots.'),
+      el('div', {style:{display:'flex',gap:8}},
+        el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'8px 16px',background:'#3b82f6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Individual \u2014 $5/mo'),
+        el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'8px 16px',background:'#8b5cf6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Team \u2014 $30/mo'),
+      ),
+    ),
+    el('div', {style:{marginBottom:20}},
+      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, 'Members (' + (members.length || team.memberCount || 1) + '/' + (team.maxMembers||3) + ')'),
+      members.map(m => el('div', {key:m.id, style:{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 12px',background:'#ffffff04',borderRadius:8,marginBottom:4}},
+        el('div', {style:{display:'flex',alignItems:'center',gap:10}},
+          el('div', {style:{width:28,height:28,borderRadius:'50%',background:'#ef444420',color:'#f87171',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.75rem',fontWeight:700}}, (m.displayName||m.email||'?').charAt(0).toUpperCase()),
+          el('span', {style:{color:'#e2e8f0',fontSize:'.88rem'}}, m.displayName || m.email),
+          m.role === 'owner' && el('span', {style:{fontSize:'.65rem',padding:'2px 6px',borderRadius:4,background:'#f59e0b20',color:'#f59e0b',fontWeight:600,marginLeft:6}}, 'OWNER'),
+        ),
+        isOwner && m.role !== 'owner' && el('button', {onClick:()=>removeMember(m.id), style:{background:'none',border:'none',color:'#64748b',cursor:'pointer',fontSize:'.75rem'}}, 'Remove'),
+      )),
+      isOwner && el('div', {style:{display:'flex',gap:8,marginTop:12}},
+        el('input', {value:inviteEmail, onChange:e=>setInviteEmail(e.target.value), placeholder:'teammate@email.com', style:{flex:1,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.85rem',outline:'none'}}),
+        el('button', {onClick:inviteMember, disabled:actionLoading||!inviteEmail.trim(), style:{padding:'8px 14px',background:'#22c55e20',border:'1px solid #22c55e40',borderRadius:8,color:'#4ade80',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Invite'),
+      ),
+    ),
+    msg && el('div', {style:{marginTop:12,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   SHARED CASES — share cases between team members
+   ═══════════════════════════════════════════════════ */
+
+function SharedCases({ user, team }) {
+  const el = React.createElement;
+  const [sharedCases, setSharedCases] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sharing, setSharing] = useState(false);
+  const [selectedCase, setSelectedCase] = useState('');
+  const [msg, setMsg] = useState('');
+  const myCases = useMemo(() => loadSavedCases(), []);
+
+  useEffect(() => {
+    if (!team || !firebaseDb) { setLoading(false); return; }
+    const unsub = firebaseDb.collection('shared_cases')
+      .where('teamId', '==', team.teamId)
+      .orderBy('sharedAt', 'desc')
+      .limit(50)
+      .onSnapshot(snap => {
+        setSharedCases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setLoading(false);
+      }, () => setLoading(false));
+    return () => unsub();
+  }, [team]);
+
+  const shareCase = async () => {
+    if (!selectedCase || !team || !firebaseDb) return;
+    setSharing(true);
+    try {
+      const c = myCases.find(x => x.id === selectedCase);
+      if (!c) throw new Error('Case not found');
+      await firebaseDb.collection('shared_cases').add({
+        teamId: team.teamId,
+        sharedBy: user.displayName || user.email || 'Unknown',
+        sharedByUid: user.uid,
+        motion: c.motion || 'Untitled',
+        side: c.side || '',
+        depth: c.depth || '',
+        output: c.output || c.text || '',
+        sharedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      setMsg('Case shared with your team!');
+      setSelectedCase('');
+    } catch (err) { setMsg('Error: ' + err.message); }
+    setSharing(false);
+  };
+
+  const importCase = (c) => {
+    const cases = loadSavedCases();
+    const newCase = { id: Date.now().toString(), motion: c.motion, side: c.side, depth: c.depth, output: c.output, savedAt: new Date().toISOString(), sharedFrom: c.sharedBy };
+    persistCases([newCase, ...cases]);
+    setMsg('Case imported to your saved cases!');
+  };
+
+  if (!user) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Team Case Library'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Sign in and join a team to share cases.'),
+  );
+
+  if (!team) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Team Case Library'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Create or join a team to share cases with teammates.'),
+  );
+
+  return el('div', {className:'panel'},
+    el('div', {style:{marginBottom:20}},
+      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, 'Team Case Library'),
+      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Share and access cases across your team.'),
+    ),
+    myCases.length > 0 && el('div', {style:{display:'flex',gap:8,marginBottom:24,flexWrap:'wrap'}},
+      el('select', {value:selectedCase, onChange:e=>setSelectedCase(e.target.value), style:{flex:1,minWidth:200,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.85rem',outline:'none'}},
+        el('option', {value:''}, 'Select a case to share...'),
+        myCases.map(c => el('option', {key:c.id, value:c.id}, (c.motion||'Untitled').substring(0,60) + ' (' + (c.side||'?') + ')')),
+      ),
+      el('button', {onClick:shareCase, disabled:sharing||!selectedCase, style:{padding:'8px 16px',background:'#3b82f620',border:'1px solid #3b82f640',borderRadius:8,color:'#60a5fa',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, sharing?'Sharing...':'Share with Team'),
+    ),
+    msg && el('div', {style:{marginBottom:16,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
+    loading ? el('div',{style:{textAlign:'center',color:'#64748b',padding:20}},'Loading shared cases...') :
+    sharedCases.length === 0 ? el('div',{style:{textAlign:'center',color:'#64748b',padding:40,background:'#ffffff04',borderRadius:12}},'No shared cases yet. Share your first case above!') :
+    sharedCases.map(c => el('div', {key:c.id, style:{padding:16,background:'#ffffff04',border:'1px solid #ffffff08',borderRadius:10,marginBottom:8}},
+      el('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}},
+        el('div', null,
+          el('div', {style:{color:'#e4e8f0',fontWeight:600,fontSize:'.95rem',marginBottom:2}}, c.motion || 'Untitled'),
+          el('div', {style:{color:'#64748b',fontSize:'.78rem'}}, 'Shared by ' + (c.sharedBy||'Unknown') + (c.sharedAt ? ' \u00B7 ' + new Date(c.sharedAt.seconds ? c.sharedAt.seconds*1000 : c.sharedAt).toLocaleDateString() : '')),
+        ),
+        el('div', {style:{display:'flex',gap:6}},
+          c.side && el('span', {style:{fontSize:'.7rem',padding:'2px 8px',borderRadius:4,background:c.side.toLowerCase()==='gov'?'#22c55e15':'#ef444415',color:c.side.toLowerCase()==='gov'?'#4ade80':'#f87171',fontWeight:600}}, c.side),
+          el('button', {onClick:()=>importCase(c), style:{fontSize:'.75rem',padding:'2px 10px',background:'#3b82f615',border:'1px solid #3b82f630',borderRadius:4,color:'#60a5fa',cursor:'pointer',fontWeight:600}}, 'Import'),
+        ),
+      ),
+      c.output && el('div', {style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.6,maxHeight:80,overflow:'hidden',maskImage:'linear-gradient(to bottom, black 60%, transparent)'}}, c.output.substring(0,300) + '...'),
+    )),
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   ANALYTICS — team usage analytics dashboard
+   ═══════════════════════════════════════════════════ */
+
+function Analytics({ user, team }) {
+  const el = React.createElement;
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!team || !firebaseDb) { setLoading(false); return; }
+    firebaseDb.collection('usage_logs')
+      .where('teamId', '==', team.teamId)
+      .orderBy('timestamp', 'desc')
+      .limit(200)
+      .get()
+      .then(snap => {
+        setLogs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [team]);
+
+  if (!user || !team) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Analytics'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Sign in and join a team to view usage analytics.'),
+  );
+
+  const featureCounts = {};
+  const dailyCounts = {};
+  logs.forEach(l => {
+    const f = l.feature || 'unknown';
+    featureCounts[f] = (featureCounts[f] || 0) + 1;
+    if (l.timestamp) {
+      const d = new Date(l.timestamp.seconds ? l.timestamp.seconds*1000 : l.timestamp);
+      const day = d.toLocaleDateString('en-US', {month:'short',day:'numeric'});
+      dailyCounts[day] = (dailyCounts[day] || 0) + 1;
+    }
+  });
+
+  const topFeatures = Object.entries(featureCounts).sort((a,b)=>b[1]-a[1]);
+  const dailyEntries = Object.entries(dailyCounts).slice(0,14).reverse();
+  const maxDaily = Math.max(...dailyEntries.map(e=>e[1]), 1);
+  const usagePct = team.usageLimit ? Math.round((team.usageThisPeriod / team.usageLimit) * 100) : 0;
+  const featureColors = {case:'#ef4444',simulator:'#3b82f6',feedback:'#22c55e',vision:'#f59e0b',casual:'#8b5cf6',philosophy:'#ec4899',practice:'#14b8a6',judge:'#f97316'};
+
+  return el('div', {className:'panel'},
+    el('div', {style:{marginBottom:24}},
+      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, 'Analytics'),
+      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Track your team\'s usage and activity.'),
+    ),
+    el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:28}},
+      ...[
+        {label:'Requests Used',value:(team.usageThisPeriod||0)+' / '+(team.usageLimit||0),color:usagePct>80?'#ef4444':'#22c55e'},
+        {label:'Plan',value:(team.plan||'trial').charAt(0).toUpperCase()+(team.plan||'trial').slice(1),color:'#3b82f6'},
+        {label:'Members',value:(team.memberCount||1)+' / '+(team.maxMembers||3),color:'#8b5cf6'},
+        {label:'Total Logged',value:logs.length+' requests',color:'#f59e0b'},
+      ].map(s => el('div',{key:s.label,style:{padding:16,background:'#ffffff06',border:'1px solid #ffffff08',borderRadius:10,textAlign:'center'}},
+        el('div',{style:{fontSize:'1.3rem',fontWeight:800,color:s.color}},s.value),
+        el('div',{style:{fontSize:'.75rem',color:'#64748b',marginTop:4,fontWeight:600,textTransform:'uppercase',letterSpacing:'.5px'}},s.label),
+      ))
+    ),
+    dailyEntries.length > 0 && el('div', {style:{marginBottom:28}},
+      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, 'Daily Usage'),
+      el('div', {style:{display:'flex',alignItems:'flex-end',gap:4,height:120,padding:'0 4px'}},
+        dailyEntries.map(([day,count]) => el('div', {key:day, style:{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}},
+          el('div',{style:{fontSize:'.65rem',color:'#94a3b8'}},count),
+          el('div',{style:{width:'100%',height:Math.max(4,(count/maxDaily)*100),background:'linear-gradient(to top,#ef4444,#f87171)',borderRadius:4,transition:'height .3s ease'}}),
+          el('div',{style:{fontSize:'.6rem',color:'#64748b',marginTop:2}},day),
+        ))
+      ),
+    ),
+    topFeatures.length > 0 && el('div', {style:{marginBottom:24}},
+      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, 'Feature Usage'),
+      topFeatures.map(([feat,count]) => {
+        const pct = Math.round((count/logs.length)*100);
+        const color = featureColors[feat] || '#94a3b8';
+        return el('div', {key:feat, style:{marginBottom:8}},
+          el('div', {style:{display:'flex',justifyContent:'space-between',marginBottom:3}},
+            el('span', {style:{color:'#e2e8f0',fontSize:'.85rem',fontWeight:600,textTransform:'capitalize'}}, feat),
+            el('span', {style:{color:'#94a3b8',fontSize:'.8rem'}}, count + ' (' + pct + '%)'),
+          ),
+          el('div', {style:{height:6,background:'#ffffff08',borderRadius:3,overflow:'hidden'}},
+            el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:3}}),
+          ),
+        );
+      })
+    ),
+    loading && el('div',{style:{textAlign:'center',color:'#64748b',padding:20}},'Loading analytics...'),
+    !loading && logs.length === 0 && el('div',{style:{textAlign:'center',color:'#64748b',padding:40,background:'#ffffff04',borderRadius:12}},'No usage data yet. Start using tools to see analytics here.'),
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   USAGE BANNER — shows usage in nav area
+   ═══════════════════════════════════════════════════ */
+
+function UsageBanner({ team }) {
+  const el = React.createElement;
+  if (!team || !team.usageLimit) return null;
+  const pct = Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100));
+  const color = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e';
+  return el('div', {style:{display:'flex',alignItems:'center',gap:8,padding:'4px 12px',margin:'8px auto 0',maxWidth:300}},
+    el('div', {style:{flex:1,height:4,background:'#ffffff08',borderRadius:2,overflow:'hidden'}},
+      el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:2,transition:'width .3s ease'}}),
+    ),
+    el('span', {style:{fontSize:'.7rem',color:'#64748b',whiteSpace:'nowrap'}}, (team.usageThisPeriod||0) + '/' + (team.usageLimit||0)),
+  );
+}
+
 const TABS = [
   // Core tools
   {id:'case',label:'Case Gen'},
@@ -6033,6 +6438,11 @@ const TABS = [
   {id:'judge',label:'Judge'},
   {id:'forum',label:'Forum'},
   {id:'newbies',label:'Guide'},
+  {id:'shared',label:'Cases'},
+  {id:'divider3',divider:true},
+  // Team
+  {id:'team',label:'Team'},
+  {id:'analytics',label:'Analytics'},
   {id:'resources',label:'Resources',href:'https://apda.online/'},
 ];
 
@@ -6051,6 +6461,23 @@ function App() {
     try { return !localStorage.getItem('debateos-welcomed'); } catch(e) { return true; }
   });
   const { user, loading: authLoading, signIn, signOut } = useAuth();
+
+  // Team state — fetched when user signs in
+  const [team, setTeam] = useState(null);
+  const [teamLoading, setTeamLoading] = useState(false);
+  useEffect(() => {
+    if (!user) { setTeam(null); setTeamLoading(false); return; }
+    setTeamLoading(true);
+    (async () => {
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch('/api/teams/usage', { headers: { Authorization: 'Bearer ' + token } });
+        if (res.ok) { setTeam(await res.json()); }
+        else { setTeam(null); }
+      } catch { setTeam(null); }
+      setTeamLoading(false);
+    })();
+  }, [user]);
 
   const closeGuide = useCallback(() => {
     setShowGuide(false);
@@ -6116,13 +6543,33 @@ function App() {
 
   return React.createElement(React.Fragment,null,
     React.createElement(PolyBackground),
-    // BYOK API key gate
-    !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)'}},
+    // Auth gate — sign in or use BYOK key
+    !user && !authLoading && !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)'}},
       React.createElement('div',{style:{background:'#131a27',border:'1px solid #ffffff12',borderRadius:16,padding:'40px 48px',maxWidth:480,width:'90%',textAlign:'center'}},
-        React.createElement('h2',{style:{fontSize:'1.4rem',color:'#f1f5f9',marginBottom:8}},'Enter Your API Key'),
-        React.createElement('p',{style:{color:'#94a3b8',fontSize:'.9rem',lineHeight:1.6,marginBottom:24}},'DebateOS requires an Anthropic API key to generate cases. Your key is stored locally and never sent to our servers.'),
-        React.createElement('input',{type:'password',placeholder:'sk-ant-...',value:userApiKey,onChange:e=>setUserApiKey(e.target.value.trim()),onKeyDown:e=>{if(e.key==='Enter'&&e.target.value.trim())setUserApiKey(e.target.value.trim())},autoFocus:true,style:{width:'100%',boxSizing:'border-box',padding:'12px 16px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',textAlign:'center',outline:'none',marginBottom:16}}),
-        React.createElement('a',{href:'https://console.anthropic.com/settings/keys',target:'_blank',rel:'noopener',style:{color:'#ef4444',textDecoration:'none',fontSize:'.82rem'}},'Get an API key from console.anthropic.com')
+        React.createElement('h1',{style:{fontSize:'1.8rem',fontWeight:900,color:'#f1f5f9',marginBottom:4}},
+          React.createElement('span',{style:{color:'#ef4444'}},'Debate'),
+          React.createElement('span',{style:{fontWeight:300}},'OS')
+        ),
+        React.createElement('p',{style:{color:'#94a3b8',fontSize:'.9rem',lineHeight:1.6,marginBottom:20}},'The AI toolkit for competitive debaters.'),
+        React.createElement('button',{onClick:signIn,style:{display:'flex',alignItems:'center',justifyContent:'center',gap:10,width:'100%',padding:'12px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.92rem',fontWeight:600,cursor:'pointer',marginBottom:16}},
+          React.createElement('img',{src:'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',width:20,height:20}),
+          'Sign in with Google'
+        ),
+        React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12,marginBottom:16}},
+          React.createElement('div',{style:{flex:1,height:1,background:'#ffffff15'}}),
+          React.createElement('span',{style:{color:'#64748b',fontSize:'.78rem'}},'or use your own key'),
+          React.createElement('div',{style:{flex:1,height:1,background:'#ffffff15'}}),
+        ),
+        React.createElement('input',{type:'password',placeholder:'sk-ant-...',value:userApiKey,onChange:e=>setUserApiKey(e.target.value.trim()),onKeyDown:e=>{if(e.key==='Enter'&&e.target.value.trim())setUserApiKey(e.target.value.trim())},style:{width:'100%',boxSizing:'border-box',padding:'12px 16px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',textAlign:'center',outline:'none',marginBottom:8}}),
+        React.createElement('a',{href:'https://console.anthropic.com/settings/keys',target:'_blank',rel:'noopener',style:{color:'#64748b',textDecoration:'none',fontSize:'.75rem'}},'Get a key from console.anthropic.com'),
+        React.createElement('div',{style:{display:'flex',gap:16,justifyContent:'center',marginTop:20}},
+          ...[{name:'Free Trial',desc:'25 requests/mo'},{name:'Individual $5/mo',desc:'500 requests/mo'},{name:'Team $30/mo',desc:'2,000 requests/mo'}].map(p =>
+            React.createElement('div',{key:p.name,style:{fontSize:'.72rem',color:'#64748b',textAlign:'center'}},
+              React.createElement('div',{style:{fontWeight:700,color:'#94a3b8',marginBottom:2}},p.name),
+              p.desc
+            )
+          )
+        )
       )
     ),
     showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: setTab }),
@@ -6158,7 +6605,7 @@ function App() {
         React.createElement('h1',{className:'logo'},
           React.createElement('span',{className:'green'},'Debate'),
           React.createElement('span',{className:'white'},'OS'),
-          React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:userApiKey?'#22c55e20':'#f59e0b20',color:userApiKey?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>{const k=prompt('Enter Anthropic API key:',userApiKey||'');if(k!==null)setUserApiKey(k.trim())}},userApiKey?'KEY SET':'NO KEY'),
+          team && React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:team.status==='active'||team.status==='trialing'?'#22c55e20':'#f59e0b20',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
           React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:6,fontWeight:600,background:theme==='light'?'#3b82f620':'#f59e0b20',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'LIGHT':'DARK')
         ),
       ),
@@ -6193,6 +6640,7 @@ function App() {
               },t.label)
         )
       ),
+      React.createElement(UsageBanner, { team: team }),
       // All tabs rendered but only active one visible — preserves state across switches
       tabPane('case', React.createElement(CaseGenerator, { onSave: saveCase, loadedCase: loadedCase, onClearLoaded: () => setLoadedCase(null) })),
       tabPane('simulator', React.createElement(RoundSimulator)),
@@ -6205,6 +6653,9 @@ function App() {
       tabPane('judge', React.createElement(Judge)),
       tabPane('forum', React.createElement(Forum, { user: user, onSignIn: () => setShowAuth(true) })),
       tabPane('newbies', React.createElement(Newbies)),
+      tabPane('shared', React.createElement(SharedCases, { user: user, team: team })),
+      tabPane('team', React.createElement(TeamDashboard, { user: user, team: team, teamLoading: teamLoading, onTeamCreated: setTeam })),
+      tabPane('analytics', React.createElement(Analytics, { user: user, team: team })),
     )
   );
 }
