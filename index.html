@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -636,6 +636,77 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   .depth-card{min-width:unset}
 }
 
+
+/* ===== LIGHT / DAY THEME ===== */
+body.light-theme{background:#f0f4fc!important;color:#1a1a2e!important}
+.light-theme .app{background:#f0f4fc!important}
+.light-theme .bg-canvas canvas{opacity:0.3!important}
+.light-theme .logo{color:#2563eb!important}
+.light-theme .subtitle{color:#6b7fa0!important}
+.light-theme .nav-btn{background:#ffffff!important;color:#475569!important;border-color:#e2e8f0!important}
+.light-theme .nav-btn:hover{background:#e8f0fe!important;color:#2563eb!important;border-color:#93c5fd!important}
+.light-theme .nav-btn.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+.light-theme .panel{background:#ffffffdd!important;border-color:#e2e8f0!important;box-shadow:0 4px 24px rgba(0,0,0,0.06)!important}
+.light-theme .panel-inner{background:#f8fafc!important;border-color:#e2e8f0!important}
+.light-theme h2,.light-theme h3{color:#1a1a2e!important}
+.light-theme p,.light-theme span,.light-theme label,.light-theme li{color:#475569!important}
+.light-theme textarea,.light-theme input[type=text],.light-theme input[type=password],.light-theme select{background:#fff!important;color:#1a1a2e!important;border-color:#cbd5e1!important}
+.light-theme textarea::placeholder,.light-theme input::placeholder{color:#94a3b8!important}
+.light-theme .btn{background:#e8f0fe!important;color:#2563eb!important;border-color:#93c5fd!important}
+.light-theme .btn:hover{background:#2563eb!important;color:#fff!important}
+.light-theme .btn-primary{background:#2563eb!important;color:#fff!important}
+.light-theme .btn-primary:hover{background:#1d4ed8!important}
+.light-theme .btn-secondary{background:#f1f5f9!important;color:#475569!important;border-color:#e2e8f0!important}
+.light-theme .btn-green{background:#10b98120!important;color:#059669!important}
+.light-theme .btn-orange{background:#f9731620!important;color:#ea580c!important}
+.light-theme .btn-purple{background:#8b5cf620!important;color:#7c3aed!important}
+.light-theme .section{background:#ffffff!important;border-color:#e2e8f0!important}
+.light-theme .tag{background:#e8f0fe!important;color:#2563eb!important;border-color:#bfdbfe!important}
+.light-theme .depth-card{background:#fff!important;border-color:#e2e8f0!important;color:#475569!important}
+.light-theme .depth-card.active{border-color:#2563eb!important;background:#eff6ff!important;color:#1d4ed8!important}
+.light-theme .res-card{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .res-motion{color:#1a1a2e!important}
+.light-theme .case-item{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .case-item-title{color:#1a1a2e!important}
+.light-theme .case-item-meta,.light-theme .case-item-depth{color:#6b7fa0!important}
+.light-theme .speech-card{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .speech-title{color:#1a1a2e!important}
+.light-theme .speech-time{color:#6b7fa0!important}
+.light-theme .rc-user{background:#eff6ff!important;border-color:#bfdbfe!important}
+.light-theme .rc-ai{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .rc-text{color:#1a1a2e!important}
+.light-theme .rc-time{color:#94a3b8!important}
+.light-theme .practice-card{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .practice-textarea{background:#fff!important;color:#1a1a2e!important;border-color:#cbd5e1!important}
+.light-theme .practice-feedback{background:#f8fafc!important;border-color:#e2e8f0!important;color:#475569!important}
+.light-theme .phil-output{color:#475569!important}
+.light-theme .toc-label{color:#475569!important}
+.light-theme .term-word{color:#1a1a2e!important}
+.light-theme .term-def{color:#475569!important}
+.light-theme .pc-title{color:#1a1a2e!important}
+.light-theme .pc-meta{color:#6b7fa0!important}
+.light-theme .thinking-container{background:#ffffffee!important;border-color:#e2e8f0!important}
+.light-theme .thinking-status{color:#6b7fa0!important}
+.light-theme .stream-indicator{background:#ffffffee!important;border-color:#e2e8f0!important}
+.light-theme .auth-overlay{background:#f0f4fcee!important}
+.light-theme .auth-modal{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .revision-sidebar{background:#f8fafc!important;border-color:#e2e8f0!important}
+.light-theme .revision-header{color:#1a1a2e!important}
+.light-theme .revision-body{color:#475569!important}
+.light-theme .argmap-container{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .argmap-col-header{color:#1a1a2e!important}
+.light-theme .argmap-node{background:#f8fafc!important;border-color:#e2e8f0!important;color:#475569!important}
+.light-theme .forum-post{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .forum-title{color:#1a1a2e!important}
+.light-theme .forum-meta{color:#6b7fa0!important}
+.light-theme .cases-overlay{background:#f0f4fcee!important}
+.light-theme .profile-name{color:#1a1a2e!important}
+.light-theme .profile-badge{background:#e8f0fe!important;color:#2563eb!important}
+.light-theme ::selection{background:#2563eb40!important}
+.light-theme ::-webkit-scrollbar-track{background:#f1f5f9!important}
+.light-theme ::-webkit-scrollbar-thumb{background:#cbd5e1!important}
+.light-theme ::-webkit-scrollbar-thumb:hover{background:#94a3b8!important}
+/* ===== END LIGHT THEME ===== */
 </style>
 <script data-goatcounter="https://aidanhm31.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -1231,12 +1302,26 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
   let response;
   const startTime = Date.now();
+  const byokKey = window.__DEBATEOS_API_KEY;
   try {
-    response = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    if (byokKey && byokKey.startsWith('sk-ant-')) {
+      response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': byokKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify(body),
+      });
+    } else {
+      response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    }
   } catch(fetchErr) {
     throw new Error('Could not connect to the AI service. Check your internet connection and try again.');
   }
@@ -2408,6 +2493,8 @@ function ThinkingAnimation({mode, progress}) {
     React.createElement('div',{className:'thinking-logo'},
       React.createElement('span',{className:'green'},'Debate'),
       React.createElement('span',{className:'white'},'OS'),
+              React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:userApiKey?'#22c55e20':'#f59e0b20',color:userApiKey?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>{const k=prompt('Enter Anthropic API key:',userApiKey||'');if(k!==null)setUserApiKey(k.trim())}},userApiKey?'KEY SET':'NO KEY'),
+              React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:6,fontWeight:600,background:theme==='light'?'#3b82f620':'#f59e0b20',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'LIGHT':'DARK'),
     ),
     React.createElement('div',{className:'thinking-dots'},
       React.createElement('span'),
@@ -3030,6 +3117,126 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
    TAB 3: ROUND VISION
    ═══════════════════════════════════════════════════ */
 
+
+// ═══════════════════════════════════════════════════
+//   MIND MAP — D3 Radial Tree Visualization
+// ═══════════════════════════════════════════════════
+function MindMapView({ caseResult, motion }) {
+  const el = React.createElement;
+  const svgRef = useRef(null);
+  const containerRef = useRef(null);
+  const [tooltip, setTooltip] = useState(null);
+  const [dimensions, setDimensions] = useState({ w: 860, h: 640 });
+  const TYPE_COLORS = {root: '#e0e0e6',mechanism: '#818cf8',vision: '#a78bfa',section: '#6b6b80',argument: '#67e8f9',claim: '#818cf8',warrant: '#67e8f9',impact: '#f43f5e',spike: '#c084fc',turn: '#fbbf24',opposing: '#fb923c',turnMove: '#fbbf24',ballot: '#6ee7b7'};
+  const TYPE_ICONS = {root:'\u25C9',mechanism:'\u2699',vision:'\u25CE',section:'\u25CB',argument:'\u25C6',claim:'\u25B8',warrant:'\u25B8',impact:'\u25B8',spike:'\u26A1',turn:'\u21BB',opposing:'\u25C0',turnMove:'\u27F6',ballot:'\u2696'};
+  function caseToTree(result, mot) {
+    var root = { name: mot || 'Motion', type: 'root', children: [] };
+    if (!result) return root;
+    if (result.mechanism) root.children.push({ name: 'Mechanism', type: 'mechanism', detail: result.mechanism, children: [] });
+    if (result.roundVision) root.children.push({ name: 'Round Vision', type: 'vision', detail: result.roundVision, children: [] });
+    if (result.arguments && result.arguments.length) {
+      root.children.push({name: 'Arguments', type: 'section',
+        children: result.arguments.map(function(arg, i) {
+          return {name: arg.label || ('Contention ' + (i + 1)), type: 'argument',
+            children: [{ name: 'Claim', type: 'claim', detail: arg.claim, children: [] },{ name: 'Warrant', type: 'warrant', detail: arg.warrant, children: [] },{ name: 'Impact', type: 'impact', detail: arg.impact, children: [] }]};})});}
+    if (result.spikes && result.spikes.length) {
+      root.children.push({ name: 'Pre-empts', type: 'section',
+        children: result.spikes.map(function(s) { return { name: s.label || 'Spike', type: 'spike', detail: s.response, children: [] }; })});}
+    if (result.turn) {
+      root.children.push({ name: 'Turn', type: 'turn', children: [
+        { name: 'Their Argument', type: 'opposing', detail: result.turn.opposingArgument, children: [] },
+        { name: 'The Turn', type: 'turnMove', detail: result.turn.turn, children: [] }]});}
+    if (result.ballotFraming) root.children.push({ name: 'Ballot Framing', type: 'ballot', detail: result.ballotFraming, children: [] });
+    if (root.children.length === 0 && typeof result === 'string') {
+      root.children.push({ name: 'Case Output', type: 'section', detail: result.substring(0, 200), children: [] });}
+    return root;}
+  useEffect(function() {
+    if (!containerRef.current) return;
+    var ro = new ResizeObserver(function(entries) {
+      var entry = entries[0];
+      if (entry) setDimensions({ w: entry.contentRect.width || 860, h: Math.max(entry.contentRect.height, 500) });});
+    ro.observe(containerRef.current);
+    return function() { ro.disconnect(); };}, []);
+  useEffect(function() {
+    if (!svgRef.current || !caseResult || typeof d3 === 'undefined') return;
+    var svg = d3.select(svgRef.current); svg.selectAll('*').remove();
+    var W = dimensions.w, H = dimensions.h, CX = W / 2, CY = H / 2;
+    var radius = Math.min(W, H) / 2 - 100;
+    var treeData = caseToTree(caseResult, motion);
+    var root = d3.hierarchy(treeData);
+    d3.tree().size([2 * Math.PI, radius]).separation(function(a, b) { return (a.parent === b.parent ? 1 : 1.8) / (a.depth || 1); })(root);
+    var g = svg.append('g').attr('transform', 'translate(' + CX + ',' + CY + ')');
+    var zoom = d3.zoom().scaleExtent([0.3, 3]).on('zoom', function(event) {
+      g.attr('transform', 'translate(' + (CX + event.transform.x) + ',' + (CY + event.transform.y) + ') scale(' + event.transform.k + ')');});
+    svg.call(zoom).on('dblclick.zoom', null);
+    var defs = svg.append('defs');
+    var glow = defs.append('filter').attr('id', 'mm-glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+    glow.append('feGaussianBlur').attr('stdDeviation', '4').attr('result', 'blur');
+    var mrg = glow.append('feMerge'); mrg.append('feMergeNode').attr('in', 'blur'); mrg.append('feMergeNode').attr('in', 'SourceGraphic');
+    var linkGen = d3.linkRadial().angle(function(d) { return d.x; }).radius(function(d) { return d.y; });
+    root.links().forEach(function(link, i) {
+      var sc = TYPE_COLORS[link.source.data.type] || '#555';
+      var tc = TYPE_COLORS[link.target.data.type] || '#555';
+      var gr = defs.append('linearGradient').attr('id', 'mm-grad-' + i).attr('gradientUnits', 'userSpaceOnUse');
+      gr.append('stop').attr('offset', '0%').attr('stop-color', sc).attr('stop-opacity', 0.4);
+      gr.append('stop').attr('offset', '100%').attr('stop-color', tc).attr('stop-opacity', 0.7);});
+    g.selectAll('.mm-link').data(root.links()).join('path').attr('class', 'mm-link').attr('fill', 'none')
+      .attr('stroke', function(d, i) { return 'url(#mm-grad-' + i + ')'; })
+      .attr('stroke-width', function(d) { return d.source.depth === 0 ? 2.5 : 1.5; })
+      .attr('d', linkGen)
+      .attr('stroke-dasharray', function() { var len = this.getTotalLength(); return len + ' ' + len; })
+      .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
+      .transition().duration(800).delay(function(d) { return d.source.depth * 200; }).attr('stroke-dashoffset', 0);
+    var nodes = g.selectAll('.mm-node').data(root.descendants()).join('g').attr('class', 'mm-node')
+      .attr('transform', function(d) { return 'rotate(' + (d.x * 180 / Math.PI - 90) + ') translate(' + d.y + ',0)'; })
+      .style('cursor', function(d) { return d.data.detail ? 'pointer' : 'default'; }).style('opacity', 0);
+    nodes.transition().duration(600).delay(function(d) { return d.depth * 200 + 100; }).style('opacity', 1);
+    nodes.append('circle')
+      .attr('r', function(d) { return d.depth === 0 ? 22 : d.children ? 14 : 10; })
+      .attr('fill', function(d) { return (TYPE_COLORS[d.data.type] || '#555') + '25'; })
+      .attr('stroke', function(d) { return TYPE_COLORS[d.data.type] || '#555'; })
+      .attr('stroke-width', function(d) { return d.depth === 0 ? 2.5 : 1.5; })
+      .attr('filter', 'url(#mm-glow)');
+    nodes.append('text').attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+      .attr('font-size', function(d) { return d.depth === 0 ? '14px' : '10px'; })
+      .attr('fill', function(d) { return TYPE_COLORS[d.data.type] || '#ccc'; })
+      .attr('transform', function(d) { return 'rotate(' + (-(d.x * 180 / Math.PI - 90)) + ')'; })
+      .text(function(d) { return TYPE_ICONS[d.data.type] || ''; });
+    nodes.append('text').attr('dy', '0.31em')
+      .attr('x', function(d) { return d.x < Math.PI === !d.children ? 18 : -18; })
+      .attr('text-anchor', function(d) { return d.x < Math.PI === !d.children ? 'start' : 'end'; })
+      .attr('transform', function(d) { return 'rotate(' + (-(d.x * 180 / Math.PI - 90)) + ')'; })
+      .attr('fill', function(d) { return TYPE_COLORS[d.data.type] || '#ccc'; })
+      .attr('font-size', function(d) { return d.depth === 0 ? '13px' : d.depth === 1 ? '11px' : '10px'; })
+      .attr('font-weight', function(d) { return d.depth <= 1 ? '700' : '400'; })
+      .attr('font-family', 'IBM Plex Mono, monospace')
+      .text(function(d) { var n = d.data.name || ''; return n.length > 28 ? n.substring(0, 26) + '..' : n; });
+    nodes.on('mouseenter', function(event, d) {
+      if (!d.data.detail) return;
+      d3.select(this).select('circle').transition().duration(200)
+        .attr('r', function() { return d.depth === 0 ? 26 : d.children ? 18 : 14; })
+        .attr('fill', function() { return (TYPE_COLORS[d.data.type] || '#555') + '50'; });
+      var svgRect = svgRef.current.getBoundingClientRect();
+      setTooltip({x: event.clientX - svgRect.left, y: event.clientY - svgRect.top, name: d.data.name, type: d.data.type, detail: d.data.detail});})
+    .on('mouseleave', function(event, d) {
+      d3.select(this).select('circle').transition().duration(200)
+        .attr('r', function() { return d.depth === 0 ? 22 : d.children ? 14 : 10; })
+        .attr('fill', function() { return (TYPE_COLORS[d.data.type] || '#555') + '25'; });
+      setTooltip(null);});
+  }, [caseResult, motion, dimensions]);
+  var legendItems = [{type:'mechanism',label:'Mechanism'},{type:'argument',label:'Argument'},{type:'impact',label:'Impact'},{type:'spike',label:'Pre-empt'},{type:'turn',label:'Turn'},{type:'ballot',label:'Ballot'}];
+  return el('div',{ref:containerRef,style:{position:'relative',width:'100%',height:640,background:'radial-gradient(ellipse at 30% 20%, #111c2e 0%, #0b1220 50%, #080e1a 100%)',borderRadius:18,overflow:'hidden',marginTop:16,border:'1px solid #ffffff0c',boxShadow:'0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 #ffffff08'}},
+    el('svg',{ref:svgRef,width:dimensions.w,height:dimensions.h,style:{width:'100%',height:'100%'}}),
+    tooltip && el('div',{style:{position:'absolute',left:Math.min(tooltip.x+12,dimensions.w-280),top:Math.max(tooltip.y-10,10),maxWidth:260,padding:'12px 16px',background:'#1a1f35ee',border:'1px solid '+(TYPE_COLORS[tooltip.type]||'#555')+'50',borderRadius:12,pointerEvents:'none',zIndex:10,boxShadow:'0 8px 32px rgba(0,0,0,.5)',backdropFilter:'blur(12px)'}},
+      el('div',{style:{fontSize:'.75rem',fontWeight:700,color:TYPE_COLORS[tooltip.type]||'#ccc',marginBottom:6,textTransform:'uppercase',letterSpacing:'.08em'}},tooltip.name),
+      el('div',{style:{fontSize:'.82rem',color:'#c8cdd8',lineHeight:1.5,fontFamily:'IBM Plex Mono, monospace'}},(tooltip.detail||'').length>200?tooltip.detail.substring(0,200)+'...':tooltip.detail)),
+    el('div',{style:{position:'absolute',bottom:12,left:16,display:'flex',gap:10,flexWrap:'wrap',padding:'8px 12px',background:'#0a0e1899',borderRadius:10,border:'1px solid #ffffff08',backdropFilter:'blur(8px)'}},
+      legendItems.map(function(item){return el('div',{key:item.type,style:{display:'flex',alignItems:'center',gap:5}},
+        el('div',{style:{width:8,height:8,borderRadius:'50%',background:TYPE_COLORS[item.type],boxShadow:'0 0 6px '+TYPE_COLORS[item.type]+'60'}}),
+        el('span',{style:{fontSize:'.68rem',color:'#94a3b8',fontFamily:'IBM Plex Mono, monospace'}},item.label));})),
+    el('div',{style:{position:'absolute',top:12,right:16,fontSize:'.7rem',color:'#ffffff30',fontFamily:'IBM Plex Mono, monospace'}},'scroll to zoom \u00B7 drag to pan \u00B7 hover for details'));}
+
+
 function ArgumentMap({ mapData }) {
   const el = React.createElement;
   const containerRef = useRef(null);
@@ -3426,6 +3633,7 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
     (output || mapData) && el('div',{className:'argmap-tab-toggle'},
       el('button',{className:view==='map'?'active':'',onClick:()=>setView('map')},'Argument Map'),
       el('button',{className:view==='text'?'active':'',onClick:()=>setView('text')},'Text Analysis'),
+      el('button',{className:view==='mindmap'?'active':'',onClick:()=>setView('mindmap')},'Mind Map'),
     ),
 
     // Map loading state
@@ -3446,6 +3654,8 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
 
     // Argument Map
     view === 'map' && mapData && el(ArgumentMap, {mapData:mapData}),
+    // Mind Map radial tree
+    view === 'mindmap' && (mapData || output) && el(MindMapView, {caseResult: mapData, motion: motion}),
 
     // Map placeholder when no API
     view === 'map' && !mapData && !mapLoading && output && el('div',{
@@ -5591,6 +5801,11 @@ const TABS = [
 ];
 
 function App() {
+  const [userApiKey, setUserApiKey] = useState(() => { try { return localStorage.getItem('debateos-byok') || '' } catch(e) { return '' } });
+  const [theme, setTheme] = useState(() => { try { return localStorage.getItem('debateos-theme') || 'dark' } catch(e) { return 'dark' } });
+  useEffect(() => { try { localStorage.setItem('debateos-byok', userApiKey) } catch(e) {} }, [userApiKey]);
+  useEffect(() => { try { localStorage.setItem('debateos-theme', theme) } catch(e) {} document.body.classList.toggle('light-theme', theme === 'light'); }, [theme]);
+  useEffect(() => { window.__DEBATEOS_API_KEY = userApiKey || null; }, [userApiKey]);
   const [tab, setTab] = useState('case');
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -5665,6 +5880,15 @@ function App() {
 
   return React.createElement(React.Fragment,null,
     React.createElement(PolyBackground),
+    // BYOK API key gate
+    !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)'}},
+      React.createElement('div',{style:{background:'#131a27',border:'1px solid #ffffff12',borderRadius:16,padding:'40px 48px',maxWidth:480,width:'90%',textAlign:'center'}},
+        React.createElement('h2',{style:{fontSize:'1.4rem',color:'#f1f5f9',marginBottom:8}},'Enter Your API Key'),
+        React.createElement('p',{style:{color:'#94a3b8',fontSize:'.9rem',lineHeight:1.6,marginBottom:24}},'DebateOS requires an Anthropic API key to generate cases. Your key is stored locally and never sent to our servers.'),
+        React.createElement('input',{type:'password',placeholder:'sk-ant-...',value:userApiKey,onChange:e=>setUserApiKey(e.target.value.trim()),onKeyDown:e=>{if(e.key==='Enter'&&e.target.value.trim())setUserApiKey(e.target.value.trim())},autoFocus:true,style:{width:'100%',boxSizing:'border-box',padding:'12px 16px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',textAlign:'center',outline:'none',marginBottom:16}}),
+        React.createElement('a',{href:'https://console.anthropic.com/settings/keys',target:'_blank',rel:'noopener',style:{color:'#ef4444',textDecoration:'none',fontSize:'.82rem'}},'Get an API key from console.anthropic.com')
+      )
+    ),
     showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: setTab }),
     !showGuide && React.createElement('button',{className:'guide-trigger',onClick:()=>setShowGuide(true),title:'How to use DebateOS'},'?'),
     showAuth && React.createElement(AuthModal, { onSignIn: handleSignIn, onSkip: () => setShowAuth(false) }),
