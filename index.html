@@ -1075,7 +1075,7 @@ function createStreamThrottle(onChunk, outputRef) {
   let latestText = '';
   let rafId = null;
   let lastCommit = 0;
-  const COMMIT_INTERVAL = 60; // ms between React state updates
+  const COMMIT_INTERVAL = Infinity; // only commit on finish()
 
   function flush() {
     rafId = null;
@@ -1087,9 +1087,9 @@ function createStreamThrottle(onChunk, outputRef) {
       // Write directly to DOM for instant visual feedback without React re-render
       if (outputRef && outputRef.current) {
         const el = outputRef.current;
-        const _pc = el.children.length; el.innerHTML = cleanOutput(latestText, true); for(let _i = _pc; _i < el.children.length; _i++) el.children[_i].classList.add('stream-new');
+        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){_t.children[_pc].classList.add('stream-new'); el.appendChild(_t.children[_pc]);}
         // Auto-scroll if near bottom
-        if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
+        if (el.scrollHeight - el.scrollop - el.clientHeight < 150) {
           el.scrollTop = el.scrollHeight;
         }
       }
