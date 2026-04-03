@@ -16,6 +16,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><style>
 /* ── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -666,24 +667,32 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   .panel.panel-expanded{padding:20px 16px}
   .nav{gap:3px;padding:3px;max-width:100%;overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
-  .nav-btn{padding:9px 14px;font-size:.72rem;min-height:40px;flex-shrink:0}
+  .nav-btn{padding:10px 16px;font-size:.72rem;min-height:44px;flex-shrink:0}
+  .nav-divider{display:none}
   .logo{font-size:2.4rem}
   .header{padding:48px 16px 0}
-  .cases-toggle{top:12px;left:12px;padding:6px 10px;font-size:.95rem}
-  .profile-badge{top:12px;right:12px;padding:5px 10px;gap:6px}
+  .cases-toggle{top:12px;left:12px;padding:8px 12px;font-size:.95rem;min-width:44px;min-height:44px}
+  .profile-badge{top:12px;right:12px;padding:6px 10px;gap:6px;min-height:44px}
   .profile-name{font-size:.72rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .hero{padding:32px 16px 24px}
   .hero-title{font-size:2rem}
   .hero-tagline{font-size:1rem}
-  .btn{padding:12px 22px;font-size:.95rem}
+  .btn{padding:14px 22px;font-size:.95rem;min-height:48px}
   .btn-row{flex-direction:column;gap:8px}
   .btn-row .btn{width:100%}
   .depth-selector{flex-direction:column}
-  .depth-card{min-width:unset}
+  .depth-card{min-width:unset;padding:14px 16px}
   textarea{min-height:150px}
   .output{font-size:.92rem}
-  .revision-sidebar{font-size:.85rem}
+  .revision-sidebar{font-size:.85rem;width:85vw}
+  .cases-sidebar{width:85vw}
   .apda-body-inner{padding:16px}
+  .chip{padding:10px 16px;min-height:40px}
+  .argmap-columns{flex-direction:column;gap:16px;padding:20px 16px}
+  .argmap-col{max-width:100%}
+  .forum-compose textarea{min-height:80px}
+  .newbie-toc{grid-template-columns:1fr}
+  select{min-height:44px;font-size:.92rem}
 }
 
 
@@ -750,9 +759,15 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme .revision-sidebar{background:#f8fafc!important;border-color:#e2e8f0!important}
 .light-theme .revision-header{color:#1a1a2e!important}
 .light-theme .revision-body{color:#475569!important}
-.light-theme .argmap-container{background:#fff!important;border-color:#e2e8f0!important}
-.light-theme .argmap-col-header{color:#1a1a2e!important}
-.light-theme .argmap-node{background:#f8fafc!important;border-color:#e2e8f0!important;color:#475569!important}
+.light-theme .argmap-container{background:linear-gradient(145deg,#f8fafc,#f0f4fc)!important;border-color:#e2e8f0!important}
+.light-theme .argmap-col-header.gov{color:#2563eb!important}
+.light-theme .argmap-col-header.clash{color:#d97706!important}
+.light-theme .argmap-col-header.opp{color:#dc2626!important}
+.light-theme .argmap-node.gov{background:#eff6ff!important;border-color:#93c5fd!important;color:#1e40af!important}
+.light-theme .argmap-node.opp{background:#fef2f2!important;border-color:#fca5a5!important;color:#991b1b!important}
+.light-theme .argmap-node.clash{background:#fffbeb!important;border-color:#fcd34d!important;color:#92400e!important}
+.light-theme .argmap-node .node-desc{color:#64748b!important}
+.light-theme .argmap-legend{color:#64748b!important}
 .light-theme .forum-post{background:#fff!important;border-color:#e2e8f0!important}
 .light-theme .forum-title{color:#1a1a2e!important}
 .light-theme .forum-meta{color:#6b7fa0!important}
@@ -763,6 +778,29 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme ::-webkit-scrollbar-track{background:#f1f5f9!important}
 .light-theme ::-webkit-scrollbar-thumb{background:#cbd5e1!important}
 .light-theme ::-webkit-scrollbar-thumb:hover{background:#94a3b8!important}
+.light-theme .case-output,.light-theme .output-box,.light-theme .round-sim-output,.light-theme .philosophy-output,.light-theme .feedback-output,.light-theme .judge-output,.light-theme .casual-output{color:#1e293b!important}
+.light-theme .case-output h2,.light-theme .case-output h3,.light-theme .output-box h2,.light-theme .output-box h3{color:#0f172a!important}
+.light-theme .case-output strong,.light-theme .output-box strong{color:#0f172a!important}
+.light-theme .chip{background:#e8f0fe!important;color:#2563eb!important;border-color:#bfdbfe!important}
+.light-theme .chip.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+.light-theme .field-label{color:#475569!important}
+.light-theme .newbie-section-header{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .newbie-section-header:hover{background:#f8fafc!important;border-color:#93c5fd!important}
+.light-theme .newbie-section-body{background:#f8fafc!important;border-color:#e2e8f0!important}
+.light-theme .newbie-section p{color:#475569!important}
+.light-theme .newbie-callout{background:#fef2f2!important;border-left-color:#dc2626!important;color:#475569!important}
+.light-theme .newbie-callout strong{color:#dc2626!important}
+.light-theme .newbie-table th{background:#f1f5f9!important;color:#dc2626!important;border-bottom-color:#e2e8f0!important}
+.light-theme .newbie-table td{color:#475569!important;border-bottom-color:#f1f5f9!important}
+.light-theme .newbie-term .term-word{color:#d97706!important}
+.light-theme .forum-compose textarea{background:#fff!important;color:#1a1a2e!important;border-color:#cbd5e1!important}
+.light-theme .forum-post-body{color:#475569!important}
+.light-theme .forum-post-tag{background:#e8f0fe!important;color:#2563eb!important}
+.light-theme .highlight-popup{background:#fff!important;border-color:#d97706!important;box-shadow:0 8px 24px rgba(0,0,0,.1)!important}
+.light-theme .cases-sidebar{background:#fff!important;border-color:#e2e8f0!important}
+.light-theme .cases-sidebar-header{border-bottom-color:#e2e8f0!important}
+.light-theme .cases-sidebar-header h3{color:#1a1a2e!important}
+.light-theme .cases-search input{background:#f8fafc!important;color:#1a1a2e!important;border-color:#e2e8f0!important}
 /* ===== END LIGHT THEME ===== */
 </style>
 <script data-goatcounter="https://aidanhm31.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -1312,12 +1350,88 @@ function createStreamThrottle(onChunk, outputRef) {
   };
 }
 
-function SaveToDocsButton({text, filename}) {
+// Google Drive integration
+const GDRIVE_CLIENT_ID = ''; // Set your Google Cloud OAuth client ID here
+const GDRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+let __gdriveToken = null;
+let __gdriveTokenClient = null;
+
+function getGDriveTokenClient() {
+  if (__gdriveTokenClient) return __gdriveTokenClient;
+  if (!window.google || !window.google.accounts) return null;
+  __gdriveTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GDRIVE_CLIENT_ID,
+    scope: GDRIVE_SCOPES,
+    callback: () => {}, // overridden per call
+  });
+  return __gdriveTokenClient;
+}
+
+async function requestGDriveToken() {
+  return new Promise((resolve, reject) => {
+    const client = getGDriveTokenClient();
+    if (!client) return reject(new Error('Google Identity Services not loaded'));
+    client.callback = (resp) => {
+      if (resp.error) return reject(new Error(resp.error));
+      __gdriveToken = resp.access_token;
+      resolve(resp.access_token);
+    };
+    if (__gdriveToken) {
+      // Try silent re-auth first
+      client.requestAccessToken({ prompt: '' });
+    } else {
+      client.requestAccessToken({ prompt: 'consent' });
+    }
+  });
+}
+
+async function gdriveCreateDoc(title, htmlContent, token) {
+  // Create a Google Doc by uploading HTML — Google auto-converts
+  const metadata = { name: title, mimeType: 'application/vnd.google-apps.document' };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', new Blob([htmlContent], { type: 'text/html' }));
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token },
+    body: form,
+  });
+  if (!res.ok) throw new Error('Failed to create Google Doc');
+  return await res.json();
+}
+
+async function gdriveUpdateDoc(fileId, htmlContent, token) {
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files/' + fileId + '?uploadType=media&fields=id,webViewLink', {
+    method: 'PATCH',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'text/html' },
+    body: htmlContent,
+  });
+  if (!res.ok) throw new Error('Failed to update Google Doc');
+  return await res.json();
+}
+
+// Map case IDs to Google Drive file IDs
+function getGDriveMap() {
+  try { return JSON.parse(localStorage.getItem('debateos_gdrive_map') || '{}'); } catch { return {}; }
+}
+function setGDriveMap(map) {
+  try { localStorage.setItem('debateos_gdrive_map', JSON.stringify(map)); } catch {}
+}
+
+function SaveToDocsButton({text, filename, caseId}) {
+  const [saving, setSaving] = React.useState(false);
+  const [saved, setSaved] = React.useState(false);
+  const [error, setError] = React.useState(null);
   if (!text) return null;
-  return React.createElement('button',{
-    className:'btn btn-secondary',
-    style:{marginTop:12,fontSize:'.85rem'},
-    onClick:() => {
+
+  const gdriveAvailable = GDRIVE_CLIENT_ID && typeof window !== 'undefined' && window.google && window.google.accounts;
+  const driveMap = getGDriveMap();
+  const existingFileId = caseId && driveMap[caseId];
+
+  const handleSave = async () => {
+    if (!gdriveAvailable) {
+      // Fallback: download + open Google Docs
       if (navigator.clipboard) navigator.clipboard.writeText(text);
       const blob = new Blob([text], {type:'text/plain'});
       const url = URL.createObjectURL(blob);
@@ -1327,8 +1441,46 @@ function SaveToDocsButton({text, filename}) {
       a.click();
       URL.revokeObjectURL(url);
       window.open('https://docs.google.com/document/create','_blank');
+      return;
     }
-  },'Save to Google Docs');
+
+    setSaving(true);
+    setError(null);
+    try {
+      const token = await requestGDriveToken();
+      const htmlContent = '<html><body>' + cleanOutput(text, true) + '</body></html>';
+      let result;
+      if (existingFileId) {
+        result = await gdriveUpdateDoc(existingFileId, htmlContent, token);
+      } else {
+        result = await gdriveCreateDoc(filename || 'DebateOS Case', htmlContent, token);
+        if (caseId && result.id) {
+          const map = getGDriveMap();
+          map[caseId] = result.id;
+          setGDriveMap(map);
+        }
+      }
+      setSaved(true);
+      if (result.webViewLink) window.open(result.webViewLink, '_blank');
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err.message);
+      setTimeout(() => setError(null), 4000);
+    }
+    setSaving(false);
+  };
+
+  const label = saving ? 'Saving...' : saved ? 'Saved to Drive!' : error ? 'Error' : existingFileId ? 'Update in Drive' : 'Save to Google Drive';
+  const style = {marginTop:12,fontSize:'.85rem'};
+  if (saved) style.borderColor = '#22c55e40';
+  if (error) style.borderColor = '#ef444440';
+
+  return React.createElement('button',{
+    className:'btn btn-secondary',
+    style,
+    disabled: saving,
+    onClick: handleSave,
+  }, label);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1347,6 +1499,7 @@ function persistCases(cases) {
 }
 
 function SavedCasesSidebar({ isOpen, onClose, cases, onSelect, onDelete, onExport, activeId }) {
+  const { t } = React.useContext(I18nContext);
   const [search, setSearch] = useState('');
   const filtered = search.trim()
     ? cases.filter(c => c.motion.toLowerCase().includes(search.toLowerCase()) || (c.side||'').toLowerCase().includes(search.toLowerCase()))
@@ -1358,22 +1511,22 @@ function SavedCasesSidebar({ isOpen, onClose, cases, onSelect, onDelete, onExpor
     }),
     React.createElement('div', { className: 'cases-sidebar' + (isOpen ? ' open' : '') },
       React.createElement('div', { className: 'cases-sidebar-header' },
-        React.createElement('h3', null, 'Saved Cases'),
+        React.createElement('h3', null, t('savedCases.title','Saved Cases')),
         React.createElement('button', { className: 'cases-sidebar-close', onClick: onClose }, '\u2715')
       ),
       React.createElement('div', { className: 'cases-search' },
         React.createElement('input', {
-          type: 'text', placeholder: 'Search cases...',
+          type: 'text', placeholder: t('savedCases.searchPlaceholder','Search cases...'),
           value: search, onChange: e => setSearch(e.target.value),
         })
       ),
       React.createElement('div', { className: 'cases-list' },
         filtered.length === 0
           ? React.createElement('div', { className: 'cases-empty' },
-              search ? 'No cases match your search.' : 'No saved cases yet.',
+              search ? t('savedCases.noMatch','No cases match your search.') : t('savedCases.noCases','No saved cases yet.'),
               !search && React.createElement('br'),
               !search && React.createElement('br'),
-              !search && 'Generate a case and click "Save Case" to store it here.'
+              !search && t('savedCases.saveTip','Generate a case and click "Save Case" to store it here.')
             )
           : filtered.map(c =>
               React.createElement('div', {
@@ -1672,7 +1825,7 @@ function getDepthConfigs(format) {
   return configs;
 }
 
-function buildSystemPrompt(depth) {
+function buildSystemPrompt(depth, format) {
   const base = `You are an elite APDA (American Parliamentary Debate Association) case writer. You write cases in the format used by top competitive APDA debaters. Your writing voice is confident, specific, and deeply warranted — you sound like an actual debater who has done extensive research, not a language model producing generic analysis.
 
 STOP WRITING LIKE AN AI — READ THIS FIRST:
@@ -2135,13 +2288,89 @@ This is STANDARD DEPTH — about 1000-1400 words. Include:
 - Brief MG notes: what to extend, what to concede, how to weigh
 - All warrants should still be specific and use real examples`;
   }
-  return base + `
+  let prompt = base + `
 
 This is QUICK DEPTH — about 500-700 words. A skeleton for brainstorming:
 - One-sentence background
 - 2-3 sentence framework establishing the evaluative lens
 - 2 arguments with named sub-points and brief warrants (1-2 sentences each)
 - Brief notes on likely opposition and how to respond`;
+
+  // Format-specific overrides
+  const FORMAT_PROMPTS = {
+    BP: `
+
+FORMAT OVERRIDE — BRITISH PARLIAMENTARY (BP):
+You are now writing for British Parliamentary format, NOT APDA. Adjust everything accordingly:
+- 4 teams of 2: Opening Government (OG), Opening Opposition (OO), Closing Government (CG), Closing Opposition (CO)
+- Speeches: Prime Minister (7 min), Leader of Opposition (7 min), Deputy PM (7 min), Deputy LO (7 min), Member of Government (7 min), Member of Opposition (7 min), Government Whip (7 min), Opposition Whip (7 min)
+- Points of Information (POIs) can be offered during speeches (not first/last minute)
+- Key BP concepts: "Extension" — closing teams MUST bring new material that extends (not contradicts) their opening half. This is the most important strategic element.
+- The case should specify which bench it's for (Opening or Closing). Opening teams set up the debate; Closing teams must add a new dimension.
+- No tight blocks or MG overviews. Instead include: Extension strategy (for closing), POI strategy, and Whip speech architecture.
+- Use BP terminology: "bench," "extension," "whip," "POI" instead of APDA terms like "tight block," "PMR," "POC."
+- Weighing in BP is done primarily by the Whip speeches. Design cases so the Whip has clear comparative material.`,
+
+    WSDC: `
+
+FORMAT OVERRIDE — WORLD SCHOOLS DEBATE CHAMPIONSHIP (WSDC):
+You are now writing for World Schools format, NOT APDA. Adjust everything accordingly:
+- 3v3 format: Proposition vs Opposition
+- Speeches: 1st Proposition (8 min), 1st Opposition (8 min), 2nd Proposition (8 min), 2nd Opposition (8 min), 3rd Proposition (8 min), 3rd Opposition (8 min), Opposition Reply (4 min), Proposition Reply (4 min)
+- POIs allowed during constructive speeches (not first/last minute)
+- Reply speeches are delivered by the 1st or 2nd speaker (NOT the 3rd), summarize the round from their side's perspective. No new arguments in replies.
+- WSDC values: accessible argumentation, real-world examples, clear structure. Less technical than APDA — more emphasis on persuasion and clarity.
+- Cases should have clear "team lines" — a consistent narrative all 3 speakers maintain.
+- Include speaker splits: which arguments go to which speaker. 1st speaker sets up framework + 1-2 arguments, 2nd speaker adds arguments + rebuts, 3rd speaker primarily rebuts + extends.
+- Use WSDC terminology: "Proposition/Opposition" (not Gov/Opp), "team line," "reply speech," "POI."`,
+
+    AP: `
+
+FORMAT OVERRIDE — ASIAN PARLIAMENTARY (AP):
+You are now writing for Asian Parliamentary format, NOT APDA. Adjust everything accordingly:
+- 3v3 format: Government vs Opposition
+- Speeches: Prime Minister (7 min), Leader of Opposition (7 min), Deputy PM (7 min), Deputy LO (7 min), Government Whip (7 min), Opposition Whip (7 min), Opposition Reply (4 min), Government Reply (4 min)
+- POIs allowed during all speeches except Reply (not first/last minute)
+- Reply speeches are given by the 1st or 2nd speaker, biased summary of the round. No new arguments.
+- Whip speeches: summarize your team's case and explain why you're winning. No new substantive arguments in whips.
+- AP emphasizes clear role fulfillment: PM defines and sets up, DPM extends, Whip crystallizes.
+- Include speaker splits and Reply speech strategy.
+- Use AP terminology: "Government/Opposition," "Whip," "Reply," "DPM," "DLO."`,
+
+    CP: `
+
+FORMAT OVERRIDE — CANADIAN PARLIAMENTARY (CP):
+You are now writing for Canadian Parliamentary format, NOT APDA. Adjust everything accordingly:
+- Similar to BP but with some variations in Canadian circuit norms
+- Speeches: Prime Minister Constructive (7 min), Leader of Opposition Constructive (7 min), Member of Government (7 min), Member of Opposition (7 min), Leader of Opposition Rebuttal (4 min), Prime Minister Rebuttal (4 min)
+- Canadian Parli uses a more structured approach similar to APDA but with POIs during constructive speeches
+- Cases can be either prepared or impromptu depending on tournament
+- Include tight block strategy and rebuttal architecture similar to APDA
+- Canadian circuits value empirical depth and policy analysis`,
+
+    KP: `
+
+FORMAT OVERRIDE — KARL POPPER DEBATE:
+You are now writing for Karl Popper format, NOT APDA. Adjust everything accordingly:
+- 3v3 format: Affirmative vs Negative
+- Speech order with cross-examinations:
+  1st Affirmative Constructive (6 min), Cross-ex by 3rd Negative (3 min),
+  1st Negative Constructive (6 min), Cross-ex by 3rd Affirmative (3 min),
+  2nd Affirmative Constructive (5 min), Cross-ex by 1st Negative (3 min),
+  2nd Negative Constructive (5 min), Cross-ex by 1st Affirmative (3 min),
+  3rd Affirmative Summary (5 min), 3rd Negative Summary (5 min)
+- Cross-examination is a KEY feature. Include CX strategy: what questions to ask, what traps to set, how to handle hostile questions.
+- Karl Popper emphasizes evidence-based argumentation and critical thinking (named after the philosopher of science).
+- Cases should include: clear definitions, criterion/value, contentions with evidence, and CX preparation.
+- Use KP terminology: "Affirmative/Negative," "constructive," "cross-examination," "summary," "contention."
+- Include a CX prep section with 3-5 strategic questions for each opposing speech.`,
+  };
+
+  if (format && format !== 'APDA' && FORMAT_PROMPTS[format]) {
+    prompt += FORMAT_PROMPTS[format];
+  }
+
+  return prompt;
 }
 
 function buildCasePrompt(motion, bg, side, format, depth) {
@@ -2326,7 +2555,7 @@ Write ONLY the background text. No labels, no "Background:" header.`;
       }
     }
 
-    const sysPrompt = buildSystemPrompt(depth);
+    const sysPrompt = buildSystemPrompt(depth, format);
     const userPrompt = genMode === 'case'
       ? buildCasePrompt(motion, activeBg, side, format, depth)
       : buildTightblockPrompt(motion, activeBg, side, format, depth);
@@ -3193,16 +3422,16 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
   return el('div',{className:'panel'+(motionOutput?' panel-expanded':'')},
     // Mode tabs at top
     el('div',{style:{display:'flex',gap:10,marginBottom:20,flexWrap:'wrap',justifyContent:'center'}},
-      modeTab(null, 'Random Roller'),
-      modeTab('motion', 'Generate Motion'),
-      modeTab('agent', 'Generate with Background'),
-      modeTab('current', 'Current Events'),
+      modeTab(null, t('motions.randomRoller','Random Roller')),
+      modeTab('motion', t('motions.generateMotion','Generate Motion')),
+      modeTab('agent', t('motions.generateWithBg','Generate with Background')),
+      modeTab('current', t('motions.currentEvents','Current Events')),
     ),
 
     // === RANDOM ROLLER MODE ===
     genMode === null && el('div',{style:{textAlign:'center'}},
       el('p',{style:{color:'#888',fontSize:'.92rem',marginBottom:16}},
-        'Roll a random motion from the database. Filter by category.'
+        t('motions.rollDesc','Roll a random motion from the database. Filter by category.')
       ),
       el('div',{className:'chips',style:{justifyContent:'center'}},
         CATEGORIES.map(cat =>
@@ -3218,7 +3447,7 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
           onClick:roll,
           disabled:spinning,
           style:{padding:'18px 48px',fontSize:'1.1rem',borderRadius:16}
-        }, spinning ? 'Rolling...' : 'Roll')
+        }, spinning ? t('motions.rolling','Rolling...') : t('motions.roll','Roll'))
       ),
       result && el('div',{className:'res-expanded'},
         el('div',{className:'res-card',style:{marginTop:16}}, result),
@@ -3229,12 +3458,12 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
             disabled:loadingBg,
           }, loadingBg
             ? el('span',null,el('span',{className:'spinner'}),' Generating...')
-            : 'Generate Background'
+            : t('motions.generateBg','Generate Background')
           ),
           el('button',{
             className:'btn btn-secondary btn-sm',
             onClick:roll,
-          }, 'Re-roll'),
+          }, t('motions.reRoll','Re-roll')),
         ),
         bgText && el('div',{className:'res-bg',style:{marginTop:14,textAlign:'left'}}, bgText)
       )
@@ -3244,31 +3473,31 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
     genMode !== null && el('div',null,
       el('p',{style:{color:'#888',fontSize:'.92rem',marginBottom:16,textAlign:'center'}},
         genMode === 'agent'
-          ? 'Generate an agent case: a character in a specific situation with a vivid, cinematic background.'
+          ? t('motions.agentDesc','Generate an agent case: a character in a specific situation with a vivid, cinematic background.')
           : genMode === 'current'
-          ? 'Pull this week\'s news and turn the most debatable story into an APDA motion.'
-          : 'Generate an original debate motion with AI. Pick a category for deeper, more specific results.'
+          ? t('motions.currentDesc','Pull this week\'s news and turn the most debatable story into an APDA motion.')
+          : t('motions.standardDesc','Generate an original debate motion with AI. Pick a category for deeper, more specific results.')
       ),
 
       // Category picker
-      el('label',{className:'field-label',style:{color:'#c084fc'}},'Topic Category'),
+      el('label',{className:'field-label',style:{color:'#c084fc'}},t('motions.topicCategory','Topic Category')),
       el('select',{
         value:motionCategory,
         onChange:e=>setMotionCategory(e.target.value),
         style:{width:'100%',marginBottom:16}
       },
-        el('option',{value:'any'},'Any (surprise me)'),
-        el('option',{value:'philosophy'},'Philosophy / Ethics'),
-        el('option',{value:'policy'},'Policy / Governance'),
-        el('option',{value:'technology'},'Technology / AI / Science'),
-        el('option',{value:'social norms'},'Social Norms / Culture'),
-        el('option',{value:'economics'},'Economics / Labor'),
-        el('option',{value:'education'},'Education'),
-        el('option',{value:'international'},'International Relations'),
-        el('option',{value:'law'},'Law / Justice'),
-        el('option',{value:'science'},'Science / Environment'),
-        el('option',{value:'art'},'Art / Media / Pop Culture'),
-        el('option',{value:'identity'},'Relationships / Identity'),
+        el('option',{value:'any'},t('motions.anySurprise','Any (surprise me)')),
+        el('option',{value:'philosophy'},t('motions.catPhilosophy','Philosophy / Ethics')),
+        el('option',{value:'policy'},t('motions.catPolicy','Policy / Governance')),
+        el('option',{value:'technology'},t('motions.catTechnology','Technology / AI / Science')),
+        el('option',{value:'social norms'},t('motions.catSocial','Social Norms / Culture')),
+        el('option',{value:'economics'},t('motions.catEconomics','Economics / Labor')),
+        el('option',{value:'education'},t('motions.catEducation','Education')),
+        el('option',{value:'international'},t('motions.catInternational','International Relations')),
+        el('option',{value:'law'},t('motions.catLaw','Law / Justice')),
+        el('option',{value:'science'},t('motions.catScience','Science / Environment')),
+        el('option',{value:'art'},t('motions.catArt','Art / Media / Pop Culture')),
+        el('option',{value:'identity'},t('motions.catIdentity','Relationships / Identity')),
       ),
 
       // Generate button
@@ -3280,13 +3509,13 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
           style:{padding:'16px 40px',fontSize:'1rem',borderRadius:14}
         }, motionLoading
           ? el('span',null,el('span',{className:'spinner'}),
-              fetchingNews ? ' Scanning this week\'s news...' :
-              genMode === 'agent' ? ' Crafting scenario...' :
-              genMode === 'current' ? ' Building motion from news...' :
-              ' Generating motion...')
-          : genMode === 'agent' ? 'Generate Agent Case'
-          : genMode === 'current' ? 'Generate from Current Events'
-          : 'Generate Motion'
+              fetchingNews ? ' '+t('motions.scanningNews','Scanning this week\'s news...') :
+              genMode === 'agent' ? ' '+t('motions.craftingScenario','Crafting scenario...') :
+              genMode === 'current' ? ' '+t('motions.buildingFromNews','Building motion from news...') :
+              ' '+t('motions.generatingMotion','Generating motion...'))
+          : genMode === 'agent' ? t('motions.generateAgentCase','Generate Agent Case')
+          : genMode === 'current' ? t('motions.generateFromEvents','Generate from Current Events')
+          : t('motions.generateMotion','Generate Motion')
         )
       ),
 
@@ -3306,14 +3535,14 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
           className: genMode === 'current' ? 'btn btn-green' : 'btn btn-purple',
           onClick:()=> genMode === 'current' ? generateFromNews() : generateMotion(genMode === 'agent'),
           style:{minWidth:160},
-        }, 'New Motion'),
+        }, t('motions.newMotion','New Motion')),
         el('button',{
           className:'btn btn-secondary',
           onClick:()=>{
             if (navigator.clipboard && motionOutput) navigator.clipboard.writeText(motionOutput);
           },
           style:{minWidth:120},
-        }, 'Copy'),
+        }, t('common.copy','Copy')),
         el(SaveToDocsButton,{text:motionOutput,filename:'DebateOS Motion'}),
       ),
     ),
@@ -3680,6 +3909,7 @@ function MindMapView({ caseResult, motion }) {
 }
 
 function ArgumentMap({ mapData }) {
+  const { t } = React.useContext(I18nContext);
   const el = React.createElement;
   const containerRef = useRef(null);
   const [paths, setPaths] = useState([]);
@@ -3855,7 +4085,7 @@ function ArgumentMap({ mapData }) {
     el('div',{className:'argmap-columns'},
       // Gov column
       el('div',{className:'argmap-col'},
-        el('div',{className:'argmap-col-header gov'},'Government'),
+        el('div',{className:'argmap-col-header gov'},t('argMap.government','Government')),
         gov.map((a,i) => el('div',{
           key:i, className:nodeClass('gov',i), 'data-gov':i,
           onMouseEnter:()=>{setHoveredNode({type:'gov',idx:i});setHoveredClash(null)},
@@ -3872,7 +4102,7 @@ function ArgumentMap({ mapData }) {
       ),
       // Clash column
       el('div',{className:'argmap-col'},
-        el('div',{className:'argmap-col-header clash'},'Clash Points'),
+        el('div',{className:'argmap-col-header clash'},t('argMap.clashPoints','Clash Points')),
         clashes.map((c,i) => el('div',{
           key:i, className:nodeClass('clash',i), 'data-clash':i,
           onMouseEnter:()=>{setHoveredClash(i);setHoveredNode(null)},
@@ -3886,7 +4116,7 @@ function ArgumentMap({ mapData }) {
       ),
       // Opp column
       el('div',{className:'argmap-col'},
-        el('div',{className:'argmap-col-header opp'},'Opposition'),
+        el('div',{className:'argmap-col-header opp'},t('argMap.opposition','Opposition')),
         opp.map((a,i) => el('div',{
           key:i, className:nodeClass('opp',i), 'data-opp':i,
           onMouseEnter:()=>{setHoveredNode({type:'opp',idx:i});setHoveredClash(null)},
@@ -3904,10 +4134,10 @@ function ArgumentMap({ mapData }) {
     ),
     // Legend
     el('div',{className:'argmap-legend'},
-      el('span',null, el('span',{className:'dot',style:{background:'#3b82f6',color:'#3b82f6'}}), 'Government'),
-      el('span',null, el('span',{className:'dot',style:{background:'#fbbf24',color:'#fbbf24'}}), 'Clash Points'),
-      el('span',null, el('span',{className:'dot',style:{background:'#ef4444',color:'#ef4444'}}), 'Opposition'),
-      el('span',null, 'Hover any node to trace connections'),
+      el('span',null, el('span',{className:'dot',style:{background:'#3b82f6',color:'#3b82f6'}}), t('argMap.government','Government')),
+      el('span',null, el('span',{className:'dot',style:{background:'#fbbf24',color:'#fbbf24'}}), t('argMap.clashPoints','Clash Points')),
+      el('span',null, el('span',{className:'dot',style:{background:'#ef4444',color:'#ef4444'}}), t('argMap.opposition','Opposition')),
+      el('span',null, t('argMap.hoverTrace','Hover any node to trace connections')),
     )
   );
 }
@@ -5636,6 +5866,7 @@ function AuthModal({ onSignIn, onSkip }) {
    ═══════════════════════════════════════════════════ */
 
 function Forum({ user, onSignIn }) {
+  const { t } = React.useContext(I18nContext);
   const el = React.createElement;
   const [posts, setPosts] = useState(() => {
     try { return JSON.parse(localStorage.getItem('debateos_forum') || '[]'); } catch { return []; }
@@ -5675,15 +5906,15 @@ function Forum({ user, onSignIn }) {
 
   return el('div', {className:'panel'},
     el('div', {style:{marginBottom:20}},
-      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, 'Community Forum'),
-      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Share cases, ideas, and debate tips with the community.'),
+      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, t('forum.title','Community Forum')),
+      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('forum.desc','Share cases, ideas, and debate tips with the community.')),
     ),
 
     // Compose
     el('div', {className:'forum-compose'},
       el('textarea', {
         value: newPost, onChange: e => setNewPost(e.target.value),
-        placeholder: user ? 'Share a case, ask a question, or post an idea...' : 'Sign in to post to the forum...',
+        placeholder: user ? t('forum.placeholder','Share a case, ask a question, or post an idea...') : t('forum.signInPlaceholder','Sign in to post to the forum...'),
         disabled: !user,
       }),
       el('div', {className:'forum-compose-row'},
@@ -5697,8 +5928,8 @@ function Forum({ user, onSignIn }) {
           )
         ),
         user
-          ? el('button', {className:'btn btn-primary btn-sm', onClick:submit, disabled:!newPost.trim()}, 'Post')
-          : el('button', {className:'btn btn-primary btn-sm', onClick:onSignIn}, 'Sign in to post'),
+          ? el('button', {className:'btn btn-primary btn-sm', onClick:submit, disabled:!newPost.trim()}, t('forum.post','Post'))
+          : el('button', {className:'btn btn-primary btn-sm', onClick:onSignIn}, t('forum.signInToPost','Sign in to post')),
       ),
     ),
 
@@ -5706,7 +5937,7 @@ function Forum({ user, onSignIn }) {
     posts.length === 0
       ? el('div', {className:'forum-empty'},
           el('div', {style:{fontSize:'2rem',marginBottom:12}}, '\uD83D\uDCAC'),
-          'No posts yet. Be the first to share something!',
+          t('forum.noPostsYet','No posts yet. Be the first to share something!'),
         )
       : posts.map(p =>
           el('div', {key:p.id, className:'forum-post'},
@@ -5722,7 +5953,7 @@ function Forum({ user, onSignIn }) {
             el('div', {className:'forum-post-actions'},
               el('button', {className:'forum-action', onClick:()=>likePost(p.id)}, '\u2764\uFE0F ', p.likes || 0),
               (user && (p.author === (user.displayName || user.email) || p.author === 'Anonymous')) &&
-                el('button', {className:'forum-action', onClick:()=>deletePost(p.id)}, '\uD83D\uDDD1 Delete'),
+                el('button', {className:'forum-action', onClick:()=>deletePost(p.id)}, '\uD83D\uDDD1 '+t('forum.delete','Delete')),
             ),
           )
         ),
@@ -6300,6 +6531,7 @@ function WelcomeGuide({ onClose, onNavigate }) {
    ═══════════════════════════════════════════════════ */
 
 function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
+  const { t } = React.useContext(I18nContext);
   const el = React.createElement;
   const [creating, setCreating] = useState(false);
   const [teamName, setTeamName] = useState('');
@@ -6400,19 +6632,19 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     } catch (err) { setMsg('Error: ' + err.message); setActionLoading(false); }
   };
 
-  if (teamLoading) return el('div', {className:'panel', style:{textAlign:'center',padding:60}}, 'Loading...');
+  if (teamLoading) return el('div', {className:'panel', style:{textAlign:'center',padding:60}}, t('team.loading','Loading...'));
 
   if (!user) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
-    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Sign in to manage your team'),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Sign in with Google to create or join a debate team.'),
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, t('team.signInTitle','Sign in to manage your team')),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('team.signInDesc','Sign in with Google to create or join a debate team.')),
   );
 
   if (!team) return el('div', {className:'panel'},
-    el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:8}}, 'Get Started'),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem',marginBottom:24}}, 'Create a team to start using DebateOS. Every team gets a 14-day free trial.'),
+    el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:8}}, t('team.getStarted','Get Started')),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem',marginBottom:24}}, t('team.createDesc','Create a team to start using DebateOS. Every team gets a 14-day free trial.')),
     el('div', {style:{display:'flex',gap:8,marginBottom:16}},
-      el('input', {value:teamName, onChange:e=>setTeamName(e.target.value), placeholder:'Team name (e.g. Springfield Debate)', style:{flex:1,padding:'10px 14px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.9rem',outline:'none'}}),
-      el('button', {onClick:createTeam, disabled:actionLoading||!teamName.trim(), style:{padding:'10px 20px',background:'#ef4444',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',opacity:actionLoading?.5:1}}, actionLoading?'Creating...':'Create Team'),
+      el('input', {value:teamName, onChange:e=>setTeamName(e.target.value), placeholder:t('team.teamNamePlaceholder','Team name (e.g. Springfield Debate)'), style:{flex:1,padding:'10px 14px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.9rem',outline:'none'}}),
+      el('button', {onClick:createTeam, disabled:actionLoading||!teamName.trim(), style:{padding:'10px 20px',background:'#ef4444',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',opacity:actionLoading?.5:1}}, actionLoading?t('team.creating','Creating...'):t('team.createTeam','Create Team')),
     ),
     el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginTop:24}},
       ...[
@@ -6420,12 +6652,12 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         {name:'Individual',price:'$5/mo',requests:'500/mo',members:'1 member',highlight:true},
         {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false},
       ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
-        p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},'Most Popular'),
+        p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},t('team.mostPopular','Most Popular')),
         el('h3',{style:{color:'#e4e8f0',fontSize:'1.1rem',fontWeight:700,marginBottom:4}},p.name),
         el('div',{style:{fontSize:'1.5rem',fontWeight:800,color:'#fff',marginBottom:8}},p.price),
         el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},p.requests+' requests'),
         el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},p.members),
-        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},'All tools included'),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},t('team.allToolsIncluded','All tools included')),
       ))
     ),
     msg && el('div', {style:{marginTop:16,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
@@ -6443,11 +6675,11 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         el('span', {style:{fontSize:'.75rem',padding:'3px 10px',borderRadius:20,fontWeight:700,background:planColor+'20',color:planColor,textTransform:'uppercase',letterSpacing:'.5px'}}, team.plan + ' plan'),
         team.status === 'trialing' && team.trialEndsAt && el('span',{style:{fontSize:'.78rem',color:'#f59e0b',marginLeft:12}}, 'Trial ends ' + new Date(team.trialEndsAt).toLocaleDateString()),
       ),
-      isOwner && el('button', {onClick:team.stripeSubscriptionId?openPortal:()=>openCheckout('team'), style:{padding:'8px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.82rem',fontWeight:600,cursor:'pointer'}}, team.stripeSubscriptionId?'Manage Billing':'Upgrade Plan'),
+      isOwner && el('button', {onClick:team.stripeSubscriptionId?openPortal:()=>openCheckout('team'), style:{padding:'8px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.82rem',fontWeight:600,cursor:'pointer'}}, team.stripeSubscriptionId?t('team.manageBilling','Manage Billing'):t('team.upgradePlan','Upgrade Plan')),
     ),
     el('div', {style:{marginBottom:28}},
       el('div', {style:{display:'flex',justifyContent:'space-between',marginBottom:6}},
-        el('span', {style:{color:'#94a3b8',fontSize:'.85rem'}}, 'Usage this period'),
+        el('span', {style:{color:'#94a3b8',fontSize:'.85rem'}}, t('team.usageThisPeriod','Usage this period')),
         el('span', {style:{color:'#e4e8f0',fontSize:'.85rem',fontWeight:600}}, (team.usageThisPeriod||0) + ' / ' + (team.usageLimit||0) + ' requests'),
       ),
       el('div', {style:{height:8,background:'#ffffff08',borderRadius:4,overflow:'hidden'}},
@@ -6458,7 +6690,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     team.plan === 'trial' && el('div', {style:{padding:20,background:'linear-gradient(135deg,#f59e0b08,#ef444408)',border:'1px solid #f59e0b25',borderRadius:12,marginBottom:24}},
       el('div', {style:{display:'flex',alignItems:'center',gap:8,marginBottom:8}},
         el('span', {style:{fontSize:'1.1rem'}}, '\u26A1'),
-        el('div', {style:{fontWeight:800,color:'#f59e0b',fontSize:'.95rem'}}, 'Upgrade Your Plan'),
+        el('div', {style:{fontWeight:800,color:'#f59e0b',fontSize:'.95rem'}}, t('team.upgradePlan','Upgrade Your Plan')),
       ),
       el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free trial with ' + (team.usageLimit||25) + ' requests/month. Upgrade for more power and team collaboration.'),
       el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
@@ -6479,13 +6711,13 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         el('div', {style:{display:'flex',alignItems:'center',gap:10}},
           el('div', {style:{width:28,height:28,borderRadius:'50%',background:'#ef444420',color:'#f87171',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.75rem',fontWeight:700}}, (m.displayName||m.email||'?').charAt(0).toUpperCase()),
           el('span', {style:{color:'#e2e8f0',fontSize:'.88rem'}}, m.displayName || m.email),
-          m.role === 'owner' && el('span', {style:{fontSize:'.65rem',padding:'2px 6px',borderRadius:4,background:'#f59e0b20',color:'#f59e0b',fontWeight:600,marginLeft:6}}, 'OWNER'),
+          m.role === 'owner' && el('span', {style:{fontSize:'.65rem',padding:'2px 6px',borderRadius:4,background:'#f59e0b20',color:'#f59e0b',fontWeight:600,marginLeft:6}}, t('team.owner','OWNER')),
         ),
-        isOwner && m.role !== 'owner' && el('button', {onClick:()=>removeMember(m.id), style:{background:'none',border:'none',color:'#64748b',cursor:'pointer',fontSize:'.75rem'}}, 'Remove'),
+        isOwner && m.role !== 'owner' && el('button', {onClick:()=>removeMember(m.id), style:{background:'none',border:'none',color:'#64748b',cursor:'pointer',fontSize:'.75rem'}}, t('team.remove','Remove')),
       )),
       isOwner && el('div', {style:{display:'flex',gap:8,marginTop:12}},
-        el('input', {value:inviteEmail, onChange:e=>setInviteEmail(e.target.value), placeholder:'teammate@email.com', style:{flex:1,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.85rem',outline:'none'}}),
-        el('button', {onClick:inviteMember, disabled:actionLoading||!inviteEmail.trim(), style:{padding:'8px 14px',background:'#22c55e20',border:'1px solid #22c55e40',borderRadius:8,color:'#4ade80',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Invite'),
+        el('input', {value:inviteEmail, onChange:e=>setInviteEmail(e.target.value), placeholder:t('team.invitePlaceholder','teammate@email.com'), style:{flex:1,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.85rem',outline:'none'}}),
+        el('button', {onClick:inviteMember, disabled:actionLoading||!inviteEmail.trim(), style:{padding:'8px 14px',background:'#22c55e20',border:'1px solid #22c55e40',borderRadius:8,color:'#4ade80',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, t('team.invite','Invite')),
       ),
     ),
     msg && el('div', {style:{marginTop:12,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
@@ -6498,6 +6730,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
 
 function SharedCases({ user, team }) {
   const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
   const [sharedCases, setSharedCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
@@ -6548,30 +6781,30 @@ function SharedCases({ user, team }) {
   };
 
   if (!user) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
-    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Team Case Library'),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Sign in and join a team to share cases.'),
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, t('sharedCases.title','Team Case Library')),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('sharedCases.signInDesc','Sign in and join a team to share cases.')),
   );
 
   if (!team) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
-    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Team Case Library'),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Create or join a team to share cases with teammates.'),
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, t('sharedCases.title','Team Case Library')),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('sharedCases.noTeamDesc','Create or join a team to share cases with teammates.')),
   );
 
   return el('div', {className:'panel'},
     el('div', {style:{marginBottom:20}},
-      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, 'Team Case Library'),
-      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Share and access cases across your team.'),
+      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, t('sharedCases.title','Team Case Library')),
+      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('sharedCases.desc','Share and access cases across your team.')),
     ),
     myCases.length > 0 && el('div', {style:{display:'flex',gap:8,marginBottom:24,flexWrap:'wrap'}},
       el('select', {value:selectedCase, onChange:e=>setSelectedCase(e.target.value), style:{flex:1,minWidth:200,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.85rem',outline:'none'}},
-        el('option', {value:''}, 'Select a case to share...'),
+        el('option', {value:''}, t('sharedCases.selectCase','Select a case to share...')),
         myCases.map(c => el('option', {key:c.id, value:c.id}, (c.motion||'Untitled').substring(0,60) + ' (' + (c.side||'?') + ')')),
       ),
-      el('button', {onClick:shareCase, disabled:sharing||!selectedCase, style:{padding:'8px 16px',background:'#3b82f620',border:'1px solid #3b82f640',borderRadius:8,color:'#60a5fa',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, sharing?'Sharing...':'Share with Team'),
+      el('button', {onClick:shareCase, disabled:sharing||!selectedCase, style:{padding:'8px 16px',background:'#3b82f620',border:'1px solid #3b82f640',borderRadius:8,color:'#60a5fa',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, sharing?t('sharedCases.sharing','Sharing...'):t('sharedCases.shareWithTeam','Share with Team')),
     ),
     msg && el('div', {style:{marginBottom:16,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
-    loading ? el('div',{style:{textAlign:'center',color:'#64748b',padding:20}},'Loading shared cases...') :
-    sharedCases.length === 0 ? el('div',{style:{textAlign:'center',color:'#64748b',padding:40,background:'#ffffff04',borderRadius:12}},'No shared cases yet. Share your first case above!') :
+    loading ? el('div',{style:{textAlign:'center',color:'#64748b',padding:20}},t('sharedCases.loadingShared','Loading shared cases...')) :
+    sharedCases.length === 0 ? el('div',{style:{textAlign:'center',color:'#64748b',padding:40,background:'#ffffff04',borderRadius:12}},t('sharedCases.noSharedYet','No shared cases yet. Share your first case above!')) :
     sharedCases.map(c => el('div', {key:c.id, style:{padding:16,background:'#ffffff04',border:'1px solid #ffffff08',borderRadius:10,marginBottom:8}},
       el('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}},
         el('div', null,
@@ -6580,7 +6813,7 @@ function SharedCases({ user, team }) {
         ),
         el('div', {style:{display:'flex',gap:6}},
           c.side && el('span', {style:{fontSize:'.7rem',padding:'2px 8px',borderRadius:4,background:c.side.toLowerCase()==='gov'?'#22c55e15':'#ef444415',color:c.side.toLowerCase()==='gov'?'#4ade80':'#f87171',fontWeight:600}}, c.side),
-          el('button', {onClick:()=>importCase(c), style:{fontSize:'.75rem',padding:'2px 10px',background:'#3b82f615',border:'1px solid #3b82f630',borderRadius:4,color:'#60a5fa',cursor:'pointer',fontWeight:600}}, 'Import'),
+          el('button', {onClick:()=>importCase(c), style:{fontSize:'.75rem',padding:'2px 10px',background:'#3b82f615',border:'1px solid #3b82f630',borderRadius:4,color:'#60a5fa',cursor:'pointer',fontWeight:600}}, t('sharedCases.import','Import')),
         ),
       ),
       c.output && el('div', {style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.6,maxHeight:80,overflow:'hidden',maskImage:'linear-gradient(to bottom, black 60%, transparent)'}}, c.output.substring(0,300) + '...'),
@@ -6594,6 +6827,7 @@ function SharedCases({ user, team }) {
 
 function Analytics({ user, team }) {
   const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -6612,8 +6846,8 @@ function Analytics({ user, team }) {
   }, [team]);
 
   if (!user || !team) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
-    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, 'Analytics'),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Sign in and join a team to view usage analytics.'),
+    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, t('analytics.title','Analytics')),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('analytics.signInDesc','Sign in and join a team to view usage analytics.')),
   );
 
   const featureCounts = {};
@@ -6636,8 +6870,8 @@ function Analytics({ user, team }) {
 
   return el('div', {className:'panel'},
     el('div', {style:{marginBottom:24}},
-      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, 'Analytics'),
-      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, 'Track your team\'s usage and activity.'),
+      el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, t('analytics.title','Analytics')),
+      el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('analytics.trackDesc','Track your team\'s usage and activity.')),
     ),
     el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:28}},
       ...[
@@ -6651,7 +6885,7 @@ function Analytics({ user, team }) {
       ))
     ),
     dailyEntries.length > 0 && el('div', {style:{marginBottom:28}},
-      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, 'Daily Usage'),
+      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, t('analytics.dailyUsage','Daily Usage')),
       el('div', {style:{display:'flex',alignItems:'flex-end',gap:4,height:120,padding:'0 4px'}},
         dailyEntries.map(([day,count]) => el('div', {key:day, style:{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}},
           el('div',{style:{fontSize:'.65rem',color:'#94a3b8'}},count),
@@ -6661,7 +6895,7 @@ function Analytics({ user, team }) {
       ),
     ),
     topFeatures.length > 0 && el('div', {style:{marginBottom:24}},
-      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, 'Feature Usage'),
+      el('h3', {style:{color:'#e4e8f0',fontSize:'1rem',fontWeight:700,marginBottom:12}}, t('analytics.featureUsage','Feature Usage')),
       topFeatures.map(([feat,count]) => {
         const pct = Math.round((count/logs.length)*100);
         const color = featureColors[feat] || '#94a3b8';
@@ -6960,7 +7194,20 @@ function App() {
               React.createElement('div',{style:{fontSize:'.68rem'}},p.desc),
             )
           )
-        )
+        ),
+        // Why I Charge explainer
+        React.createElement('div',{style:{marginTop:16,padding:'14px 18px',background:'#ffffff04',border:'1px solid #ffffff08',borderRadius:10,textAlign:'left'}},
+          React.createElement('div',{style:{fontSize:'.78rem',fontWeight:700,color:'#94a3b8',marginBottom:8,letterSpacing:'.3px'}},'Why does this cost anything?'),
+          React.createElement('p',{style:{fontSize:'.75rem',color:'#64748b',lineHeight:1.7,marginBottom:8}},
+            'Every time you generate a case, simulate a round, or get feedback, DebateOS sends your request to Claude (Anthropic\'s AI). Each request costs real money in API tokens. A single competition-depth case uses roughly 15,000-20,000 tokens, which costs ~$0.15-0.30 per generation.'
+          ),
+          React.createElement('p',{style:{fontSize:'.75rem',color:'#64748b',lineHeight:1.7,marginBottom:8}},
+            'On top of that, this app is built and maintained by one person. Server hosting, the domain, Firebase for auth, Stripe for payments, and hundreds of hours of development and debate research went into making this tool actually useful for competitive debaters.'
+          ),
+          React.createElement('p',{style:{fontSize:'.75rem',color:'#64748b',lineHeight:1.7}},
+            'The BYOK option exists so you can use the app for free if you already have an Anthropic API key. The paid plans are for people who want a simpler experience without managing their own key. Either way, every penny goes back into making DebateOS better.'
+          ),
+        ),
       )
     ),
     showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: setTab }),
