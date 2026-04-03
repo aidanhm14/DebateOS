@@ -1,0 +1,130 @@
+{
+  "lang": "de",
+  "langName": "Deutsch",
+  "flag": "🇩🇪",
+  "nav": {
+    "caseGen": "Fallgen.",
+    "roundSim": "Rundensim.",
+    "feedback": "Feedback",
+    "vision": "Vision",
+    "practice": "Übung",
+    "motions": "Anträge",
+    "casual": "Locker",
+    "philosophy": "Philosophie",
+    "judge": "Jury",
+    "forum": "Forum",
+    "guide": "Anleitung",
+    "cases": "Fälle",
+    "team": "Team",
+    "analytics": "Analyse",
+    "resources": "Ressourcen"
+  },
+  "hero": {
+    "title1": "Das ",
+    "titleAccent": "KI-Toolkit",
+    "title2": " für Debattierer",
+    "tagline": "Fälle generieren, Runden simulieren, Argumente analysieren und Jury-Feedback erhalten."
+  },
+  "caseGen": {
+    "motion": "Antrag",
+    "motionPlaceholder": "Dieses Haus würde Privatschulen verbieten...",
+    "noMotion": "Kein Antrag",
+    "background": "Hintergrund",
+    "backgroundPlaceholder": "Optional: Kontext, Einschränkungen, Akteure oder Szenario. Leer lassen für automatische Generierung.",
+    "depth": "Tiefe",
+    "side": "Seite",
+    "format": "Format",
+    "government": "Regierung",
+    "opposition": "Opposition",
+    "generateCase": "Fall generieren",
+    "generateOpposition": "Opposition generieren",
+    "generatingCase": "Fall wird generiert...",
+    "generatingOpposition": "Opposition wird generiert...",
+    "checkingContext": "Kontext wird geprüft...",
+    "bgNone": "Kein Hintergrund nötig",
+    "bgOptional": "Hintergrund optional",
+    "bgRecommended": "Hintergrund empfohlen",
+    "bgEssential": "Hintergrund erforderlich",
+    "bgEvaluating": "Antrag wird bewertet..."
+  },
+  "depth": {
+    "quick": "Schnell",
+    "quickDesc": "Grundgerüst mit Kernthesen",
+    "standard": "Standard",
+    "standardDesc": "Solider Fall mit Argumenten",
+    "competition": "Wettbewerb",
+    "competitionDesc": "Vollständiger Fall mit tiefgehenden Argumenten, Widerlegungsblöcken und Übersicht"
+  },
+  "vision": {
+    "desc": "Kartieren Sie die strategische Landschaft einer Runde. Erhalten Sie Textanalyse und interaktive Argumentfluss-Visualisierung.",
+    "motionPlaceholder": "Geben Sie den Antrag zur Analyse ein...",
+    "yourSide": "Ihre Seite",
+    "analyzing": "Analyse läuft...",
+    "analyzeRound": "Runde analysieren",
+    "argMap": "Argumentkarte",
+    "textAnalysis": "Textanalyse",
+    "mindMap": "Mindmap"
+  },
+  "roundSim": {
+    "desc": "Simulieren Sie eine vollständige Runde gegen einen KI-Gegner. Sie halten Ihre Reden (tippen oder Mikrofon), die KI spielt das andere Team. Nach allen 6 Reden erhalten Sie detailliertes Jury-Feedback.",
+    "motionPlaceholder": "Geben Sie einen Antrag für die Runde ein...",
+    "startRound": "Runde starten"
+  },
+  "feedback": {
+    "pasteCase": "Fall einfügen",
+    "pastePlaceholder": "Fügen Sie Ihren vollständigen Debattierfall hier ein. Hintergrund, Rahmen, Argumente, alles. Die KI analysiert und gibt gezieltes Feedback...",
+    "analyzing": "Analyse Ihres Falls...",
+    "getFeedback": "Feedback erhalten"
+  },
+  "practice": {
+    "desc": "Üben Sie das Schreiben von Reden und erhalten Sie KI-Coaching-Feedback. Wählen Sie die Rede, die Sie üben, schreiben Sie sie und reichen Sie sie zur Überprüfung ein.",
+    "whichSpeech": "Welche Rede üben Sie?"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "managedAccess": "Verwalteter Zugang",
+    "managedDesc": "Melden Sie sich an für eine kostenlose Testphase oder ein Abonnement.",
+    "signInGoogle": "Mit Google anmelden",
+    "freeForever": "Dauerhaft kostenlos",
+    "freeDesc": "Eigenen Anthropic API-Schlüssel verwenden. Unbegrenzte Nutzung.",
+    "orFreeKey": "oder kostenlos mit eigenem Schlüssel",
+    "getKey": "Schlüssel auf console.anthropic.com erhalten"
+  },
+  "about": {
+    "title": "Über DebateOS & Formate",
+    "apdaTitle": "Aufgebaut auf APDA Parlamentarischem Debattieren",
+    "apdaBody1": "DebateOS basiert auf dem Format der American Parliamentary Debate Association, weil APDA die wichtigsten Fähigkeiten trainiert: spontan denken, überzeugende Rahmen unter Zeitdruck aufbauen und sich direkt mit gegnerischen Argumenten auseinandersetzen.",
+    "apdaBody2": "Die strukturierte Redefolge (PMR, LOC, MG, MOC, LOR, PMR-Erwiderung) schafft natürliche Kontrollpunkte für Fallkonstruktion, Clash-Analyse und strategischen Zusammenbruch.",
+    "formatsBody": "DebateOS unterstützt mehrere wettbewerbsfähige Debattierformate aus der ganzen Welt. Wählen Sie Ihr Format im Fallgenerator.",
+    "caseGen": "Fallgen.",
+    "caseGenDesc": "Generiert strukturierte Fälle mit Rahmen, Argumenten und Auswirkungen, angepasst an Ihren Antrag und Ihre Seite.",
+    "roundSim": "Rundensim.",
+    "roundSimDesc": "Simuliert vollständige Runden Rede für Rede, um gegen echten Oppositionsdruck zu üben.",
+    "argMap": "Argumentkarte",
+    "argMapDesc": "Visualisiert Clash-Punkte zwischen Regierung und Opposition, um Stärken und Schwächen zu finden.",
+    "judgeFeedback": "Jury-Feedback",
+    "judgeFeedbackDesc": "Gibt Jury-Raum-Feedback zu Ihren Fällen, damit Sie sich vor dem Turnier verbessern können."
+  },
+  "formats": {
+    "title": "Debattenformate",
+    "apda": "APDA Parliamentary",
+    "apdaDesc": "Amerikanisches parlamentarisches Format — 2v2, 7 Reden",
+    "bp": "British Parliamentary",
+    "bpDesc": "Weltuniversitätsformat — 4 Teams à 2, OG/OO/CG/CO",
+    "wsdc": "World Schools",
+    "wsdcDesc": "3v3 Schülerformat — 3 vorbereitete + 1 Stegreifrede",
+    "ap": "Asian Parliamentary",
+    "apDesc": "3v3 Format, beliebt in Asien — Antwort-Reden",
+    "cp": "Canadian Parliamentary",
+    "cpDesc": "Ähnlich wie BP, angepasst für den kanadischen Universitätskreis",
+    "kp": "Karl Popper",
+    "kpDesc": "3v3 mit Kreuzbefragung, beliebt in Osteuropa"
+  },
+  "multilingual": {
+    "whyTitle": "Warum in anderen Sprachen debattieren?",
+    "whyBody": "Debattieren ist eines der wirksamsten Werkzeuge für kritisches Denken und Überzeugungskraft. Durch die Unterstützung mehrerer Sprachen und Formate macht DebateOS Debattentraining weltweit zugänglich.",
+    "selectLanguage": "Sprache",
+    "whyBody2": "In Ihrer Muttersprache zu debattieren zwingt zu einer tieferen Auseinandersetzung mit den Ideen selbst, nicht nur mit dem Vokabular. Es entwickelt rhetorische Fähigkeiten, die direkt auf das berufliche und bürgerschaftliche Leben in Ihrer Gemeinschaft übertragbar sind."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "lang": "fr",
+  "langName": "Français",
+  "flag": "🇫🇷",
+  "nav": {
+    "caseGen": "Gén. de cas",
+    "roundSim": "Sim. de tour",
+    "feedback": "Feedback",
+    "vision": "Vision",
+    "practice": "Pratique",
+    "motions": "Motions",
+    "casual": "Informel",
+    "philosophy": "Philosophie",
+    "judge": "Juge",
+    "forum": "Forum",
+    "guide": "Guide",
+    "cases": "Cas",
+    "team": "Équipe",
+    "analytics": "Analyse",
+    "resources": "Ressources"
+  },
+  "hero": {
+    "title1": "L'",
+    "titleAccent": "outil IA",
+    "title2": " pour les débatteurs compétitifs",
+    "tagline": "Générez des cas, simulez des tours, cartographiez les arguments et obtenez des retours de juge."
+  },
+  "caseGen": {
+    "motion": "Motion",
+    "motionPlaceholder": "Cette assemblée interdirait l'éducation privée...",
+    "noMotion": "Pas de motion",
+    "background": "Contexte",
+    "backgroundPlaceholder": "Optionnel : contexte, contraintes, acteurs ou scénario. Laisser vide pour génération automatique.",
+    "depth": "Profondeur",
+    "side": "Côté",
+    "format": "Format",
+    "government": "Gouvernement",
+    "opposition": "Opposition",
+    "generateCase": "Générer le cas",
+    "generateOpposition": "Générer l'opposition",
+    "generatingCase": "Génération du cas...",
+    "generatingOpposition": "Génération de l'opposition...",
+    "checkingContext": "Vérification du contexte...",
+    "bgNone": "Pas de contexte nécessaire",
+    "bgOptional": "Contexte optionnel",
+    "bgRecommended": "Contexte recommandé",
+    "bgEssential": "Contexte nécessaire",
+    "bgEvaluating": "Évaluation de la motion..."
+  },
+  "depth": {
+    "quick": "Rapide",
+    "quickDesc": "Plan squelette avec les points clés",
+    "standard": "Standard",
+    "standardDesc": "Cas solide avec arguments",
+    "competition": "Compétition",
+    "competitionDesc": "Cas complet avec arguments approfondis, blocs de réfutation et vue d'ensemble"
+  },
+  "vision": {
+    "desc": "Cartographiez le paysage stratégique d'un tour. Obtenez une analyse textuelle et une visualisation interactive du flux d'arguments.",
+    "motionPlaceholder": "Entrez la motion à analyser...",
+    "yourSide": "Votre côté",
+    "analyzing": "Analyse en cours...",
+    "analyzeRound": "Analyser le tour",
+    "argMap": "Carte des arguments",
+    "textAnalysis": "Analyse textuelle",
+    "mindMap": "Carte mentale"
+  },
+  "roundSim": {
+    "desc": "Simulez un tour complet contre un adversaire IA. Vous prononcez vos discours (tapez ou parlez au micro), l'IA joue l'autre équipe. Après les 6 discours, obtenez un feedback détaillé du juge.",
+    "motionPlaceholder": "Entrez une motion pour le tour...",
+    "startRound": "Démarrer le tour"
+  },
+  "feedback": {
+    "pasteCase": "Collez votre cas",
+    "pastePlaceholder": "Collez votre cas de débat complet ici. Contexte, cadre, arguments, tout. L'IA l'analysera et vous donnera un feedback ciblé section par section...",
+    "analyzing": "Réflexion approfondie sur votre cas...",
+    "getFeedback": "Obtenir le feedback"
+  },
+  "practice": {
+    "desc": "Entraînez-vous à écrire des discours et obtenez un coaching IA. Sélectionnez le discours que vous pratiquez, rédigez-le et soumettez-le pour révision.",
+    "whichSpeech": "Quel discours pratiquez-vous ?"
+  },
+  "auth": {
+    "signIn": "Connexion",
+    "signOut": "Déconnexion",
+    "managedAccess": "Accès géré",
+    "managedDesc": "Connectez-vous pour un essai gratuit ou un abonnement.",
+    "signInGoogle": "Se connecter avec Google",
+    "freeForever": "Gratuit pour toujours",
+    "freeDesc": "Utilisez votre propre clé API Anthropic. Utilisation illimitée.",
+    "orFreeKey": "ou gratuit avec votre clé",
+    "getKey": "Obtenez une clé sur console.anthropic.com"
+  },
+  "about": {
+    "title": "À propos de DebateOS & formats",
+    "apdaTitle": "Basé sur le débat parlementaire APDA",
+    "apdaBody1": "DebateOS est structuré autour du format de l'Association Américaine de Débat Parlementaire car l'APDA forme les compétences les plus importantes : penser rapidement, construire des cadres persuasifs sous pression et s'engager directement avec les arguments opposés.",
+    "apdaBody2": "L'ordre structuré des discours (PMR, LOC, MG, MOC, LOR, réplique PMR) crée des points de contrôle naturels pour la construction de cas, l'analyse de clash et l'effondrement stratégique.",
+    "formatsBody": "DebateOS supporte plusieurs formats de débat compétitif utilisés dans le monde entier. Sélectionnez votre format dans le Générateur de Cas.",
+    "caseGen": "Gén. de cas",
+    "caseGenDesc": "Génère des cas structurés avec cadres, arguments et impacts adaptés à votre motion et côté.",
+    "roundSim": "Sim. de tour",
+    "roundSimDesc": "Simule des tours complets discours par discours pour pratiquer contre la pression réelle de l'opposition.",
+    "argMap": "Carte des arguments",
+    "argMapDesc": "Visualise les points de clash entre Gouvernement et Opposition pour trouver forces et faiblesses.",
+    "judgeFeedback": "Feedback du juge",
+    "judgeFeedbackDesc": "Donne un feedback de style salle de jury pour améliorer vos cas avant le tournoi."
+  },
+  "formats": {
+    "title": "Formats de débat",
+    "apda": "APDA Parliamentary",
+    "apdaDesc": "Format parlementaire américain — 2c2, 7 discours",
+    "bp": "British Parliamentary",
+    "bpDesc": "Format universités mondiales — 4 équipes de 2",
+    "wsdc": "World Schools",
+    "wsdcDesc": "Format 3c3 lycéen — 3 discours préparés + 1 impromptu",
+    "ap": "Asian Parliamentary",
+    "apDesc": "Format 3c3 populaire en Asie — discours de réponse",
+    "cp": "Canadian Parliamentary",
+    "cpDesc": "Similaire au BP, adapté au circuit universitaire canadien",
+    "kp": "Karl Popper",
+    "kpDesc": "3c3 avec interrogatoire croisé, populaire en Europe de l'Est"
+  },
+  "multilingual": {
+    "whyTitle": "Pourquoi débattre dans d'autres langues ?",
+    "whyBody": "Le débat est l'un des outils les plus efficaces pour développer la pensée critique et la persuasion. En supportant plusieurs langues et formats, DebateOS rend la préparation au débat accessible aux débatteurs du monde entier.",
+    "selectLanguage": "Langue",
+    "whyBody2": "Débattre dans votre langue maternelle force un engagement plus profond avec les idées elles-mêmes, pas seulement le vocabulaire. Cela développe des compétences rhétoriques directement applicables à la vie professionnelle et civique dans votre communauté."
+  }
+}

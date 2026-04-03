@@ -1,0 +1,130 @@
+{
+  "lang": "es",
+  "langName": "Español",
+  "flag": "🇪🇸",
+  "nav": {
+    "caseGen": "Gen. de caso",
+    "roundSim": "Sim. de ronda",
+    "feedback": "Feedback",
+    "vision": "Visión",
+    "practice": "Práctica",
+    "motions": "Mociones",
+    "casual": "Informal",
+    "philosophy": "Filosofía",
+    "judge": "Juez",
+    "forum": "Foro",
+    "guide": "Guía",
+    "cases": "Casos",
+    "team": "Equipo",
+    "analytics": "Análisis",
+    "resources": "Recursos"
+  },
+  "hero": {
+    "title1": "El ",
+    "titleAccent": "toolkit de IA",
+    "title2": " para debatientes competitivos",
+    "tagline": "Genera casos, simula rondas, mapea argumentos y obtén feedback de juez."
+  },
+  "caseGen": {
+    "motion": "Moción",
+    "motionPlaceholder": "Esta cámara prohibiría la educación privada...",
+    "noMotion": "Sin moción",
+    "background": "Contexto",
+    "backgroundPlaceholder": "Opcional: contexto, restricciones, actores o escenario. Dejar vacío para generación automática.",
+    "depth": "Profundidad",
+    "side": "Lado",
+    "format": "Formato",
+    "government": "Gobierno",
+    "opposition": "Oposición",
+    "generateCase": "Generar caso",
+    "generateOpposition": "Generar oposición",
+    "generatingCase": "Generando caso...",
+    "generatingOpposition": "Generando oposición...",
+    "checkingContext": "Verificando contexto...",
+    "bgNone": "Sin contexto necesario",
+    "bgOptional": "Contexto opcional",
+    "bgRecommended": "Contexto recomendado",
+    "bgEssential": "Contexto necesario",
+    "bgEvaluating": "Evaluando moción..."
+  },
+  "depth": {
+    "quick": "Rápido",
+    "quickDesc": "Esquema con puntos clave",
+    "standard": "Estándar",
+    "standardDesc": "Caso sólido con argumentos",
+    "competition": "Competición",
+    "competitionDesc": "Caso completo con argumentos profundos, bloques de refutación y resumen"
+  },
+  "vision": {
+    "desc": "Mapea el panorama estratégico de una ronda. Obtén análisis de texto y visualización interactiva del flujo de argumentos.",
+    "motionPlaceholder": "Ingresa la moción a analizar...",
+    "yourSide": "Tu lado",
+    "analyzing": "Analizando...",
+    "analyzeRound": "Analizar ronda",
+    "argMap": "Mapa de argumentos",
+    "textAnalysis": "Análisis de texto",
+    "mindMap": "Mapa mental"
+  },
+  "roundSim": {
+    "desc": "Simula una ronda completa contra un oponente IA. Tú das los discursos (escribe o usa el micrófono), la IA juega el otro equipo. Después de los 6 discursos, obtén feedback detallado del juez.",
+    "motionPlaceholder": "Ingresa una moción para la ronda...",
+    "startRound": "Iniciar ronda"
+  },
+  "feedback": {
+    "pasteCase": "Pega tu caso",
+    "pastePlaceholder": "Pega tu caso de debate completo aquí. Contexto, marco, argumentos, todo. La IA lo analizará y te dará feedback específico sección por sección...",
+    "analyzing": "Analizando tu caso en profundidad...",
+    "getFeedback": "Obtener feedback"
+  },
+  "practice": {
+    "desc": "Practica escribiendo discursos y obtén feedback de coaching IA. Selecciona el discurso que estás practicando, escríbelo y envíalo para revisión.",
+    "whichSpeech": "¿Qué discurso estás practicando?"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "managedAccess": "Acceso gestionado",
+    "managedDesc": "Inicia sesión para prueba gratuita o suscripción.",
+    "signInGoogle": "Iniciar sesión con Google",
+    "freeForever": "Gratis para siempre",
+    "freeDesc": "Usa tu propia clave API de Anthropic. Uso ilimitado.",
+    "orFreeKey": "o gratis con tu clave",
+    "getKey": "Obtén una clave en console.anthropic.com"
+  },
+  "about": {
+    "title": "Sobre DebateOS y formatos",
+    "apdaTitle": "Basado en el debate parlamentario APDA",
+    "apdaBody1": "DebateOS está estructurado alrededor del formato de la Asociación Americana de Debate Parlamentario porque APDA entrena las habilidades más importantes: pensar rápido, construir marcos persuasivos bajo presión y enfrentarse directamente a argumentos opuestos.",
+    "apdaBody2": "El orden estructurado de discursos (PMR, LOC, MG, MOC, LOR, réplica PMR) crea puntos de control naturales para la construcción de casos, análisis de choque y colapso estratégico.",
+    "formatsBody": "DebateOS soporta múltiples formatos de debate competitivo usados en todo el mundo. Selecciona tu formato en el Generador de Casos.",
+    "caseGen": "Gen. de caso",
+    "caseGenDesc": "Genera casos estructurados con marcos, argumentos e impactos adaptados a tu moción y lado.",
+    "roundSim": "Sim. de ronda",
+    "roundSimDesc": "Simula rondas completas discurso por discurso para practicar contra presión real de oposición.",
+    "argMap": "Mapa de argumentos",
+    "argMapDesc": "Visualiza puntos de choque entre Gobierno y Oposición para encontrar fortalezas y debilidades.",
+    "judgeFeedback": "Feedback de juez",
+    "judgeFeedbackDesc": "Da feedback estilo sala de jueces para mejorar tus casos antes del torneo."
+  },
+  "formats": {
+    "title": "Formatos de debate",
+    "apda": "APDA Parliamentary",
+    "apdaDesc": "Formato parlamentario americano — 2v2, 7 discursos",
+    "bp": "British Parliamentary",
+    "bpDesc": "Formato universidades mundiales — 4 equipos de 2",
+    "wsdc": "World Schools",
+    "wsdcDesc": "Formato 3v3 escolar — 3 discursos preparados + 1 improvisado",
+    "ap": "Asian Parliamentary",
+    "apDesc": "Formato 3v3 popular en Asia — discursos de respuesta",
+    "cp": "Canadian Parliamentary",
+    "cpDesc": "Similar al BP, adaptado al circuito universitario canadiense",
+    "kp": "Karl Popper",
+    "kpDesc": "3v3 con interrogatorio cruzado, popular en Europa del Este"
+  },
+  "multilingual": {
+    "whyTitle": "¿Por qué debatir en otros idiomas?",
+    "whyBody": "El debate es una de las herramientas más efectivas para el pensamiento crítico y la persuasión. Al soportar múltiples idiomas y formatos, DebateOS hace accesible la preparación de debate a debatientes de todo el mundo.",
+    "selectLanguage": "Idioma",
+    "whyBody2": "Debatir en tu idioma nativo te obliga a un compromiso más profundo con las ideas en sí, no solo con el vocabulario. Desarrolla habilidades retóricas que se transfieren directamente a la vida profesional y cívica en tu comunidad."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "lang": "en",
+  "langName": "English",
+  "flag": "\ud83c\uddfa\ud83c\uddf8",
+  "nav": {
+    "caseGen": "Case Gen",
+    "roundSim": "Round Sim",
+    "feedback": "Feedback",
+    "vision": "Vision",
+    "practice": "Practice",
+    "motions": "Motions",
+    "casual": "Casual",
+    "philosophy": "Philosophy",
+    "judge": "Judge",
+    "forum": "Forum",
+    "guide": "Guide",
+    "cases": "Cases",
+    "team": "Team",
+    "analytics": "Analytics",
+    "resources": "Resources"
+  },
+  "hero": {
+    "title1": "The ",
+    "titleAccent": "AI toolkit",
+    "title2": " for competitive debaters",
+    "tagline": "Generate cases, simulate rounds, map arguments, and get judge-level feedback."
+  },
+  "caseGen": {
+    "motion": "Motion",
+    "motionPlaceholder": "This house would ban private education...",
+    "noMotion": "No motion",
+    "background": "Background",
+    "backgroundPlaceholder": "Optional: provide context, constraints, actor details, or scenario. Leave blank to auto-generate. Type \"n/a\" to skip.",
+    "depth": "Depth",
+    "side": "Side",
+    "format": "Format",
+    "government": "Government",
+    "opposition": "Opposition",
+    "generateCase": "Generate Case",
+    "generateOpposition": "Generate Opposition",
+    "generatingCase": "Generating Case...",
+    "generatingOpposition": "Generating Opposition...",
+    "checkingContext": "Checking context...",
+    "bgNone": "No background needed",
+    "bgOptional": "Background optional",
+    "bgRecommended": "Background recommended",
+    "bgEssential": "Background needed",
+    "bgEvaluating": "Evaluating motion..."
+  },
+  "depth": {
+    "quick": "Quick",
+    "quickDesc": "Skeleton outline with key claims",
+    "standard": "Standard",
+    "standardDesc": "Solid case with warrants",
+    "competition": "Competition",
+    "competitionDesc": "Full case with deep warrants, A2 blocks, MG overview"
+  },
+  "vision": {
+    "desc": "Map the strategic landscape of a round. Get text analysis and an interactive argument flow visualization.",
+    "motionPlaceholder": "Enter the motion to analyze...",
+    "yourSide": "Your Side",
+    "analyzing": "Analyzing...",
+    "analyzeRound": "Analyze Round",
+    "argMap": "Argument Map",
+    "textAnalysis": "Text Analysis",
+    "mindMap": "Mind Map"
+  },
+  "roundSim": {
+    "desc": "Simulate a full APDA round against an AI opponent. You deliver your speeches (type or speak into mic), the AI plays the other team. After all 6 speeches, get detailed judge feedback and speaker scores.",
+    "motionPlaceholder": "Enter a motion for the round...",
+    "startRound": "Start Round"
+  },
+  "feedback": {
+    "pasteCase": "Paste Your Case",
+    "pastePlaceholder": "Paste your full debate case here. Background, framework, arguments, everything. The AI will analyze it and give you targeted, section-by-section feedback...",
+    "analyzing": "Thinking deeply about your case...",
+    "getFeedback": "Get Feedback"
+  },
+  "practice": {
+    "desc": "Practice writing speeches and get AI coaching feedback. Select the speech you're practicing, type it out, and submit for review.",
+    "whichSpeech": "Which speech are you practicing?"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "managedAccess": "Managed access",
+    "managedDesc": "Sign in to get a free trial or subscribe. No API key needed.",
+    "signInGoogle": "Sign in with Google",
+    "freeForever": "Free forever",
+    "freeDesc": "Bring your own Anthropic API key. Unlimited usage, no subscription.",
+    "orFreeKey": "or free with your own key",
+    "getKey": "Get a key at console.anthropic.com"
+  },
+  "about": {
+    "title": "About DebateOS & Formats",
+    "apdaTitle": "Why we default to APDA",
+    "apdaBody1": "DebateOS is structured around the American Parliamentary Debate Association format because APDA trains the skills that matter most: thinking on your feet, building persuasive frameworks under time pressure, and engaging directly with opposing arguments. Every tool in this app maps to a real moment in a round.",
+    "apdaBody2": "The structured speech order (PMR, LOC, MG, MOC, LOR, PMR rebuttal) creates natural checkpoints for case construction, clash analysis, and strategic collapse. AI-assisted prep lets you pressure-test arguments before you walk into the round, not replace the thinking that wins debates.",
+    "formatsBody": "DebateOS supports multiple competitive debate formats used around the world. Select your format in the Case Generator to get cases structured for your circuit.",
+    "caseGen": "Case Gen",
+    "caseGenDesc": "Generates structured PMR/LOC cases with frameworks, warrants, and impacts tailored to your motion and side.",
+    "roundSim": "Round Sim",
+    "roundSimDesc": "Simulates full rounds speech-by-speech so you can practice responding to real opposition pressure.",
+    "argMap": "Argument Map",
+    "argMapDesc": "Visualizes clash points between Gov and Opp to find where your case is strongest and where it leaks.",
+    "judgeFeedback": "Judge Feedback",
+    "judgeFeedbackDesc": "Gives tab-room-style feedback on your cases so you can improve before tournament day."
+  },
+  "formats": {
+    "title": "Other Debate Formats",
+    "apda": "APDA Parliamentary",
+    "apdaDesc": "American Parliamentary Debate Association — 2v2, 7 speeches, prepared + impromptu cases",
+    "bp": "British Parliamentary",
+    "bpDesc": "World Universities format — 4 teams of 2, Opening/Closing Gov & Opp, POIs",
+    "wsdc": "World Schools",
+    "wsdcDesc": "3v3 format used in high school worlds — 3 prepared + 1 impromptu speech per side",
+    "ap": "Asian Parliamentary",
+    "apDesc": "3v3 format popular across Asia — similar to BP but with 2 teams, reply speeches",
+    "cp": "Canadian Parliamentary",
+    "cpDesc": "Similar to BP, adapted for Canadian university circuit",
+    "kp": "Karl Popper",
+    "kpDesc": "3v3 format with cross-examination, popular in Eastern Europe and debate clubs"
+  },
+  "multilingual": {
+    "whyTitle": "Why debate in other languages?",
+    "whyBody": "Debate is one of the most effective tools for building critical thinking, persuasion, and civic engagement. But access to quality debate prep tools has been limited to English-speaking circuits. By supporting multiple languages and formats, DebateOS opens competitive debate training to debaters worldwide — whether you're prepping for a BP tournament in Seoul, a World Schools round in São Paulo, or an APDA case at UChicago.",
+    "selectLanguage": "Language",
+    "whyBody2": "Arguing in your native language forces deeper engagement with the ideas themselves, not just the vocabulary. It develops rhetorical skills that transfer directly to professional and civic life in your own community. And for multilingual debaters, switching between languages builds cognitive flexibility that monolingual training can't match."
+  }
+}

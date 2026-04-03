@@ -1,0 +1,130 @@
+{
+  "lang": "ko",
+  "langName": "한국어",
+  "flag": "🇰🇷",
+  "nav": {
+    "caseGen": "케이스 생성",
+    "roundSim": "라운드 시뮬",
+    "feedback": "피드백",
+    "vision": "비전",
+    "practice": "연습",
+    "motions": "논제",
+    "casual": "캐주얼",
+    "philosophy": "철학",
+    "judge": "심판",
+    "forum": "포럼",
+    "guide": "가이드",
+    "cases": "케이스",
+    "team": "팀",
+    "analytics": "분석",
+    "resources": "자료"
+  },
+  "hero": {
+    "title1": "경쟁 토론자를 위한 ",
+    "titleAccent": "AI 툴킷",
+    "title2": "",
+    "tagline": "케이스 생성, 라운드 시뮬레이션, 논증 맵핑, 심판 피드백을 받으세요."
+  },
+  "caseGen": {
+    "motion": "논제",
+    "motionPlaceholder": "이 의회는 사립 교육을 금지할 것이다...",
+    "noMotion": "논제 없음",
+    "background": "배경",
+    "backgroundPlaceholder": "선택 사항: 맥락, 제약 조건, 행위자 또는 시나리오를 제공하세요.",
+    "depth": "깊이",
+    "side": "측",
+    "format": "형식",
+    "government": "정부",
+    "opposition": "야당",
+    "generateCase": "케이스 생성",
+    "generateOpposition": "반론 생성",
+    "generatingCase": "케이스 생성 중...",
+    "generatingOpposition": "반론 생성 중...",
+    "checkingContext": "맥락 확인 중...",
+    "bgNone": "배경 불필요",
+    "bgOptional": "배경 선택 사항",
+    "bgRecommended": "배경 권장",
+    "bgEssential": "배경 필요",
+    "bgEvaluating": "논제 평가 중..."
+  },
+  "depth": {
+    "quick": "빠른",
+    "quickDesc": "주요 주장이 포함된 개요",
+    "standard": "표준",
+    "standardDesc": "논거가 포함된 완성된 케이스",
+    "competition": "대회용",
+    "competitionDesc": "심층 논거, 반박 블록, MG 개요가 포함된 완전한 케이스"
+  },
+  "vision": {
+    "desc": "라운드의 전략적 지형을 맵핑하세요. 텍스트 분석과 인터랙티브 논증 흐름 시각화를 받으세요.",
+    "motionPlaceholder": "분석할 논제를 입력하세요...",
+    "yourSide": "당신의 측",
+    "analyzing": "분석 중...",
+    "analyzeRound": "라운드 분석",
+    "argMap": "논증 맵",
+    "textAnalysis": "텍스트 분석",
+    "mindMap": "마인드맵"
+  },
+  "roundSim": {
+    "desc": "AI 상대와 APDA 라운드를 시뮬레이션하세요. 연설을 입력하거나 마이크로 말하세요. AI가 상대팀을 맡습니다. 6개 연설 후 상세 심판 피드백과 스피커 점수를 받으세요.",
+    "motionPlaceholder": "라운드 논제를 입력하세요...",
+    "startRound": "라운드 시작"
+  },
+  "feedback": {
+    "pasteCase": "케이스를 붙여넣기",
+    "pastePlaceholder": "토론 케이스를 여기에 붙여넣으세요. 배경, 프레임워크, 논증 모두 포함. AI가 섹션별 피드백을 제공합니다...",
+    "analyzing": "케이스를 깊이 분석 중...",
+    "getFeedback": "피드백 받기"
+  },
+  "practice": {
+    "desc": "연설 작성을 연습하고 AI 코칭 피드백을 받으세요. 연습할 연설을 선택하고, 작성한 후 제출하세요.",
+    "whichSpeech": "어떤 연설을 연습하고 있나요?"
+  },
+  "auth": {
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "managedAccess": "관리형 액세스",
+    "managedDesc": "무료 체험 또는 구독을 위해 로그인하세요.",
+    "signInGoogle": "Google로 로그인",
+    "freeForever": "영구 무료",
+    "freeDesc": "자신의 Anthropic API 키를 사용하세요. 무제한 사용.",
+    "orFreeKey": "또는 자신의 키로 무료",
+    "getKey": "console.anthropic.com에서 키 받기"
+  },
+  "about": {
+    "title": "DebateOS 소개 & 형식",
+    "apdaTitle": "APDA 의회식 토론 기반",
+    "apdaBody1": "DebateOS는 미국 의회식 토론 협회(APDA) 형식을 기반으로 합니다. APDA는 즉석 사고, 시간 압박 속 설득력 있는 프레임워크 구축, 상대 논증과의 직접 대결 등 가장 중요한 기술을 훈련합니다.",
+    "apdaBody2": "구조화된 연설 순서(PMR, LOC, MG, MOC, LOR, PMR 반박)는 케이스 구성, 충돌 분석, 전략적 축소를 위한 자연스러운 체크포인트를 만듭니다.",
+    "formatsBody": "DebateOS는 전 세계에서 사용되는 여러 경쟁 토론 형식을 지원합니다. 케이스 생성기에서 형식을 선택하세요.",
+    "caseGen": "케이스 생성",
+    "caseGenDesc": "논제와 측면에 맞춰 프레임워크, 논거, 영향력을 포함한 구조화된 케이스를 생성합니다.",
+    "roundSim": "라운드 시뮬",
+    "roundSimDesc": "연설별로 전체 라운드를 시뮬레이션하여 실제 반론 압박에 대응하는 연습을 합니다.",
+    "argMap": "논증 맵",
+    "argMapDesc": "정부측과 야당측 사이의 충돌 지점을 시각화하여 케이스의 강점과 약점을 파악합니다.",
+    "judgeFeedback": "심판 피드백",
+    "judgeFeedbackDesc": "대회 전에 케이스를 개선할 수 있도록 탭룸 스타일의 피드백을 제공합니다."
+  },
+  "formats": {
+    "title": "기타 토론 형식",
+    "apda": "APDA Parliamentary",
+    "apdaDesc": "미국 의회식 토론 — 2대 2, 7개 연설",
+    "bp": "British Parliamentary",
+    "bpDesc": "세계 대학 형식 — 4팀, 각 2명",
+    "wsdc": "World Schools",
+    "wsdcDesc": "3대 3 고등학생 형식",
+    "ap": "Asian Parliamentary",
+    "apDesc": "아시아에서 인기 있는 3대 3 형식",
+    "cp": "Canadian Parliamentary",
+    "cpDesc": "BP와 유사, 캐나다 대학 서킷에 맞게 조정",
+    "kp": "Karl Popper",
+    "kpDesc": "교차 심문이 있는 3대 3, 동유럽에서 인기"
+  },
+  "multilingual": {
+    "whyTitle": "왜 다른 언어로 토론해야 할까요?",
+    "whyBody": "토론은 비판적 사고와 설득력을 키우는 가장 효과적인 도구 중 하나입니다. 다양한 언어와 형식을 지원함으로써 DebateOS는 전 세계 토론자들에게 토론 훈련을 열어줍니다.",
+    "selectLanguage": "언어",
+    "whyBody2": "모국어로 토론하면 단순한 어휘가 아닌 아이디어 자체에 더 깊이 몰입할 수 있습니다. 이는 자신의 커뮤니티에서 직업 생활과 시민 생활에 직접 적용되는 수사 능력을 개발합니다. 다국어 토론자에게는 언어 간 전환이 단일 언어 훈련으로는 얻을 수 없는 인지적 유연성을 키워줍니다."
+  }
+}

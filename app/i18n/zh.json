@@ -1,0 +1,130 @@
+{
+  "lang": "zh",
+  "langName": "中文",
+  "flag": "🇨🇳",
+  "nav": {
+    "caseGen": "生成论点",
+    "roundSim": "模拟辩论",
+    "feedback": "反馈",
+    "vision": "分析",
+    "practice": "练习",
+    "motions": "辩题",
+    "casual": "随意",
+    "philosophy": "哲学",
+    "judge": "评委",
+    "forum": "论坛",
+    "guide": "指南",
+    "cases": "案例",
+    "team": "团队",
+    "analytics": "数据",
+    "resources": "资源"
+  },
+  "hero": {
+    "title1": "竞技辩论者的",
+    "titleAccent": "AI工具包",
+    "title2": "",
+    "tagline": "生成论点、模拟辩论、分析论证、获取评委反馈。"
+  },
+  "caseGen": {
+    "motion": "辩题",
+    "motionPlaceholder": "本院认为应禁止私立教育...",
+    "noMotion": "无辩题",
+    "background": "背景",
+    "backgroundPlaceholder": "可选：提供背景、限制条件、相关方或场景。留空则自动生成。",
+    "depth": "深度",
+    "side": "立场",
+    "format": "赛制",
+    "government": "正方",
+    "opposition": "反方",
+    "generateCase": "生成论点",
+    "generateOpposition": "生成反论",
+    "generatingCase": "正在生成论点...",
+    "generatingOpposition": "正在生成反论...",
+    "checkingContext": "正在检查背景...",
+    "bgNone": "无需背景",
+    "bgOptional": "背景可选",
+    "bgRecommended": "建议提供背景",
+    "bgEssential": "需要背景",
+    "bgEvaluating": "正在评估辩题..."
+  },
+  "depth": {
+    "quick": "快速",
+    "quickDesc": "包含关键论点的框架大纲",
+    "standard": "标准",
+    "standardDesc": "包含论据支撑的完整论点",
+    "competition": "竞赛",
+    "competitionDesc": "包含深度论据、反驳模块和概述的完整论点"
+  },
+  "vision": {
+    "desc": "分析一场辩论的战略全景。获取文本分析和交互式论证流程可视化。",
+    "motionPlaceholder": "输入要分析的辩题...",
+    "yourSide": "你的立场",
+    "analyzing": "分析中...",
+    "analyzeRound": "分析辩论",
+    "argMap": "论证图",
+    "textAnalysis": "文本分析",
+    "mindMap": "思维导图"
+  },
+  "roundSim": {
+    "desc": "与AI对手模拟一场完整辩论。你发表演讲（打字或语音），AI扮演对方队伍。6轮演讲后获取详细评委反馈和分数。",
+    "motionPlaceholder": "输入辩论的辩题...",
+    "startRound": "开始辩论"
+  },
+  "feedback": {
+    "pasteCase": "粘贴你的论点",
+    "pastePlaceholder": "在此粘贴你的完整辩论论点。包括背景、框架、论证等所有内容。AI将逐段分析并给出针对性反馈...",
+    "analyzing": "正在深入分析你的论点...",
+    "getFeedback": "获取反馈"
+  },
+  "practice": {
+    "desc": "练习撰写演讲稿并获取AI教练反馈。选择你要练习的演讲类型，写好后提交审查。",
+    "whichSpeech": "你在练习哪种演讲？"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signOut": "退出",
+    "managedAccess": "托管访问",
+    "managedDesc": "登录获取免费试用或订阅。无需API密钥。",
+    "signInGoogle": "使用Google登录",
+    "freeForever": "永久免费",
+    "freeDesc": "使用你自己的Anthropic API密钥。无限使用，无需订阅。",
+    "orFreeKey": "或使用自己的密钥免费使用",
+    "getKey": "在console.anthropic.com获取密钥"
+  },
+  "about": {
+    "title": "关于DebateOS与赛制",
+    "apdaTitle": "基于APDA议会制辩论",
+    "apdaBody1": "DebateOS围绕美国议会制辩论协会（APDA）格式构建，因为APDA训练最重要的技能：即兴思考、在时间压力下构建有说服力的框架，以及直接应对对方论证。",
+    "apdaBody2": "结构化的演讲顺序（PMR、LOC、MG、MOC、LOR、PMR反驳）为论点构建、冲突分析和战略收缩创造了自然的检查点。",
+    "formatsBody": "DebateOS支持全球使用的多种竞技辩论赛制。在论点生成器中选择你的赛制。",
+    "caseGen": "论点生成",
+    "caseGenDesc": "根据辩题和立场，生成包含框架、论据和影响分析的结构化论点。",
+    "roundSim": "模拟辩论",
+    "roundSimDesc": "逐轮模拟完整辩论，让你在真实对抗压力下练习应对。",
+    "argMap": "论证图",
+    "argMapDesc": "可视化正反方之间的冲突点，找出论点最强和最弱之处。",
+    "judgeFeedback": "评委反馈",
+    "judgeFeedbackDesc": "提供评委室风格的反馈，让你在比赛前改进论点。"
+  },
+  "formats": {
+    "title": "辩论赛制",
+    "apda": "APDA议会制",
+    "apdaDesc": "美国议会制辩论——2对2，7轮演讲",
+    "bp": "英国议会制",
+    "bpDesc": "世界大学赛制——4支队伍，各2人",
+    "wsdc": "世界学校赛制",
+    "wsdcDesc": "3对3中学赛制——3轮准备演讲+1轮即兴演讲",
+    "ap": "亚洲议会制",
+    "apDesc": "亚洲流行的3对3赛制——答辩演讲",
+    "cp": "加拿大议会制",
+    "cpDesc": "类似BP，适应加拿大大学赛事",
+    "kp": "卡尔·波普尔",
+    "kpDesc": "3对3交叉质询赛制，东欧流行"
+  },
+  "multilingual": {
+    "whyTitle": "为什么用其他语言辩论？",
+    "whyBody": "辩论是培养批判性思维和说服力最有效的工具之一。通过支持多种语言和赛制，DebateOS让全球辩手都能进行辩论训练。",
+    "selectLanguage": "语言",
+    "whyBody2": "用母语辩论能迫使你更深入地理解思想本身，而不仅仅是词汇。它培养的修辞技能可以直接应用于你所在社区的职业和公民生活。对于多语言辩手来说，在语言之间切换能培养单语训练无法匹配的认知灵活性。"
+  }
+}

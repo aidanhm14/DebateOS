@@ -22,7 +22,10 @@
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
 body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:#0a0e18;color:#e8ecf4;font-size:18px}
 
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.stream-new{animation:fadeIn 0.4s ease-out both}.case-output ol,.output-box ol,.round-sim-output ol,.philosophy-output ol,.feedback-output ol,.judge-output ol,.casual-output ol{list-style-type:decimal;padding-left:1.5em;margin:0.3em 0}.case-output ol ol,.output-box ol ol,.round-sim-output ol ol,.philosophy-output ol ol,.feedback-output ol ol,.judge-output ol ol,.casual-output ol ol{list-style-type:lower-alpha}.case-output ol ol ol,.output-box ol ol ol,.round-sim-output ol ol ol{list-style-type:lower-roman}.case-output ol ol ol ol,.output-box ol ol ol ol,.round-sim-output ol ol ol ol{list-style-type:decimal}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sectionReveal{from{opacity:0;transform:translateY(24px);filter:blur(2px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+.stream-new{animation:sectionReveal 0.7s cubic-bezier(.16,1,.3,1) both}
+.stream-section-0{animation-delay:0s}.stream-section-1{animation-delay:.08s}.stream-section-2{animation-delay:.16s}.stream-section-3{animation-delay:.24s}.stream-section-4{animation-delay:.32s}.stream-section-5{animation-delay:.4s}.stream-section-6{animation-delay:.48s}.stream-section-7{animation-delay:.56s}.stream-section-8{animation-delay:.64s}.stream-section-9{animation-delay:.72s}.case-output ol,.output-box ol,.round-sim-output ol,.philosophy-output ol,.feedback-output ol,.judge-output ol,.casual-output ol{list-style-type:decimal;padding-left:1.5em;margin:0.3em 0}.case-output ol ol,.output-box ol ol,.round-sim-output ol ol,.philosophy-output ol ol,.feedback-output ol ol,.judge-output ol ol,.casual-output ol ol{list-style-type:lower-alpha}.case-output ol ol ol,.output-box ol ol ol,.round-sim-output ol ol ol{list-style-type:lower-roman}.case-output ol ol ol ol,.output-box ol ol ol ol,.round-sim-output ol ol ol ol{list-style-type:decimal}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:#0a0e18}
 #debate-flow-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 #debate-flow-bg canvas{display:block;width:100%!important;height:100%!important}
@@ -32,25 +35,47 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
-.header{text-align:center;padding:20px 20px 0}
-.logo{font-size:2.4rem;font-weight:900;letter-spacing:-1.5px;line-height:1;display:flex;align-items:center;justify-content:center;gap:2px}
+.header{text-align:center;padding:28px 20px 0}
+.logo{font-size:3.2rem;font-weight:900;letter-spacing:-2px;line-height:1;display:flex;align-items:center;justify-content:center;gap:3px}
 .logo .green{color:#ef4444;text-shadow:0 0 30px #ef444425}
-.logo .white{color:#fff;font-weight:300;letter-spacing:1px}
+.logo .white{color:#fff;font-weight:300;letter-spacing:1px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
 .subtitle{display:none}
 
 /* ── Hero Section (first visit / no output) ───── */
 .hero{text-align:center;padding:48px 20px 32px;max-width:700px;margin:0 auto}
-.hero-title{font-size:2.8rem;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:12px}
+.hero-title{font-size:2.8rem;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:12px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
 .hero-title .accent{color:#ef4444}
-.hero-tagline{font-size:1.15rem;color:#8899b0;line-height:1.6;margin-bottom:24px}
+.hero-tagline{font-size:1.15rem;color:#c8d5e2;line-height:1.6;margin-bottom:24px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 .hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
-.hero-badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border:1px solid #ffffff12;color:#8899b0;background:#ffffff06}
+.hero-badge{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border:1px solid #ffffff12;color:#a8b8cc;background:#ffffff06}
 .hero-badge.accent{border-color:#ef444430;color:#f87171;background:#ef444410}
 
+/* ── Why APDA Explainer ──────────────────────── */
+.apda-explainer{max-width:700px;margin:0 auto 8px;text-align:left}
+.apda-toggle{display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:rgba(10,14,24,.5);border:1px solid #ffffff18;border-radius:10px;padding:8px 20px;color:#c8d5e2;font-size:.82rem;font-weight:600;font-family:inherit;transition:.25s;letter-spacing:.3px;margin:0 auto;backdrop-filter:blur(8px);text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.apda-toggle:hover{color:#e4e8f0;border-color:#ffffff20;background:#ffffff06}
+.apda-toggle svg{transition:transform .25s ease}
+.apda-body{overflow:hidden;transition:max-height .5s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .3s ease}
+.apda-body-inner{padding:20px 24px;background:linear-gradient(145deg,#131c2c,#16203060);border:1px solid #ffffff0c;border-radius:14px;margin-top:12px}
+.apda-body-inner h3{font-size:1rem;font-weight:700;color:#e4e8f0;margin-bottom:8px;letter-spacing:-.3px}
+.apda-body-inner p{font-size:.88rem;color:#a8b8cc;line-height:1.7;margin-bottom:14px}
+.apda-body-inner p:last-child{margin-bottom:0}
+.apda-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.apda-card{padding:14px 16px;background:#0c1422;border:1px solid #ffffff10;border-radius:10px}
+.apda-card .ac-label{font-size:.78rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.apda-card .ac-text{font-size:.82rem;color:#a8b8cc;line-height:1.5}
+.light-theme .apda-toggle{color:#475569;border-color:#e2e8f0;background:#ffffff90;backdrop-filter:blur(8px);text-shadow:none}
+.light-theme .apda-toggle:hover{color:#1a1a2e;background:#e8f0fe}
+.light-theme .apda-body-inner{background:#ffffffdd;border-color:#e2e8f0}
+.light-theme .apda-body-inner h3{color:#1a1a2e}
+.light-theme .apda-body-inner p{color:#475569}
+.light-theme .apda-card{background:#f8fafc;border-color:#e2e8f0}
+@media(max-width:640px){.apda-grid{grid-template-columns:1fr}}
+
 /* ── Nav Tabs ─────────────────────────────────── */
-.nav{display:flex;gap:4px;margin:12px auto 0;padding:4px;flex-wrap:wrap;justify-content:center;background:#ffffff04;border-radius:12px;border:1px solid #ffffff06;max-width:900px}
+.nav{display:flex;gap:4px;margin:12px auto 0;padding:4px;flex-wrap:wrap;justify-content:center;background:rgba(10,14,24,.55);border-radius:12px;border:1px solid #ffffff0c;max-width:900px;backdrop-filter:blur(12px)}
 .nav-btn{
-  background:transparent;border:1.5px solid transparent;color:#6b7f99;
+  background:transparent;border:1.5px solid transparent;color:#b0c0d4;
   padding:8px 16px;border-radius:8px;font-size:.76rem;font-weight:600;
   letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:.25s;
   font-family:inherit;white-space:nowrap;
@@ -67,7 +92,7 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
   border-radius:16px;padding:32px 36px;
   backdrop-filter:blur(16px);
   box-shadow:0 4px 24px rgba(0,0,0,.3);
-  transition:max-width .4s ease, padding .3s ease;
+  transition:max-width .4s cubic-bezier(.16,1,.3,1), padding .3s ease;
 }
 .panel.panel-expanded{
   max-width:1100px;padding:32px 40px;
@@ -80,8 +105,8 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 }
 
 /* ── Form Elements ────────────────────────────── */
-label.field-label{display:block;font-size:.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:8px}
-label.field-label.green{color:#94a3b8}
+label.field-label{display:block;font-size:.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#b0bec9;margin-bottom:8px}
+label.field-label.green{color:#b0bec9}
 textarea,select,input[type="text"]{
   width:100%;background:#0c1422;color:#e4e8f0;
   border:1px solid #ffffff14;border-radius:12px;
@@ -100,6 +125,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   letter-spacing:.3px;
 }
 .btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;pointer-events:none}
 .btn-primary{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px #ef444440}
 .btn-orange{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
@@ -429,7 +455,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 @keyframes gentlePulse{0%,100%{opacity:.7}50%{opacity:1}}
 .panel{backdrop-filter:blur(20px) saturate(1.1)}
 .hero-badge.accent{animation:gentlePulse 4s ease-in-out infinite}
-.logo .green{text-shadow:0 0 40px #ef444420,0 0 80px #ef444410}
+.logo .green{text-shadow:0 0 50px #ef444430,0 0 100px #ef444415}
 .nav{backdrop-filter:blur(12px)}
 .btn-primary,.btn-orange{box-shadow:0 2px 16px #ef444420,inset 0 1px 0 #ffffff10}
 .btn-primary:hover,.btn-orange:hover{box-shadow:0 8px 32px #ef444440,0 0 60px #ef444415,inset 0 1px 0 #ffffff10}
@@ -455,7 +481,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   position:fixed;top:0;left:0;z-index:40;width:300px;height:100vh;
   background:#0f1724f8;border-right:1px solid #ffffff10;
   backdrop-filter:blur(16px);display:flex;flex-direction:column;
-  transform:translateX(-100%);transition:transform .25s ease;
+  transform:translateX(-100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
 }
 .cases-sidebar.open{transform:translateX(0)}
 
@@ -632,13 +658,32 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   .revision-sidebar{width:100%;min-width:100%;border-left:none;border-top:1px solid #ffffff10;max-height:300px}
   .fb-layout{flex-direction:column}
   .fb-sidebar{width:100%;min-width:100%;border-left:none;border-top:1px solid #ffffff10;max-height:300px}
+  .nav{flex-wrap:wrap}
+  .panel{width:96%;padding:28px 24px}
 }
 @media(max-width:640px){
   .panel{margin:16px 10px 30px;padding:20px 16px}
-  .nav-btn{padding:7px 12px;font-size:.72rem}
-  .logo{font-size:2rem}
+  .panel.panel-expanded{padding:20px 16px}
+  .nav{gap:3px;padding:3px;max-width:100%;overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{padding:9px 14px;font-size:.72rem;min-height:40px;flex-shrink:0}
+  .logo{font-size:2.4rem}
+  .header{padding:48px 16px 0}
+  .cases-toggle{top:12px;left:12px;padding:6px 10px;font-size:.95rem}
+  .profile-badge{top:12px;right:12px;padding:5px 10px;gap:6px}
+  .profile-name{font-size:.72rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hero{padding:32px 16px 24px}
+  .hero-title{font-size:2rem}
+  .hero-tagline{font-size:1rem}
+  .btn{padding:12px 22px;font-size:.95rem}
+  .btn-row{flex-direction:column;gap:8px}
+  .btn-row .btn{width:100%}
   .depth-selector{flex-direction:column}
   .depth-card{min-width:unset}
+  textarea{min-height:150px}
+  .output{font-size:.92rem}
+  .revision-sidebar{font-size:.85rem}
+  .apda-body-inner{padding:16px}
 }
 
 
@@ -651,9 +696,13 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme #debate-flow-bg canvas{display:none!important}
 .light-theme .logo{color:#2563eb!important}
 .light-theme .subtitle{color:#6b7fa0!important}
-.light-theme .nav-btn{background:#ffffff!important;color:#475569!important;border-color:#e2e8f0!important}
-.light-theme .nav-btn:hover{background:#e8f0fe!important;color:#2563eb!important;border-color:#93c5fd!important}
+.light-theme .nav-btn{background:transparent!important;color:#64748b!important;border-color:transparent!important}
+.light-theme .nav-btn:hover{background:#e8f0fe!important;color:#2563eb!important;border-color:transparent!important}
 .light-theme .nav-btn.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+.light-theme .nav{background:#ffffffcc!important;border-color:#e2e8f0!important;backdrop-filter:blur(12px)}
+.light-theme .hero-title{color:#1a1a2e!important;text-shadow:none!important}
+.light-theme .hero-title .accent{color:#dc2626!important}
+.light-theme .hero-tagline{color:#475569!important;text-shadow:none!important}
 .light-theme .panel{background:#ffffffdd!important;border-color:#e2e8f0!important;box-shadow:0 4px 24px rgba(0,0,0,0.06)!important}
 .light-theme .panel-inner{background:#f8fafc!important;border-color:#e2e8f0!important}
 .light-theme h2,.light-theme h3{color:#1a1a2e!important}
@@ -729,6 +778,9 @@ if ('serviceWorker' in navigator) {
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+let __byokKey = null;
+let __getAuthToken = null;
 
 /* ═══════════════════════════════════════════════════
    DATA — Resolutions, Formats, Speech Configs
@@ -901,7 +953,7 @@ function initDialecticalFlow() {
     /* ── Config ──────────────────────────────── */
     const COUNT = 180;
     const TRAIL_LEN = 18;
-    const BASE_SPEED = 0.04;
+    const BASE_SPEED = 0.02;
     const NOISE_SCALE = 0.0012;
     const FADE = 6;
     const CONNECTION_DIST = 110;
@@ -946,34 +998,38 @@ function initDialecticalFlow() {
         this.vx = 0;
         this.vy = 0;
         this.age = 0;
-        this.maxAge = p.random(300, 900);
+        this.maxAge = p.random(500, 1400);
         this.trail = [];
         this.noiseOff = p.random(10000);
       }
       update() {
         const nx = this.x * NOISE_SCALE;
         const ny = this.y * NOISE_SCALE;
-        const nt = time * 0.000015;
+        const nt = time * 0.0000075;
         // Layered noise for organic movement
         const a1 = p.noise(nx + this.noiseOff, ny, nt) * p.TWO_PI * 2;
         const a2 = p.noise(nx * 2.5 + 300, ny * 2.5, nt * 1.5) * p.TWO_PI;
         const angle = a1 + a2 * 0.3;
         const dir = this.side === 0 ? 1 : -1;
-        const speed = BASE_SPEED + p.noise(this.noiseOff, time * 0.00008) * 0.04;
-        this.vx += Math.cos(angle) * speed * dir * 0.5;
-        this.vy += Math.sin(angle) * speed * 0.8;
+        const speed = BASE_SPEED + p.noise(this.noiseOff, time * 0.00004) * 0.01;
+        this.vx += Math.cos(angle) * speed * dir * 0.25;
+        this.vy += Math.sin(angle) * speed * 0.4;
         // Mouse attraction
         if (mActive) {
           const dx = mx - this.x, dy = my - this.y;
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < 250 && d > 1) {
-            const f = 0.25 * (1 - d / 250);
+            const f = 0.12 * (1 - d / 250);
             this.vx += (dx / d) * f;
             this.vy += (dy / d) * f;
           }
         }
-        this.vx *= 0.995;
-        this.vy *= 0.995;
+        this.vx *= 0.985;
+        this.vy *= 0.985;
+        // Cap max velocity for gentle movement
+        const maxV = 0.8;
+        if (this.vx > maxV) this.vx = maxV; if (this.vx < -maxV) this.vx = -maxV;
+        if (this.vy > maxV) this.vy = maxV; if (this.vy < -maxV) this.vy = -maxV;
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > TRAIL_LEN) this.trail.shift();
         this.x += this.vx;
@@ -1015,9 +1071,9 @@ function initDialecticalFlow() {
       }
       draw() {
         const drift = 40;
-        const dx = p.noise(this.seed, time * 0.00006) * drift - drift / 2;
-        const dy = p.noise(this.seed + 500, time * 0.00006) * drift - drift / 2;
-        const pulse = 0.8 + p.noise(this.seed + 1000, time * 0.00012) * 0.4;
+        const dx = p.noise(this.seed, time * 0.00003) * drift - drift / 2;
+        const dy = p.noise(this.seed + 500, time * 0.00003) * drift - drift / 2;
+        const pulse = 0.8 + p.noise(this.seed + 1000, time * 0.00006) * 0.4;
         const cx = this.x + dx;
         const cy = this.y + dy;
         const r = this.r * pulse;
@@ -1115,6 +1171,62 @@ function initDialecticalFlow() {
   });
 }
 
+/* ═══════════════════════════════════════════════════
+   i18n — INTERNATIONALIZATION INFRASTRUCTURE
+   ═══════════════════════════════════════════════════ */
+
+const SUPPORTED_LOCALES = [
+  { code: 'en', name: 'English', flag: '\ud83c\uddfa\ud83c\uddf8' },
+  { code: 'de', name: 'Deutsch', flag: '\ud83c\udde9\ud83c\uddea' },
+  { code: 'fr', name: 'Fran\u00e7ais', flag: '\ud83c\uddeb\ud83c\uddf7' },
+  { code: 'es', name: 'Espa\u00f1ol', flag: '\ud83c\uddea\ud83c\uddf8' },
+  { code: 'ko', name: '\ud55c\uad6d\uc5b4', flag: '\ud83c\uddf0\ud83c\uddf7' },
+  { code: 'zh', name: '\u4e2d\u6587', flag: '\ud83c\udde8\ud83c\uddf3' },
+];
+
+const DEBATE_FORMATS = [
+  { id: 'APDA', name: 'APDA Parliamentary', region: 'US', desc: '2v2, 7 speeches, prepared + impromptu' },
+  { id: 'BP', name: 'British Parliamentary', region: 'Global', desc: '4 teams of 2, Opening/Closing Gov & Opp' },
+  { id: 'WSDC', name: 'World Schools', region: 'Global', desc: '3v3, 3 prepared + 1 impromptu per side' },
+  { id: 'AP', name: 'Asian Parliamentary', region: 'Asia', desc: '3v3 with reply speeches' },
+  { id: 'CP', name: 'Canadian Parliamentary', region: 'Canada', desc: 'Similar to BP, Canadian circuit' },
+  { id: 'KP', name: 'Karl Popper', region: 'Europe', desc: '3v3 with cross-examination' },
+];
+
+// i18n context
+const I18nContext = React.createContext({ t: (k) => k, locale: 'en', setLocale: () => {} });
+
+// Locale cache
+const _localeCache = {};
+_localeCache['en'] = null; // will be loaded
+
+async function loadLocale(code) {
+  if (_localeCache[code]) return _localeCache[code];
+  try {
+    const res = await fetch('/i18n/' + code + '.json');
+    if (res.ok) {
+      const data = await res.json();
+      _localeCache[code] = data;
+      return data;
+    }
+  } catch(e) {}
+  return null;
+}
+
+// Translation helper — dot-notation lookup: t('hero.title1')
+function createT(strings) {
+  return function t(key, fallback) {
+    if (!strings) return fallback || key;
+    const parts = key.split('.');
+    let val = strings;
+    for (const p of parts) {
+      if (val && typeof val === 'object' && p in val) val = val[p];
+      else return fallback || key;
+    }
+    return typeof val === 'string' ? val : (fallback || key);
+  };
+}
+
 function PolyBackground() {
   const el = React.createElement;
   useEffect(() => {
@@ -1161,7 +1273,7 @@ function createStreamThrottle(onChunk, outputRef) {
   let latestText = '';
   let rafId = null;
   let lastCommit = 0;
-  const COMMIT_INTERVAL = Infinity; // only commit on finish()
+  const COMMIT_INTERVAL = 500; // commit to React state every 500ms for smooth reconciliation
 
   function flush() {
     rafId = null;
@@ -1173,9 +1285,9 @@ function createStreamThrottle(onChunk, outputRef) {
       // Write directly to DOM for instant visual feedback without React re-render
       if (outputRef && outputRef.current) {
         const el = outputRef.current;
-        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){_t.children[_pc].classList.add('stream-new'); el.appendChild(_t.children[_pc]);}
+        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){const _newEl = _t.children[_pc]; _newEl.classList.add('stream-new'); _newEl.classList.add('stream-section-' + Math.min(_pc % 10, 9)); el.appendChild(_newEl);}
         // Auto-scroll if near bottom
-        if (el.scrollHeight - el.scrollop - el.clientHeight < 150) {
+        if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
           el.scrollTop = el.scrollHeight;
         }
       }
@@ -1317,7 +1429,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
   let response;
   const startTime = Date.now();
-  const byokKey = window.__DEBATEOS_API_KEY;
+  const byokKey = __byokKey;
   try {
     if (byokKey && byokKey.startsWith('sk-ant-')) {
       response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1331,9 +1443,16 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
         body: JSON.stringify(body),
       });
     } else {
+      const headers = { 'Content-Type': 'application/json' };
+      if (__getAuthToken) {
+        try {
+          const token = await __getAuthToken();
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+        } catch(e) {}
+      }
       response = await fetch('/api/claude', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(body),
       });
     }
@@ -1343,7 +1462,10 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
   if (!response.ok) {
     const err = await response.text();
-    if (response.status === 429) throw new Error('Rate limited — too many requests. Wait a moment and try again.');
+    if (response.status === 429) {
+      try { const errData = JSON.parse(err); if (errData.code === 'USAGE_LIMIT_REACHED') throw new Error('You\'ve reached your monthly request limit. Upgrade your plan in the Team tab for more requests, or use your own Anthropic API key for unlimited free access.'); } catch(parseErr) { if (parseErr.message.includes('monthly')) throw parseErr; }
+      throw new Error('Rate limited — too many requests. Wait a moment and try again.');
+    }
     if (response.status === 401 || response.status === 403) throw new Error('Authentication error — the API key may be invalid or expired. Contact the site admin.');
     if (response.status >= 500) throw new Error('The AI service is temporarily down. Try again in a minute.');
     if (!navigator.onLine) throw new Error('You appear to be offline. Check your internet connection and try again.');
@@ -1444,9 +1566,16 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
     let contResponse;
     try {
+      const contHeaders = { 'Content-Type': 'application/json' };
+      if (__getAuthToken) {
+        try {
+          const token = await __getAuthToken();
+          if (token) contHeaders['Authorization'] = 'Bearer ' + token;
+        } catch(e) {}
+      }
       contResponse = await fetch('/api/claude', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: contHeaders,
         body: JSON.stringify(contBody),
       });
     } catch(e) { break; }
@@ -1525,6 +1654,23 @@ const DEPTH_CONFIGS = {
   standard: { label:'Standard', words:'~1200', time:'5 min', desc:'Solid case with warrants', maxTokens:8000 },
   competition: { label:'Competition', words:'~1800+', time:'7-8 min', desc:'Full case with deep warrants, A2 blocks, MG overview', maxTokens:16000 },
 };
+// Format-specific competition depth overrides (words + time match constructive speech)
+const FORMAT_DEPTH_OVERRIDES = {
+  APDA: { competition: { words:'~1800+', time:'7-8 min' } },
+  BP:   { competition: { words:'~1600+', time:'7 min' } },
+  WSDC: { competition: { words:'~2000+', time:'8 min' } },
+  AP:   { competition: { words:'~1600+', time:'7 min' } },
+  CP:   { competition: { words:'~1600+', time:'7 min' } },
+  KP:   { competition: { words:'~1400+', time:'6 min' } },
+};
+function getDepthConfigs(format) {
+  const overrides = FORMAT_DEPTH_OVERRIDES[format] || {};
+  const configs = {};
+  for (const [key, cfg] of Object.entries(DEPTH_CONFIGS)) {
+    configs[key] = overrides[key] ? { ...cfg, ...overrides[key] } : cfg;
+  }
+  return configs;
+}
 
 function buildSystemPrompt(depth) {
   const base = `You are an elite APDA (American Parliamentary Debate Association) case writer. You write cases in the format used by top competitive APDA debaters. Your writing voice is confident, specific, and deeply warranted — you sound like an actual debater who has done extensive research, not a language model producing generic analysis.
@@ -2040,6 +2186,7 @@ CRITICAL: Be SUCCINCT. Tight, punchy responses — no filler, no throat-clearing
    ═══════════════════════════════════════════════════ */
 
 function CaseGenerator({ onSave, loadedCase, onClearLoaded }) {
+  const { t } = React.useContext(I18nContext);
   const [motion, setMotion] = useState('');
   const [background, setBackground] = useState('');
   const [format, setFormat] = useState('APDA');
@@ -2056,8 +2203,31 @@ function CaseGenerator({ onSave, loadedCase, onClearLoaded }) {
   const [progress, setProgress] = useState({ phase: 'idle', percent: 0 });
   const [tightness, setTightness] = useState(null); // {level, explanation}
   const [formCollapsed, setFormCollapsed] = useState(false);
+  const [bgNeed, setBgNeed] = useState(null); // {level:'none'|'optional'|'recommended'|'essential', reason:'...'}
+  const [bgNeedLoading, setBgNeedLoading] = useState(false);
   const outputRef = useRef(null);
   const streamAreaRef = useRef(null);
+
+  // Debounced background-need evaluator — runs when motion changes
+  useEffect(() => {
+    setBgNeed(null);
+    const trimmed = (motion || '').trim();
+    if (trimmed.length < 15) return;
+    const timer = setTimeout(async () => {
+      setBgNeedLoading(true);
+      try {
+        const sys = 'You evaluate APDA debate motions. Given a motion, assess how much a background/context is needed to generate a strong case. Respond ONLY with valid JSON: {"level":"none"|"optional"|"recommended"|"essential","reason":"1 sentence explaining why"}. "none" = motion is self-contained (e.g. THBT democracy is overrated). "optional" = could benefit from context but works without. "recommended" = would be significantly stronger with actor/scenario details. "essential" = too vague without background, case quality will suffer.';
+        const usr = 'Motion: ' + trimmed;
+        let result = '';
+        await callClaude(sys, usr, (t) => { result = t; }, { thinkBudget: 1024, maxTokens: 200 });
+        const cleaned = result.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+        const parsed = JSON.parse(cleaned);
+        if (parsed.level && parsed.reason) setBgNeed(parsed);
+      } catch(e) { /* silent */ }
+      setBgNeedLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [motion]);
 
   // Load a saved case when selected from sidebar
   useEffect(() => {
@@ -2230,52 +2400,69 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
       onClick:()=>setFormCollapsed(false),
     },
       React.createElement('div',{style:{flex:1,minWidth:0}},
-        React.createElement('div',{style:{fontSize:'.78rem',color:'#fbbf24',fontWeight:700,letterSpacing:'1px',textTransform:'uppercase',marginBottom:4}},'Motion'),
-        React.createElement('div',{style:{fontSize:'.95rem',color:'#e4e8f0',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}, motion || 'No motion'),
+        React.createElement('div',{style:{fontSize:'.78rem',color:'#fbbf24',fontWeight:700,letterSpacing:'1px',textTransform:'uppercase',marginBottom:4}},t('caseGen.motion','Motion')),
+        React.createElement('div',{style:{fontSize:'.95rem',color:'#e4e8f0',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}, motion || t('caseGen.noMotion','No motion')),
       ),
       React.createElement('div',{style:{display:'flex',gap:12,alignItems:'center',flexShrink:0}},
         React.createElement('span',{style:{fontSize:'.78rem',color:'#94a3b8',background:'#ffffff0a',padding:'4px 10px',borderRadius:6}}, side),
-        React.createElement('span',{style:{fontSize:'.78rem',color:'#94a3b8',background:'#ffffff0a',padding:'4px 10px',borderRadius:6}}, DEPTH_CONFIGS[depth]?.label || depth),
+        React.createElement('span',{style:{fontSize:'.78rem',color:'#94a3b8',background:'#ffffff0a',padding:'4px 10px',borderRadius:6}}, getDepthConfigs(format)[depth]?.label || depth),
         React.createElement('span',{style:{fontSize:'.78rem',color:'#667',marginLeft:4}}, '\u25BC Edit')
       )
     ),
 
     // Full form — hidden when collapsed
     React.createElement('div',{style:{
-      maxHeight: formCollapsed && (loading || streaming || output) ? '0px' : '2000px',
+      maxHeight: formCollapsed && (loading || streaming || output) ? '0px' : '4000px',
       overflow: 'hidden',
       opacity: formCollapsed && (loading || streaming || output) ? 0 : 1,
       transition: 'max-height .4s ease, opacity .3s ease',
     }},
       // Motion
-      React.createElement('label',{className:'field-label'},'Motion'),
+      React.createElement('label',{className:'field-label'},t('caseGen.motion','Motion')),
       React.createElement('textarea',{
-        placeholder:'This house would ban private education...',
+        placeholder:t('caseGen.motionPlaceholder','This house would ban private education...'),
         value:motion, onChange:e=>setMotion(e.target.value),
         rows:3
       }),
       React.createElement('div',{style:{marginTop:20}}),
 
       // Background
-      React.createElement('label',{className:'field-label'},'Background'),
+      React.createElement('label',{className:'field-label'},t('caseGen.background','Background')),
       React.createElement('textarea',{
-        placeholder:'Optional: provide context, constraints, actor details, or scenario. Leave blank to auto-generate. Type "n/a" to skip.',
+        placeholder:t('caseGen.backgroundPlaceholder','Optional: provide context, constraints, actor details, or scenario. Leave blank to auto-generate. Type "n/a" to skip.'),
         value:background, onChange:e=>setBackground(e.target.value),
         rows:2
       }),
+      // Background need indicator
+      (bgNeed || bgNeedLoading) && React.createElement('div',{style:{
+        display:'flex',alignItems:'center',gap:10,marginTop:8,padding:'8px 14px',
+        borderRadius:8,fontSize:'.78rem',lineHeight:1.4,
+        background: bgNeed ? (bgNeed.level==='essential'?'#ef444410':bgNeed.level==='recommended'?'#fbbf2410':bgNeed.level==='optional'?'#3b82f610':'#22c55e10') : '#ffffff06',
+        border: '1px solid ' + (bgNeed ? (bgNeed.level==='essential'?'#ef444430':bgNeed.level==='recommended'?'#fbbf2430':bgNeed.level==='optional'?'#3b82f630':'#22c55e30') : '#ffffff10'),
+      }},
+        bgNeedLoading
+          ? React.createElement('span',{style:{color:'#94a3b8',fontStyle:'italic'}},t('caseGen.bgEvaluating','Evaluating motion...'))
+          : React.createElement(React.Fragment,null,
+              React.createElement('span',{style:{
+                fontWeight:700,letterSpacing:'.5px',textTransform:'uppercase',whiteSpace:'nowrap',fontSize:'.7rem',
+                color: bgNeed.level==='essential'?'#ef4444':bgNeed.level==='recommended'?'#fbbf24':bgNeed.level==='optional'?'#60a5fa':'#22c55e',
+              }}, bgNeed.level==='essential'?t('caseGen.bgEssential','Background needed'):bgNeed.level==='recommended'?t('caseGen.bgRecommended','Background recommended'):bgNeed.level==='optional'?t('caseGen.bgOptional','Background optional'):t('caseGen.bgNone','No background needed')),
+              React.createElement('span',{style:{color:'#94a3b8',fontSize:'.78rem'}}, bgNeed.reason),
+            )
+      ),
 
       // Depth selector
       React.createElement('div',{style:{marginTop:20}},
-        React.createElement('label',{className:'field-label'},'Depth'),
+        React.createElement('label',{className:'field-label'},t('caseGen.depth','Depth')),
         React.createElement('div',{className:'depth-selector'},
-          Object.entries(DEPTH_CONFIGS).map(([key, cfg]) =>
+          Object.entries(getDepthConfigs(format)).map(([key, cfg]) =>
             React.createElement('div',{
               key:key,
               className:'depth-card'+(depth===key?' active':''),
               onClick:()=>setDepth(key)
             },
-              React.createElement('div',{className:'depth-title'},cfg.label),
-              React.createElement('div',{className:'depth-desc'},cfg.desc),
+              React.createElement('div',{className:'depth-title'},t('depth.'+key, cfg.label)),
+              React.createElement('div',{className:'depth-desc'},t('depth.'+key+'Desc', cfg.desc)),
               React.createElement('div',{className:'depth-words'},cfg.words+' · '+cfg.time)
             )
           )
@@ -2283,11 +2470,17 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
       ),
 
       // Format + Side row
-      React.createElement('div',{className:'row',style:{marginTop:20}},
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginTop:20}},
         React.createElement('div',null,
-          React.createElement('label',{className:'field-label green'},'Side'),
+          React.createElement('label',{className:'field-label green'},t('caseGen.side','Side')),
           React.createElement('select',{value:side,onChange:e=>setSide(e.target.value)},
-            ['Government','Opposition'].map(s=>React.createElement('option',{key:s,value:s},s))
+            [{v:'Government',k:'caseGen.government'},{v:'Opposition',k:'caseGen.opposition'}].map(s=>React.createElement('option',{key:s.v,value:s.v},t(s.k,s.v)))
+          )
+        ),
+        React.createElement('div',null,
+          React.createElement('label',{className:'field-label green'},t('caseGen.format','Format')),
+          React.createElement('select',{value:format,onChange:e=>setFormat(e.target.value)},
+            DEBATE_FORMATS.map(f=>React.createElement('option',{key:f.id,value:f.id}, f.name + ' (' + f.region + ')'))
           )
         ),
       ),
@@ -2299,18 +2492,18 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
           onClick:()=>{ checkContext('case'); setSaved(false); },
           disabled:loading || checkingContext
         }, checkingContext ?
-          React.createElement('span',null,React.createElement('span',{className:'spinner'}),'Checking context...') :
+          React.createElement('span',null,React.createElement('span',{className:'spinner'}),t('caseGen.checkingContext','Checking context...')) :
           loading && mode==='case' ?
-          React.createElement('span',null,React.createElement('span',{className:'spinner'}),'Generating Case...') :
-          'Generate Case'
+          React.createElement('span',null,React.createElement('span',{className:'spinner'}),t('caseGen.generatingCase','Generating Case...')) :
+          t('caseGen.generateCase','Generate Case')
         ),
         React.createElement('button',{
           className:'btn btn-secondary',
           onClick:()=>{ checkContext('tightblock'); setSaved(false); },
           disabled:loading || checkingContext
         }, loading && mode==='tightblock' ?
-          React.createElement('span',null,React.createElement('span',{className:'spinner'}),'Generating Tight-block...') :
-          'Generate Tight-block'
+          React.createElement('span',null,React.createElement('span',{className:'spinner'}),t('caseGen.generatingOpposition','Generating Opposition...')) :
+          t('caseGen.generateOpposition','Generate Opposition')
         ),
       ),
 
@@ -2763,6 +2956,7 @@ function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 
 function Resolutions() {
   const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
   const [active, setActive] = useState([]);
   const [result, setResult] = useState(null);
   const [spinning, setSpinning] = useState(false);
@@ -3720,6 +3914,7 @@ function ArgumentMap({ mapData }) {
 
 function RoundVision() {
   const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
   const [motion, setMotion] = useState('');
   const [side, setSide] = useState('Government');
   const [output, setOutput] = useState(null);
@@ -3814,7 +4009,7 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
         if (!parsed.clashes || !Array.isArray(parsed.clashes)) parsed.clashes = [];
         setMapData(parsed);
       } catch(e) {
-        console.log('Map parse error (attempt 1):', e.message, mapText ? mapText.substring(0,200) : 'no response');
+        // Map parse error — retry silently
         // Retry once with a more forceful prompt
         try {
           let retryText = '';
@@ -3831,7 +4026,7 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
           if (rp.gov && rp.opp) { setMapData(rp); }
           else { throw new Error('Invalid structure'); }
         } catch(e2) {
-          console.log('Map parse error (attempt 2):', e2.message);
+          // Map parse error attempt 2 — show fallback
           setMapData({error: 'Map generation failed after 2 attempts. Try clicking Analyze again.', raw: (mapText || '').substring(0, 100)});
         }
       }
@@ -3841,22 +4036,22 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
 
   return el('div',{className:'panel'+(output?' panel-expanded':'')},
     el('p',{style:{color:'#888',marginBottom:16,fontSize:'.92rem'}},
-      'Map the strategic landscape of a round. Get text analysis and an interactive argument flow visualization.'
+      t('vision.desc','Map the strategic landscape of a round. Get text analysis and an interactive argument flow visualization.')
     ),
-    el('label',{className:'field-label'},'Motion'),
+    el('label',{className:'field-label'},t('caseGen.motion','Motion')),
     el('textarea',{
-      placeholder:'Enter the motion to analyze...',
+      placeholder:t('vision.motionPlaceholder','Enter the motion to analyze...'),
       value:motion, onChange:e=>setMotion(e.target.value), rows:3
     }),
     el('div',{style:{marginTop:16}},
-      el('label',{className:'field-label green'},'Your Side'),
+      el('label',{className:'field-label green'},t('vision.yourSide','Your Side')),
       el('select',{value:side,onChange:e=>setSide(e.target.value)},
-        ['Government','Opposition'].map(s=>el('option',{key:s,value:s},s))
+        [{v:'Government',k:'caseGen.government'},{v:'Opposition',k:'caseGen.opposition'}].map(s=>el('option',{key:s.v,value:s.v},t(s.k,s.v)))
       )
     ),
     el('div',{style:{marginTop:20}},
       el('button',{className:'btn btn-primary',onClick:analyze,disabled:loading||mapLoading},
-        loading ? el('span',null,el('span',{className:'spinner'}),'Analyzing...') : 'Analyze Round'
+        loading ? el('span',null,el('span',{className:'spinner'}),t('vision.analyzing','Analyzing...')) : t('vision.analyzeRound','Analyze Round')
       ),
       loading && vProgress && vProgress.percent > 0 && el('div',{style:{marginTop:12}},
         el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
@@ -3879,9 +4074,9 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
 
     // View toggle
     (output || mapData) && el('div',{className:'argmap-tab-toggle'},
-      el('button',{className:view==='map'?'active':'',onClick:()=>setView('map')},'Argument Map'),
-      el('button',{className:view==='text'?'active':'',onClick:()=>setView('text')},'Text Analysis'),
-      el('button',{className:view==='mindmap'?'active':'',onClick:()=>setView('mindmap')},'Mind Map'),
+      el('button',{className:view==='map'?'active':'',onClick:()=>setView('map')},t('vision.argMap','Argument Map')),
+      el('button',{className:view==='text'?'active':'',onClick:()=>setView('text')},t('vision.textAnalysis','Text Analysis')),
+      el('button',{className:view==='mindmap'?'active':'',onClick:()=>setView('mindmap')},t('vision.mindMap','Mind Map')),
     ),
 
     // Map loading state
@@ -3965,6 +4160,7 @@ function buildRoundVision(motion, side) {
    ═══════════════════════════════════════════════════ */
 
 function Casual() {
+  const { t } = React.useContext(I18nContext);
   const [topic, setTopic] = useState('');
   const [messages, setMessages] = useState([
     {role:'assistant',text:"What did they argue? Drop their argument in here and I'll generate a strategic response — whether to acknowledge, concede and weigh, dispute at link level, or turn it entirely. Think of me as your in-round thinking on steroids."}
@@ -4073,6 +4269,7 @@ function generateCasualReply(msg, history) {
    ═══════════════════════════════════════════════════ */
 
 function Philosophy() {
+  const { t } = React.useContext(I18nContext);
   const [philosopher, setPhilosopher] = useState('');
   const [concept, setConcept] = useState('');
   const [output, setOutput] = useState(null);
@@ -4332,6 +4529,7 @@ ${concept ? `<h4>Applied to: "${escHtml(concept)}"</h4>
    ═══════════════════════════════════════════════════ */
 function CaseFeedback() {
   const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
   const [caseText, setCaseText] = useState('');
   const [analyzed, setAnalyzed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -4532,11 +4730,11 @@ Rules:
   // Input view
   if (!analyzed) {
     return el('div', {className:'panel panel-expanded'},
-      el('label', {className:'field-label', style:{fontSize:'1.05rem',marginBottom:12}}, 'Paste Your Case'),
+      el('label', {className:'field-label', style:{fontSize:'1.05rem',marginBottom:12}}, t('feedback.pasteCase','Paste Your Case')),
       el('textarea', {
         value: caseText,
         onChange: e => setCaseText(e.target.value),
-        placeholder: 'Paste your full debate case here. Background, framework, arguments, everything. The AI will analyze it and give you targeted, section-by-section feedback...',
+        placeholder: t('feedback.pastePlaceholder','Paste your full debate case here. Background, framework, arguments, everything. The AI will analyze it and give you targeted, section-by-section feedback...'),
         rows: 28,
         style: {fontSize:'1rem', minHeight:'500px', lineHeight:'1.7', padding:'20px 24px'}
       }),
@@ -4546,8 +4744,8 @@ Rules:
           onClick: analyze,
           disabled: loading || !caseText.trim(),
         }, loading
-          ? el('span', null, el('span',{className:'spinner'}), 'Thinking deeply about your case...')
-          : 'Get Feedback'
+          ? el('span', null, el('span',{className:'spinner'}), t('feedback.analyzing','Thinking deeply about your case...'))
+          : t('feedback.getFeedback','Get Feedback')
         ),
         caseText.trim() && !loading && el('span', {style:{color:'#94a3b8',fontSize:'.82rem'}},
           caseText.split(/\s+/).length + ' words'
@@ -4874,15 +5072,71 @@ function buildJudgeFeedback(speech, note, activeTags) {
 
 function Practice() {
   const el = React.createElement;
-  const SPEECHES = [
-    {code:'PMC',title:'Prime Minister Constructive',time:'7:30',side:'gov',desc:'Present your case: framework, background, and 2-3 arguments with warrants.'},
-    {code:'LOC',title:'Leader of Opposition Constructive',time:'8:30',side:'opp',desc:'Present Off-Case arguments then rebut Government\'s case On-Case.'},
-    {code:'MG',title:'Member of Government',time:'8:30',side:'gov',desc:'Respond to LOC attacks. Off-Case first, then On-Case defense.'},
-    {code:'MO',title:'Member of Opposition',time:'8:30',side:'opp',desc:'Respond to MG, extend Off-Case, address anything LO missed from PMC.'},
-    {code:'LOR',title:'Leader of Opposition Rebuttal',time:'4 min',side:'opp',desc:'Summarize Opp case, give ballots, weigh aggressively. No new arguments.'},
-    {code:'PMR',title:'Prime Minister Rebuttal',time:'5 min',side:'gov',desc:'Final word. Summarize, weigh, pull through drops. No new arguments.'},
-  ];
+  const { t } = React.useContext(I18nContext);
+  const FORMAT_SPEECHES = {
+    APDA: [
+      {code:'PMC',title:'Prime Minister Constructive',time:'7:30',side:'gov',desc:'Present your case: framework, background, and 2-3 arguments with warrants.'},
+      {code:'LOC',title:'Leader of Opposition Constructive',time:'8:30',side:'opp',desc:'Present Off-Case arguments then rebut Government\'s case On-Case.'},
+      {code:'MG',title:'Member of Government',time:'8:30',side:'gov',desc:'Respond to LOC attacks. Off-Case first, then On-Case defense.'},
+      {code:'MO',title:'Member of Opposition',time:'8:30',side:'opp',desc:'Respond to MG, extend Off-Case, address anything LO missed from PMC.'},
+      {code:'LOR',title:'Leader of Opposition Rebuttal',time:'4 min',side:'opp',desc:'Summarize Opp case, give ballots, weigh aggressively. No new arguments.'},
+      {code:'PMR',title:'Prime Minister Rebuttal',time:'5 min',side:'gov',desc:'Final word. Summarize, weigh, pull through drops. No new arguments.'},
+    ],
+    BP: [
+      {code:'PM',title:'Prime Minister',time:'7 min',side:'gov',desc:'Set up the motion, define the case, present 1-2 arguments with clear mechanism.'},
+      {code:'LO',title:'Leader of Opposition',time:'7 min',side:'opp',desc:'Rebut PM, present opposition case with 1-2 counter-arguments.'},
+      {code:'DPM',title:'Deputy Prime Minister',time:'7 min',side:'gov',desc:'Rebuild Gov case, extend with new material, rebut LO.'},
+      {code:'DLO',title:'Deputy Leader of Opposition',time:'7 min',side:'opp',desc:'Rebuild Opp case, extend arguments, rebut DPM.'},
+      {code:'MG',title:'Member of Government (CG)',time:'7 min',side:'gov',desc:'Closing Gov extension — must bring a new argument while engaging the round so far.'},
+      {code:'MO',title:'Member of Opposition (CO)',time:'7 min',side:'opp',desc:'Closing Opp extension — new argument while engaging the round. Rebut MG.'},
+      {code:'GW',title:'Government Whip',time:'7 min',side:'gov',desc:'Summarize Gov case, weigh against Opp. No new arguments allowed.'},
+      {code:'OW',title:'Opposition Whip',time:'7 min',side:'opp',desc:'Summarize Opp case, weigh against Gov. No new arguments allowed.'},
+    ],
+    WSDC: [
+      {code:'P1',title:'First Proposition',time:'8 min',side:'gov',desc:'Define the motion, present case framework, deliver 1-2 arguments with evidence.'},
+      {code:'O1',title:'First Opposition',time:'8 min',side:'opp',desc:'Rebut Proposition, present counter-case with 1-2 arguments.'},
+      {code:'P2',title:'Second Proposition',time:'8 min',side:'gov',desc:'Rebut O1, extend case with new arguments and evidence.'},
+      {code:'O2',title:'Second Opposition',time:'8 min',side:'opp',desc:'Rebut P2, extend opposition arguments with new material.'},
+      {code:'P3',title:'Third Proposition',time:'8 min',side:'gov',desc:'Final constructive. Rebut O2, summarize and crystallize Proposition case.'},
+      {code:'O3',title:'Third Opposition',time:'8 min',side:'opp',desc:'Final constructive. Rebut P3, summarize and crystallize Opposition case.'},
+      {code:'OR',title:'Opposition Reply',time:'4 min',side:'opp',desc:'Biased adjudication — why Opp wins. Delivered by 1st or 2nd speaker. No new arguments.'},
+      {code:'PR',title:'Proposition Reply',time:'4 min',side:'gov',desc:'Biased adjudication — why Prop wins. Delivered by 1st or 2nd speaker. No new arguments.'},
+    ],
+    AP: [
+      {code:'PM',title:'Prime Minister',time:'7 min',side:'gov',desc:'Define motion, set up case framework, present 1-2 arguments.'},
+      {code:'LO',title:'Leader of Opposition',time:'7 min',side:'opp',desc:'Rebut PM, present opposition case with counter-arguments.'},
+      {code:'DPM',title:'Deputy Prime Minister',time:'7 min',side:'gov',desc:'Rebuild Gov case, rebut LO, extend with new arguments.'},
+      {code:'DLO',title:'Deputy Leader of Opposition',time:'7 min',side:'opp',desc:'Rebuild Opp case, rebut DPM, extend arguments.'},
+      {code:'GW',title:'Government Whip',time:'7 min',side:'gov',desc:'Summarize Gov case, respond to Opp attacks. No new arguments.'},
+      {code:'OW',title:'Opposition Whip',time:'7 min',side:'opp',desc:'Summarize Opp case, respond to Gov attacks. No new arguments.'},
+      {code:'OR',title:'Opposition Reply',time:'4 min',side:'opp',desc:'Biased adjudication by 1st or 2nd speaker. Why Opp wins the round.'},
+      {code:'GR',title:'Government Reply',time:'4 min',side:'gov',desc:'Biased adjudication by 1st or 2nd speaker. Why Gov wins the round.'},
+    ],
+    CP: [
+      {code:'PMC',title:'Prime Minister Constructive',time:'7 min',side:'gov',desc:'Define motion, present case framework and opening arguments.'},
+      {code:'LOC',title:'Leader of Opposition Constructive',time:'7 min',side:'opp',desc:'Rebut PM, present opposition case.'},
+      {code:'MGC',title:'Member of Government Constructive',time:'7 min',side:'gov',desc:'Extend Gov case, rebut LOC, add new arguments.'},
+      {code:'MOC',title:'Member of Opposition Constructive',time:'7 min',side:'opp',desc:'Extend Opp case, rebut MG, add new material.'},
+      {code:'GW',title:'Government Whip',time:'7 min',side:'gov',desc:'Summarize and weigh Gov case. No new arguments.'},
+      {code:'OW',title:'Opposition Whip',time:'7 min',side:'opp',desc:'Summarize and weigh Opp case. No new arguments.'},
+      {code:'OR',title:'Opposition Reply',time:'4 min',side:'opp',desc:'Biased summary by 1st or 2nd speaker. Why Opp wins.'},
+      {code:'GR',title:'Government Reply',time:'4 min',side:'gov',desc:'Biased summary by 1st or 2nd speaker. Why Gov wins.'},
+    ],
+    KP: [
+      {code:'1AC',title:'First Affirmative Constructive',time:'6 min',side:'gov',desc:'Present the affirmative case with clear arguments and evidence.'},
+      {code:'CX1',title:'Cross-Exam (3N → 1A)',time:'3 min',side:'opp',desc:'3rd Negative questions 1st Affirmative to expose weaknesses.'},
+      {code:'1NC',title:'First Negative Constructive',time:'6 min',side:'opp',desc:'Present the negative case and initial refutation of affirmative.'},
+      {code:'CX2',title:'Cross-Exam (3A → 1N)',time:'3 min',side:'gov',desc:'3rd Affirmative questions 1st Negative to expose weaknesses.'},
+      {code:'2AC',title:'Second Affirmative',time:'5 min',side:'gov',desc:'Rebuild affirmative case, refute negative arguments.'},
+      {code:'CX3',title:'Cross-Exam (1N → 2A)',time:'3 min',side:'opp',desc:'1st Negative questions 2nd Affirmative.'},
+      {code:'2NC',title:'Second Negative',time:'5 min',side:'opp',desc:'Rebuild negative case, refute affirmative rebuilds.'},
+      {code:'CX4',title:'Cross-Exam (1A → 2N)',time:'3 min',side:'gov',desc:'1st Affirmative questions 2nd Negative.'},
+      {code:'3AR',title:'Third Affirmative Rebuttal',time:'5 min',side:'gov',desc:'Final rebuttal for Affirmative. Summarize and weigh.'},
+      {code:'3NR',title:'Third Negative Rebuttal',time:'5 min',side:'opp',desc:'Final rebuttal for Negative. Summarize and weigh.'},
+    ],
+  };
 
+  const [practiceFormat, setPracticeFormat] = useState('APDA');
   const [speechType, setSpeechType] = useState('PMC');
   const [motion, setMotion] = useState('');
   const [userSpeech, setUserSpeech] = useState('');
@@ -4891,7 +5145,8 @@ function Practice() {
   const [speaking, setSpeaking] = useState(false);
   const [mode, setMode] = useState('write'); // 'write' or 'review'
 
-  const selectedSpeech = SPEECHES.find(s => s.code === speechType);
+  const SPEECHES = FORMAT_SPEECHES[practiceFormat] || FORMAT_SPEECHES.APDA;
+  const selectedSpeech = SPEECHES.find(s => s.code === speechType) || SPEECHES[0];
 
   const submitForReview = async () => {
     if (!userSpeech.trim()) return;
@@ -4962,11 +5217,22 @@ Write like a coach who genuinely wants this debater to get better. Be tough but 
 
   return el('div',{className:'panel'},
     el('p',{className:'practice-intro'},
-      'Practice writing speeches and get AI coaching feedback. Select the speech you\'re practicing, type it out, and submit for review.'
+      t('practice.desc','Practice writing speeches and get AI coaching feedback. Select the speech you\'re practicing, type it out, and submit for review.')
+    ),
+
+    // Format selector
+    el('div',{style:{marginBottom:20}},
+      el('label',{className:'field-label green'},t('caseGen.format','Format')),
+      el('select',{value:practiceFormat,onChange:e=>{setPracticeFormat(e.target.value);setSpeechType((FORMAT_SPEECHES[e.target.value]||FORMAT_SPEECHES.APDA)[0].code);}},
+        DEBATE_FORMATS.map(f=>el('option',{key:f.id,value:f.id}, f.name + ' (' + f.region + ')'))
+      ),
+      practiceFormat === 'APDA' && el('div',{style:{fontSize:'.72rem',color:'#94a3b8',marginTop:6,fontStyle:'italic',lineHeight:1.5}},
+        t('practice.whyApda','We default to APDA because its structured speech order and impromptu format train the core skills that transfer to all debate formats. You can switch formats above.')
+      ),
     ),
 
     // Speech type selector
-    el('label',{className:'field-label'},'Which speech are you practicing?'),
+    el('label',{className:'field-label'},t('practice.whichSpeech','Which speech are you practicing?')),
     el('div',{className:'practice-grid'},
       SPEECHES.map(s =>
         el('div',{
@@ -5478,6 +5744,7 @@ const ROUND_SPEECHES = [
 
 function RoundSimulator() {
   const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
   const [motion, setMotion] = useState('');
   const [side, setSide] = useState('gov');
   const [roundStarted, setRoundStarted] = useState(false);
@@ -5757,27 +6024,27 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
   if (!roundStarted) {
     return el('div',{className:'panel'},
       el('p',{style:{color:'#7a8da4',marginBottom:20,lineHeight:1.7}},
-        'Simulate a full APDA round against an AI opponent. You deliver your speeches (type or speak into mic), the AI plays the other team. After all 6 speeches, get detailed judge feedback and speaker scores.'
+        t('roundSim.desc','Simulate a full APDA round against an AI opponent. You deliver your speeches (type or speak into mic), the AI plays the other team. After all 6 speeches, get detailed judge feedback and speaker scores.')
       ),
-      el('label',{className:'field-label'},'Motion'),
+      el('label',{className:'field-label'},t('caseGen.motion','Motion')),
       el('textarea',{
-        placeholder:'Enter a motion for the round...',
+        placeholder:t('roundSim.motionPlaceholder','Enter a motion for the round...'),
         value:motion, onChange:e=>setMotion(e.target.value),
         rows:3
       }),
       el('div',{style:{marginTop:20}},
-        el('label',{className:'field-label green'},'Your Side'),
+        el('label',{className:'field-label green'},t('vision.yourSide','Your Side')),
         el('div',{style:{display:'flex',gap:10,marginTop:8}},
           el('button',{
             className:'btn ' + (side==='gov'?'btn-primary':'btn-secondary'),
             onClick:()=>setSide('gov'),
             style:{flex:1}
-          },'Government'),
+          },t('caseGen.government','Government')),
           el('button',{
             className:'btn ' + (side==='opp'?'btn-primary':'btn-secondary'),
             onClick:()=>setSide('opp'),
             style:{flex:1}
-          },'Opposition'),
+          },t('caseGen.opposition','Opposition')),
         )
       ),
       el('div',{style:{marginTop:24}},
@@ -5786,7 +6053,7 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
           onClick:startRound,
           disabled:!motion.trim(),
           style:{padding:'16px 48px',fontSize:'1.1rem',borderRadius:14,width:'100%'}
-        },'Start Round')
+        },t('roundSim.startRound','Start Round'))
       )
     );
   }
@@ -6188,12 +6455,22 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       ),
       team.currentPeriodEnd && el('div',{style:{color:'#64748b',fontSize:'.75rem',marginTop:4}},'Resets ' + new Date(team.currentPeriodEnd).toLocaleDateString()),
     ),
-    team.plan === 'trial' && el('div', {style:{padding:16,background:'#f59e0b10',border:'1px solid #f59e0b30',borderRadius:10,marginBottom:24}},
-      el('div', {style:{fontWeight:700,color:'#f59e0b',fontSize:'.9rem',marginBottom:4}}, 'Upgrade your plan'),
-      el('p', {style:{color:'#94a3b8',fontSize:'.82rem',marginBottom:12}}, 'Get more requests and team slots.'),
-      el('div', {style:{display:'flex',gap:8}},
-        el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'8px 16px',background:'#3b82f6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Individual \u2014 $5/mo'),
-        el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'8px 16px',background:'#8b5cf6',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, 'Team \u2014 $30/mo'),
+    team.plan === 'trial' && el('div', {style:{padding:20,background:'linear-gradient(135deg,#f59e0b08,#ef444408)',border:'1px solid #f59e0b25',borderRadius:12,marginBottom:24}},
+      el('div', {style:{display:'flex',alignItems:'center',gap:8,marginBottom:8}},
+        el('span', {style:{fontSize:'1.1rem'}}, '\u26A1'),
+        el('div', {style:{fontWeight:800,color:'#f59e0b',fontSize:'.95rem'}}, 'Upgrade Your Plan'),
+      ),
+      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free trial with ' + (team.usageLimit||25) + ' requests/month. Upgrade for more power and team collaboration.'),
+      el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
+        el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'14px 16px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:10,color:'#60a5fa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
+          el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#3b82f6',marginBottom:2}}, '$5/mo'),
+          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Individual \u2022 500 requests'),
+        ),
+        el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'14px 16px',background:'#8b5cf615',border:'1px solid #8b5cf640',borderRadius:10,color:'#a78bfa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s',position:'relative'}},
+          el('div', {style:{position:'absolute',top:-8,right:12,fontSize:'.6rem',fontWeight:700,color:'#fff',background:'#8b5cf6',padding:'2px 8px',borderRadius:10,letterSpacing:'.5px',textTransform:'uppercase'}}, 'Popular'),
+          el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#8b5cf6',marginBottom:2}}, '$30/mo'),
+          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Team \u2022 2,000 requests \u2022 50 members'),
+        ),
       ),
     ),
     el('div', {style:{marginBottom:20}},
@@ -6408,50 +6685,142 @@ function Analytics({ user, team }) {
    USAGE BANNER — shows usage in nav area
    ═══════════════════════════════════════════════════ */
 
-function UsageBanner({ team }) {
+function WhyAPDA() {
+  const { t } = React.useContext(I18nContext);
+  const [open, setOpen] = useState(false);
   const el = React.createElement;
-  if (!team || !team.usageLimit) return null;
-  const pct = Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100));
-  const color = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e';
-  return el('div', {style:{display:'flex',alignItems:'center',gap:8,padding:'4px 12px',margin:'8px auto 0',maxWidth:300}},
-    el('div', {style:{flex:1,height:4,background:'#ffffff08',borderRadius:2,overflow:'hidden'}},
-      el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:2,transition:'width .3s ease'}}),
+  return el('div', {className:'apda-explainer'},
+    el('button', {className:'apda-toggle', onClick:()=>setOpen(!open)},
+      t('about.title','About DebateOS & Formats'),
+      el('svg', {width:12,height:12,viewBox:'0 0 12 12',fill:'none',style:{transform:open?'rotate(180deg)':'rotate(0deg)'}},
+        el('path', {d:'M2 4l4 4 4-4', stroke:'currentColor', strokeWidth:1.5, strokeLinecap:'round', strokeLinejoin:'round'})
+      )
     ),
-    el('span', {style:{fontSize:'.7rem',color:'#64748b',whiteSpace:'nowrap'}}, (team.usageThisPeriod||0) + '/' + (team.usageLimit||0)),
+    el('div', {className:'apda-body', style:{maxHeight:open?'1400px':'0px',opacity:open?1:0,marginTop:open?0:-4}},
+      el('div', {className:'apda-body-inner'},
+        // Section 1: Why APDA
+        el('h3', null, t('about.apdaTitle','Why we default to APDA')),
+        el('p', null, t('about.apdaBody1','DebateOS is structured around the American Parliamentary Debate Association format because APDA trains the skills that matter most: thinking on your feet, building persuasive frameworks under time pressure, and engaging directly with opposing arguments. Every tool in this app maps to a real moment in a round.')),
+        el('p', null, t('about.apdaBody2','The structured speech order (PMR, LOC, MG, MOC, LOR, PMR rebuttal) creates natural checkpoints for case construction, clash analysis, and strategic collapse. AI-assisted prep lets you pressure-test arguments before you walk into the round, not replace the thinking that wins debates.')),
+        el('div', {className:'apda-grid'},
+          el('div', {className:'apda-card'},
+            el('div', {className:'ac-label'}, t('about.caseGen','Case Gen')),
+            el('div', {className:'ac-text'}, t('about.caseGenDesc','Generates structured PMR/LOC cases with frameworks, warrants, and impacts tailored to your motion and side.'))
+          ),
+          el('div', {className:'apda-card'},
+            el('div', {className:'ac-label'}, t('about.roundSim','Round Sim')),
+            el('div', {className:'ac-text'}, t('about.roundSimDesc','Simulates full rounds speech-by-speech so you can practice responding to real opposition pressure.'))
+          ),
+          el('div', {className:'apda-card'},
+            el('div', {className:'ac-label'}, t('about.argMap','Argument Map')),
+            el('div', {className:'ac-text'}, t('about.argMapDesc','Visualizes clash points between Gov and Opp to find where your case is strongest and where it leaks.'))
+          ),
+          el('div', {className:'apda-card'},
+            el('div', {className:'ac-label'}, t('about.judgeFeedback','Judge Feedback')),
+            el('div', {className:'ac-text'}, t('about.judgeFeedbackDesc','Gives tab-room-style feedback on your cases so you can improve before tournament day.'))
+          ),
+        ),
+
+        // Section 2: Other Debate Formats
+        el('div', {style:{borderTop:'1px solid #ffffff0c',marginTop:20,paddingTop:20}},
+          el('h3', null, t('formats.title','Other Debate Formats')),
+          el('p', null, t('about.formatsBody','DebateOS supports multiple competitive debate formats used around the world. Select your format in the Case Generator to get cases structured for your circuit.')),
+          el('div', {className:'apda-grid', style:{gridTemplateColumns:'1fr 1fr 1fr'}},
+            DEBATE_FORMATS.map(f => {
+              const fKey = f.id.toLowerCase().replace(/ /g,'_');
+              return el('div', {key:f.id, className:'apda-card'},
+                el('div', {className:'ac-label'}, t('formats.'+fKey, f.name)),
+                el('div', {style:{fontSize:'.68rem',color:'#64748b',marginBottom:3,fontWeight:600}}, f.region),
+                el('div', {className:'ac-text'}, t('formats.'+fKey+'Desc', f.desc)),
+              );
+            })
+          ),
+        ),
+
+        // Section 3: Why debate in other languages
+        el('div', {style:{borderTop:'1px solid #ffffff0c',marginTop:20,paddingTop:20}},
+          el('h3', null, t('multilingual.whyTitle','Why debate in other languages?')),
+          el('p', null, t('multilingual.whyBody','Debate is one of the most effective tools for building critical thinking, persuasion, and civic engagement. But access to quality debate prep tools has been limited to English-speaking circuits. By supporting multiple languages and formats, DebateOS opens competitive debate training to debaters worldwide \u2014 whether you\'re prepping for a BP tournament in Seoul, a World Schools round in S\u00e3o Paulo, or an APDA case at UChicago.')),
+          el('p', null, t('multilingual.whyBody2','Arguing in your native language forces deeper engagement with the ideas themselves, not just the vocabulary. It develops rhetorical skills that transfer directly to professional and civic life in your own community. And for multilingual debaters, switching between languages builds cognitive flexibility that monolingual training can\'t match.')),
+          el('div', {style:{display:'flex',gap:8,flexWrap:'wrap',marginTop:12}},
+            SUPPORTED_LOCALES.map(l => el('span', {key:l.code, style:{
+              padding:'4px 12px',borderRadius:20,fontSize:'.75rem',fontWeight:600,
+              background:'#ffffff06',border:'1px solid #ffffff10',color:'#a8b8cc',
+            }}, l.flag + ' ' + l.name))
+          ),
+        ),
+      )
+    )
   );
 }
 
+function UsageBanner({ team }) {
+  const el = React.createElement;
+  if (!team) return null;
+  const parts = [];
+
+  // Trial expiration warning
+  if (team.status === 'trialing' && team.trialEndsAt) {
+    const daysLeft = Math.ceil((new Date(team.trialEndsAt) - new Date()) / (1000*60*60*24));
+    if (daysLeft <= 4 && daysLeft > 0) {
+      parts.push(el('div', {key:'trial-warn',style:{fontSize:'.75rem',color:'#f59e0b',textAlign:'center',padding:'2px 0'}}, 'Trial ends in ' + daysLeft + ' day' + (daysLeft!==1?'s':'') + ' — upgrade to keep access'));
+    } else if (daysLeft <= 0) {
+      parts.push(el('div', {key:'trial-expired',style:{fontSize:'.75rem',color:'#ef4444',textAlign:'center',padding:'2px 0'}}, 'Trial expired — upgrade to continue using DebateOS'));
+    }
+  }
+
+  // Usage bar
+  if (team.usageLimit) {
+    const pct = Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100));
+    const color = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e';
+    parts.push(el('div', {key:'usage',style:{display:'flex',alignItems:'center',gap:8,padding:'4px 12px',margin:'0 auto',maxWidth:300}},
+      el('div', {style:{flex:1,height:4,background:'#ffffff08',borderRadius:2,overflow:'hidden'}},
+        el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:2,transition:'width .3s ease'}}),
+      ),
+      el('span', {style:{fontSize:'.7rem',color:'#64748b',whiteSpace:'nowrap'}}, (team.usageThisPeriod||0) + '/' + (team.usageLimit||0)),
+    ));
+  }
+
+  if (parts.length === 0) return null;
+  return el('div', {style:{marginTop:8}}, ...parts);
+}
+
 const TABS = [
-  // Core tools
-  {id:'case',label:'Case Gen'},
-  {id:'simulator',label:'Round Sim'},
-  {id:'feedback',label:'Feedback'},
-  {id:'vision',label:'Vision'},
+  {id:'case',label:'Case Gen',i18n:'nav.caseGen'},
+  {id:'simulator',label:'Round Sim',i18n:'nav.roundSim'},
+  {id:'feedback',label:'Feedback',i18n:'nav.feedback'},
+  {id:'vision',label:'Vision',i18n:'nav.vision'},
   {id:'divider1',divider:true},
-  // Training
-  {id:'practice',label:'Practice'},
-  {id:'res',label:'Motions'},
-  {id:'casual',label:'Casual'},
-  {id:'phil',label:'Philosophy'},
+  {id:'practice',label:'Practice',i18n:'nav.practice'},
+  {id:'res',label:'Motions',i18n:'nav.motions'},
+  {id:'casual',label:'Casual',i18n:'nav.casual'},
+  {id:'phil',label:'Philosophy',i18n:'nav.philosophy'},
   {id:'divider2',divider:true},
-  // Community
-  {id:'judge',label:'Judge'},
-  {id:'forum',label:'Forum'},
-  {id:'newbies',label:'Guide'},
-  {id:'shared',label:'Cases'},
+  {id:'judge',label:'Judge',i18n:'nav.judge'},
+  {id:'forum',label:'Forum',i18n:'nav.forum'},
+  {id:'newbies',label:'Guide',i18n:'nav.guide'},
+  {id:'shared',label:'Cases',i18n:'nav.cases'},
   {id:'divider3',divider:true},
-  // Team
-  {id:'team',label:'Team'},
-  {id:'analytics',label:'Analytics'},
-  {id:'resources',label:'Resources',href:'https://apda.online/'},
+  {id:'team',label:'Team',i18n:'nav.team'},
+  {id:'analytics',label:'Analytics',i18n:'nav.analytics'},
+  {id:'resources',label:'Resources',i18n:'nav.resources',href:'https://apda.online/'},
 ];
 
 function App() {
   const [userApiKey, setUserApiKey] = useState(() => { try { return localStorage.getItem('debateos-byok') || '' } catch(e) { return '' } });
   const [theme, setTheme] = useState(() => { try { return localStorage.getItem('debateos-theme') || 'dark' } catch(e) { return 'dark' } });
+  const [locale, setLocale] = useState(() => { try { return localStorage.getItem('debateos-locale') || 'en' } catch(e) { return 'en' } });
+  const [localeStrings, setLocaleStrings] = useState(null);
   useEffect(() => { try { localStorage.setItem('debateos-byok', userApiKey) } catch(e) {} }, [userApiKey]);
   useEffect(() => { try { localStorage.setItem('debateos-theme', theme) } catch(e) {} document.body.classList.toggle('light-theme', theme === 'light'); document.documentElement.style.background = theme === 'light' ? '#f0f4fc' : '#0a0e18'; }, [theme]);
-  useEffect(() => { window.__DEBATEOS_API_KEY = userApiKey || null; }, [userApiKey]);
+  useEffect(() => { __byokKey = userApiKey || null; }, [userApiKey]);
+  // Load locale strings
+  useEffect(() => {
+    try { localStorage.setItem('debateos-locale', locale) } catch(e) {}
+    if (locale === 'en') { setLocaleStrings(null); return; }
+    loadLocale(locale).then(data => { if (data) setLocaleStrings(data); });
+  }, [locale]);
+  const t = useMemo(() => createT(localeStrings), [localeStrings]);
   const [tab, setTab] = useState('case');
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -6460,7 +6829,9 @@ function App() {
   const [showGuide, setShowGuide] = useState(() => {
     try { return !localStorage.getItem('debateos-welcomed'); } catch(e) { return true; }
   });
+  const [toast, setToast] = useState('');
   const { user, loading: authLoading, signIn, signOut } = useAuth();
+  useEffect(() => { __getAuthToken = user ? () => user.getIdToken() : null; }, [user]);
 
   // Team state — fetched when user signs in
   const [team, setTeam] = useState(null);
@@ -6491,6 +6862,8 @@ function App() {
       persistCases(updated);
       return updated;
     });
+    setToast('Case saved!');
+    setTimeout(() => setToast(''), 2500);
   }, []);
 
   const deleteCase = useCallback((id) => {
@@ -6541,32 +6914,50 @@ function App() {
       style: { display: tab === id ? 'block' : 'none', width: '100%' }
     }, component);
 
-  return React.createElement(React.Fragment,null,
+  return React.createElement(I18nContext.Provider, {value: {t, locale, setLocale}},
+  React.createElement(React.Fragment,null,
     React.createElement(PolyBackground),
     // Auth gate — sign in or use BYOK key
     !user && !authLoading && !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)'}},
-      React.createElement('div',{style:{background:'#131a27',border:'1px solid #ffffff12',borderRadius:16,padding:'40px 48px',maxWidth:480,width:'90%',textAlign:'center'}},
-        React.createElement('h1',{style:{fontSize:'1.8rem',fontWeight:900,color:'#f1f5f9',marginBottom:4}},
+      React.createElement('div',{style:{background:'#131a27',border:'1px solid #ffffff12',borderRadius:16,padding:'40px 48px',maxWidth:520,width:'90%',textAlign:'center'}},
+        React.createElement('h1',{style:{fontSize:'2.2rem',fontWeight:900,color:'#f1f5f9',marginBottom:4}},
           React.createElement('span',{style:{color:'#ef4444'}},'Debate'),
           React.createElement('span',{style:{fontWeight:300}},'OS')
         ),
-        React.createElement('p',{style:{color:'#94a3b8',fontSize:'.9rem',lineHeight:1.6,marginBottom:20}},'The AI toolkit for competitive debaters.'),
-        React.createElement('button',{onClick:signIn,style:{display:'flex',alignItems:'center',justifyContent:'center',gap:10,width:'100%',padding:'12px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.92rem',fontWeight:600,cursor:'pointer',marginBottom:16}},
-          React.createElement('img',{src:'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',width:20,height:20}),
-          'Sign in with Google'
+        React.createElement('p',{style:{color:'#94a3b8',fontSize:'.9rem',lineHeight:1.6,marginBottom:24}},t('hero.tagline','The AI toolkit for competitive debaters.')),
+        // Paid path — sign in
+        React.createElement('div',{style:{padding:20,background:'#ef444408',border:'1px solid #ef444425',borderRadius:12,marginBottom:16}},
+          React.createElement('div',{style:{fontSize:'.72rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:'1px',marginBottom:8}},t('auth.managedAccess','Managed access')),
+          React.createElement('p',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.5,marginBottom:14}},t('auth.managedDesc','Sign in to get a free trial or subscribe. No API key needed.')),
+          React.createElement('button',{onClick:signIn,style:{display:'flex',alignItems:'center',justifyContent:'center',gap:10,width:'100%',padding:'12px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:10,color:'#e2e8f0',fontSize:'.92rem',fontWeight:600,cursor:'pointer',transition:'.2s'}},
+            React.createElement('img',{src:'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',width:20,height:20}),
+            t('auth.signInGoogle','Sign in with Google')
+          ),
         ),
-        React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12,marginBottom:16}},
-          React.createElement('div',{style:{flex:1,height:1,background:'#ffffff15'}}),
-          React.createElement('span',{style:{color:'#64748b',fontSize:'.78rem'}},'or use your own key'),
-          React.createElement('div',{style:{flex:1,height:1,background:'#ffffff15'}}),
+        // Free path — BYOK
+        React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12,margin:'16px 0'}},
+          React.createElement('div',{style:{flex:1,height:1,background:'#ffffff12'}}),
+          React.createElement('span',{style:{color:'#64748b',fontSize:'.75rem',fontWeight:600,letterSpacing:'.5px',textTransform:'uppercase'}},t('auth.orFreeKey','or free with your own key')),
+          React.createElement('div',{style:{flex:1,height:1,background:'#ffffff12'}}),
         ),
-        React.createElement('input',{type:'password',placeholder:'sk-ant-...',value:userApiKey,onChange:e=>setUserApiKey(e.target.value.trim()),onKeyDown:e=>{if(e.key==='Enter'&&e.target.value.trim())setUserApiKey(e.target.value.trim())},style:{width:'100%',boxSizing:'border-box',padding:'12px 16px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',textAlign:'center',outline:'none',marginBottom:8}}),
-        React.createElement('a',{href:'https://console.anthropic.com/settings/keys',target:'_blank',rel:'noopener',style:{color:'#64748b',textDecoration:'none',fontSize:'.75rem'}},'Get a key from console.anthropic.com'),
-        React.createElement('div',{style:{display:'flex',gap:16,justifyContent:'center',marginTop:20}},
-          ...[{name:'Free Trial',desc:'25 requests/mo'},{name:'Individual $5/mo',desc:'500 requests/mo'},{name:'Team $30/mo',desc:'2,000 requests/mo'}].map(p =>
-            React.createElement('div',{key:p.name,style:{fontSize:'.72rem',color:'#64748b',textAlign:'center'}},
-              React.createElement('div',{style:{fontWeight:700,color:'#94a3b8',marginBottom:2}},p.name),
-              p.desc
+        React.createElement('div',{style:{padding:16,background:'#22c55e08',border:'1px solid #22c55e20',borderRadius:12,marginBottom:8}},
+          React.createElement('div',{style:{fontSize:'.72rem',fontWeight:700,color:'#22c55e',textTransform:'uppercase',letterSpacing:'1px',marginBottom:8}},t('auth.freeForever','Free forever')),
+          React.createElement('p',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.5,marginBottom:12}},t('auth.freeDesc','Bring your own Anthropic API key. Unlimited usage, no subscription.')),
+          React.createElement('input',{type:'password',placeholder:'sk-ant-...',value:userApiKey,onChange:e=>setUserApiKey(e.target.value.trim()),onKeyDown:e=>{if(e.key==='Enter'&&e.target.value.trim())setUserApiKey(e.target.value.trim())},style:{width:'100%',boxSizing:'border-box',padding:'12px 16px',background:'#0c1422',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontFamily:"'IBM Plex Mono',monospace",fontSize:'.85rem',textAlign:'center',outline:'none'}}),
+        ),
+        React.createElement('a',{href:'https://console.anthropic.com/settings/keys',target:'_blank',rel:'noopener',style:{color:'#64748b',textDecoration:'none',fontSize:'.73rem'}},t('auth.getKey','Get a key at console.anthropic.com')),
+        // Plan comparison
+        React.createElement('div',{style:{display:'flex',gap:12,justifyContent:'center',marginTop:20,paddingTop:16,borderTop:'1px solid #ffffff08'}},
+          ...[
+            {name:'Free Trial',desc:'25 req/mo',icon:'\u23F3',color:'#f59e0b'},
+            {name:'Individual',desc:'$5/mo \u2022 500 req',icon:'\u26A1',color:'#3b82f6'},
+            {name:'Team',desc:'$30/mo \u2022 2K req',icon:'\uD83D\uDE80',color:'#8b5cf6'},
+            {name:'BYOK',desc:'Free \u2022 Unlimited',icon:'\uD83D\uDD11',color:'#22c55e'},
+          ].map(p =>
+            React.createElement('div',{key:p.name,style:{fontSize:'.72rem',color:'#64748b',textAlign:'center',flex:1}},
+              React.createElement('div',{style:{fontSize:'1.1rem',marginBottom:4}},p.icon),
+              React.createElement('div',{style:{fontWeight:700,color:p.color,marginBottom:2,fontSize:'.7rem'}},p.name),
+              React.createElement('div',{style:{fontSize:'.68rem'}},p.desc),
             )
           )
         )
@@ -6597,47 +6988,61 @@ function App() {
             React.createElement('div',{className:'profile-avatar'}, (user.displayName || user.email || 'U').charAt(0).toUpperCase()),
             React.createElement('span',{className:'profile-name'}, user.displayName || user.email),
           )
-        : React.createElement('div',{className:'profile-badge', onClick:()=>setShowAuth(true), title:'Sign in'},
-            React.createElement('div',{className:'profile-avatar',style:{background:'#64748b'}}, '\uD83D\uDC64'),
-            React.createElement('span',{className:'profile-name'}, 'Sign in'),
+        : React.createElement('div',{className:'profile-badge', onClick:()=>setShowAuth(true), title:'Sign in', style:{padding:'6px 8px'}},
+            React.createElement('div',{className:'profile-avatar',style:{background:'#64748b',width:28,height:28,fontSize:'.8rem'}}, '\uD83D\uDC64'),
           ),
       React.createElement('div',{className:'header'},
         React.createElement('h1',{className:'logo'},
           React.createElement('span',{className:'green'},'Debate'),
           React.createElement('span',{className:'white'},'OS'),
-          team && React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:team.status==='active'||team.status==='trialing'?'#22c55e20':'#f59e0b20',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
-          React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:6,fontWeight:600,background:theme==='light'?'#3b82f620':'#f59e0b20',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'LIGHT':'DARK')
+        ),
+        React.createElement('div',{style:{display:'flex',gap:4,alignItems:'center',justifyContent:'center',background:'var(--badge-row-bg,#ffffff08)',borderRadius:20,padding:'3px 4px',border:'1px solid var(--badge-row-border,#ffffff0c)',width:'fit-content',margin:'8px auto 0'}},
+          team && React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:team.status==='active'||team.status==='trialing'?'#22c55e15':'#f59e0b15',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
+          React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:theme==='light'?'#3b82f612':'#f59e0b12',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'\u2600 Light':'\u263E Dark'),
+          // Language selector — matching pill
+          React.createElement('span',{style:{position:'relative',display:'inline-flex',alignItems:'center'}},
+            React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:'#8b5cf612',color:'#a78bfa',cursor:'pointer',letterSpacing:'.3px',display:'inline-block',pointerEvents:'none',transition:'.2s'}},
+              (SUPPORTED_LOCALES.find(l=>l.code===locale)||SUPPORTED_LOCALES[0]).flag + ' ' + (SUPPORTED_LOCALES.find(l=>l.code===locale)||SUPPORTED_LOCALES[0]).code.toUpperCase()
+            ),
+            React.createElement('select',{
+              value:locale,
+              onChange:e=>setLocale(e.target.value),
+              style:{position:'absolute',inset:0,opacity:0,cursor:'pointer',fontSize:'.6rem',width:'100%',height:'100%'}
+            }, SUPPORTED_LOCALES.map(l => React.createElement('option',{key:l.code,value:l.code}, l.flag + ' ' + l.name))),
+          ),
         ),
       ),
       // Hero section
       React.createElement('div',{className:'hero'},
         React.createElement('h2',{className:'hero-title'},
-          'The ',
-          React.createElement('span',{className:'accent'},'AI toolkit'),
-          ' for competitive debaters'
+          t('hero.title1', 'The '),
+          React.createElement('span',{className:'accent'}, t('hero.titleAccent', 'AI toolkit')),
+          t('hero.title2', ' for competitive debaters')
         ),
         React.createElement('p',{className:'hero-tagline'},
-          'Generate cases, simulate rounds, map arguments, and get judge-level feedback.'
+          t('hero.tagline', 'Generate cases, simulate rounds, map arguments, and get judge-level feedback.')
         ),
       ),
+      // Why APDA? explainer card
+      React.createElement(WhyAPDA),
       React.createElement('nav',{className:'nav'},
-        TABS.map(t =>
-          t.divider
-            ? React.createElement('div',{key:t.id,className:'nav-divider'})
-            : t.href
+        TABS.map(tb =>
+          tb.divider
+            ? React.createElement('div',{key:tb.id,className:'nav-divider'})
+            : tb.href
             ? React.createElement('a',{
-                key:t.id,
+                key:tb.id,
                 className:'nav-btn',
-                href:t.href,
+                href:tb.href,
                 target:'_blank',
                 rel:'noopener noreferrer',
                 style:{textDecoration:'none'},
-              }, t.label + ' \u2197')
+              }, t(tb.i18n, tb.label) + ' \u2197')
             : React.createElement('button',{
-                key:t.id,
-                className:'nav-btn'+(tab===t.id?' active':''),
-                onClick:()=>setTab(t.id)
-              },t.label)
+                key:tb.id,
+                className:'nav-btn'+(tab===tb.id?' active':''),
+                onClick:()=>setTab(tb.id)
+              }, t(tb.i18n, tb.label))
         )
       ),
       React.createElement(UsageBanner, { team: team }),
@@ -6656,8 +7061,9 @@ function App() {
       tabPane('shared', React.createElement(SharedCases, { user: user, team: team })),
       tabPane('team', React.createElement(TeamDashboard, { user: user, team: team, teamLoading: teamLoading, onTeamCreated: setTeam })),
       tabPane('analytics', React.createElement(Analytics, { user: user, team: team })),
+      toast && React.createElement('div', {style:{position:'fixed',bottom:24,left:'50%',transform:'translateX(-50%)',padding:'10px 24px',background:'#22c55e',color:'#fff',borderRadius:8,fontWeight:600,fontSize:'.88rem',zIndex:99999,boxShadow:'0 4px 12px rgba(0,0,0,.3)',animation:'fadeIn .2s ease',pointerEvents:'none'}}, toast),
     )
-  );
+  ));
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
