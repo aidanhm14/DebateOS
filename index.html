@@ -730,6 +730,9 @@ if ('serviceWorker' in navigator) {
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
+let __byokKey = null;
+let __getAuthToken = null;
+
 /* ═══════════════════════════════════════════════════
    DATA — Resolutions, Formats, Speech Configs
    ═══════════════════════════════════════════════════ */
@@ -1156,19 +1159,31 @@ function cleanOutput(text, asHtml) {
   return t;
 }
 
-// Smooth streaming: batches rapid SSE events into one React state update per
-// animation frame (~60 fps). This gives a smooth, ChatGPT-like text fill effect
-// instead of stuttery per-token re-renders.
-function createStreamThrottle(onChunk) {
+// Throttled streaming: batches rapid onChunk calls into one React update per frame
+function createStreamThrottle(onChunk, outputRef) {
   let latestText = '';
-  let committed = '';
   let rafId = null;
+  let lastCommit = 0;
+  const COMMIT_INTERVAL = Infinity; // only commit on finish()
 
   function flush() {
     rafId = null;
-    if (latestText !== committed) {
-      committed = latestText;
+    const now = Date.now();
+    if (now - lastCommit >= COMMIT_INTERVAL) {
+      lastCommit = now;
       onChunk(latestText);
+    } else {
+      // Write directly to DOM for instant visual feedback without React re-render
+      if (outputRef && outputRef.current) {
+        const el = outputRef.current;
+        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){_t.children[_pc].classList.add('stream-new'); el.appendChild(_t.children[_pc]);}
+        // Auto-scroll if near bottom
+        if (el.scrollHeight - el.scrollop - el.clientHeight < 150) {
+          el.scrollTop = el.scrollHeight;
+        }
+      }
+      // Schedule the next React commit
+      rafId = requestAnimationFrame(flush);
     }
   }
 
@@ -1177,12 +1192,10 @@ function createStreamThrottle(onChunk) {
       latestText = text;
       if (!rafId) rafId = requestAnimationFrame(flush);
     },
+    // Final flush: commit everything to React state
     finish() {
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      if (latestText !== committed) {
-        committed = latestText;
-        onChunk(latestText);
-      }
+      onChunk(latestText);
     },
     cancel() {
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
@@ -1307,7 +1320,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
   let response;
   const startTime = Date.now();
-  const byokKey = window.__DEBATEOS_API_KEY;
+  const byokKey = __byokKey;
   try {
     if (byokKey && byokKey.startsWith('sk-ant-')) {
       response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1321,9 +1334,16 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
         body: JSON.stringify(body),
       });
     } else {
+      const headers = { 'Content-Type': 'application/json' };
+      if (__getAuthToken) {
+        try {
+          const token = await __getAuthToken();
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+        } catch(e) {}
+      }
       response = await fetch('/api/claude', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(body),
       });
     }
@@ -1350,21 +1370,6 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   let lastProgressUpdate = 0;
   let lastProgressPct = -1;
   let stopReason = 'end_turn';
-
-  // Smooth streaming: buffer text and commit to React at ~60fps
-  let dirty = false;
-  let rafId = null;
-  function scheduleFlush() {
-    if (!rafId) {
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        if (dirty) {
-          dirty = false;
-          onChunk(fullText);
-        }
-      });
-    }
-  }
 
   while (true) {
     const { done, value } = await reader.read();
@@ -1403,8 +1408,8 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
           if (parsed.type === 'content_block_delta') {
             if (parsed.delta?.type === 'text_delta' && parsed.delta?.text) {
               fullText += parsed.delta.text;
-              dirty = true;
-              scheduleFlush();
+              // Strip markdown bold/italic/headers in real-time
+              onChunk(fullText);
               if (onProgress) {
                 const wordCount = fullText.split(/\s+/).length;
                 const writePct = Math.min(70, (wordCount / expectedWords) * 70);
@@ -1426,9 +1431,6 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
       }
     }
   }
-  // Final flush — ensure all remaining text is committed
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  onChunk(fullText);
 
   // ── AUTO-CONTINUATION: if generation was cut off, continue where it left off ──
   let continuations = 0;
@@ -1452,9 +1454,16 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
 
     let contResponse;
     try {
+      const contHeaders = { 'Content-Type': 'application/json' };
+      if (__getAuthToken) {
+        try {
+          const token = await __getAuthToken();
+          if (token) contHeaders['Authorization'] = 'Bearer ' + token;
+        } catch(e) {}
+      }
       contResponse = await fetch('/api/claude', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: contHeaders,
         body: JSON.stringify(contBody),
       });
     } catch(e) { break; }
@@ -1485,8 +1494,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
             }
             if (cp.type === 'content_block_delta' && !contInThinking && cp.delta?.type === 'text_delta' && cp.delta?.text) {
               fullText += cp.delta.text;
-              dirty = true;
-              scheduleFlush();
+              onChunk(fullText);
             }
             if (cp.type === 'message_delta' && cp.delta?.stop_reason) {
               stopReason = cp.delta.stop_reason;
@@ -1496,10 +1504,6 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
       }
     }
   }
-
-  // Final flush after continuations
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  onChunk(fullText);
 
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
   // Strip any markdown bold/italic that slipped through despite prompt instructions
@@ -2178,7 +2182,7 @@ Write ONLY the background text. No labels, no "Background:" header.`;
 
     const throttle = createStreamThrottle((text) => {
       setOutput(text);
-    });
+    }, outputRef);
 
     try {
       const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
@@ -6080,20 +6084,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setMsg('Team created! You have a 14-day free trial.');
-      // Normalize to match the shape returned by /api/teams/usage
-      onTeamCreated({
-        teamId: data.id,
-        teamName: data.name,
-        plan: data.plan || 'trial',
-        status: data.status || 'trialing',
-        role: 'owner',
-        usageThisPeriod: data.usageThisPeriod || 0,
-        usageLimit: data.usageLimit || 25,
-        memberCount: data.memberCount || 1,
-        maxMembers: data.maxMembers || 3,
-        currentPeriodEnd: data.currentPeriodEnd,
-        trialEndsAt: data.trialEndsAt,
-      });
+      onTeamCreated(data);
     } catch (err) { setMsg('Error: ' + err.message); }
     setActionLoading(false);
   };
@@ -6436,15 +6427,33 @@ function Analytics({ user, team }) {
 
 function UsageBanner({ team }) {
   const el = React.createElement;
-  if (!team || !team.usageLimit) return null;
-  const pct = Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100));
-  const color = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e';
-  return el('div', {style:{display:'flex',alignItems:'center',gap:8,padding:'4px 12px',margin:'8px auto 0',maxWidth:300}},
-    el('div', {style:{flex:1,height:4,background:'#ffffff08',borderRadius:2,overflow:'hidden'}},
-      el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:2,transition:'width .3s ease'}}),
-    ),
-    el('span', {style:{fontSize:'.7rem',color:'#64748b',whiteSpace:'nowrap'}}, (team.usageThisPeriod||0) + '/' + (team.usageLimit||0)),
-  );
+  if (!team) return null;
+  const parts = [];
+
+  // Trial expiration warning
+  if (team.status === 'trialing' && team.trialEndsAt) {
+    const daysLeft = Math.ceil((new Date(team.trialEndsAt) - new Date()) / (1000*60*60*24));
+    if (daysLeft <= 4 && daysLeft > 0) {
+      parts.push(el('div', {key:'trial-warn',style:{fontSize:'.75rem',color:'#f59e0b',textAlign:'center',padding:'2px 0'}}, 'Trial ends in ' + daysLeft + ' day' + (daysLeft!==1?'s':'') + ' — upgrade to keep access'));
+    } else if (daysLeft <= 0) {
+      parts.push(el('div', {key:'trial-expired',style:{fontSize:'.75rem',color:'#ef4444',textAlign:'center',padding:'2px 0'}}, 'Trial expired — upgrade to continue using DebateOS'));
+    }
+  }
+
+  // Usage bar
+  if (team.usageLimit) {
+    const pct = Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100));
+    const color = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e';
+    parts.push(el('div', {key:'usage',style:{display:'flex',alignItems:'center',gap:8,padding:'4px 12px',margin:'0 auto',maxWidth:300}},
+      el('div', {style:{flex:1,height:4,background:'#ffffff08',borderRadius:2,overflow:'hidden'}},
+        el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:2,transition:'width .3s ease'}}),
+      ),
+      el('span', {style:{fontSize:'.7rem',color:'#64748b',whiteSpace:'nowrap'}}, (team.usageThisPeriod||0) + '/' + (team.usageLimit||0)),
+    ));
+  }
+
+  if (parts.length === 0) return null;
+  return el('div', {style:{marginTop:8}}, ...parts);
 }
 
 const TABS = [
@@ -6477,7 +6486,7 @@ function App() {
   const [theme, setTheme] = useState(() => { try { return localStorage.getItem('debateos-theme') || 'dark' } catch(e) { return 'dark' } });
   useEffect(() => { try { localStorage.setItem('debateos-byok', userApiKey) } catch(e) {} }, [userApiKey]);
   useEffect(() => { try { localStorage.setItem('debateos-theme', theme) } catch(e) {} document.body.classList.toggle('light-theme', theme === 'light'); document.documentElement.style.background = theme === 'light' ? '#f0f4fc' : '#0a0e18'; }, [theme]);
-  useEffect(() => { window.__DEBATEOS_API_KEY = userApiKey || null; }, [userApiKey]);
+  useEffect(() => { __byokKey = userApiKey || null; }, [userApiKey]);
   const [tab, setTab] = useState('case');
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -6486,7 +6495,9 @@ function App() {
   const [showGuide, setShowGuide] = useState(() => {
     try { return !localStorage.getItem('debateos-welcomed'); } catch(e) { return true; }
   });
+  const [toast, setToast] = useState('');
   const { user, loading: authLoading, signIn, signOut } = useAuth();
+  useEffect(() => { __getAuthToken = user ? () => user.getIdToken() : null; }, [user]);
 
   // Team state — fetched when user signs in
   const [team, setTeam] = useState(null);
@@ -6517,6 +6528,8 @@ function App() {
       persistCases(updated);
       return updated;
     });
+    setToast('Case saved!');
+    setTimeout(() => setToast(''), 2500);
   }, []);
 
   const deleteCase = useCallback((id) => {
@@ -6631,7 +6644,7 @@ function App() {
         React.createElement('h1',{className:'logo'},
           React.createElement('span',{className:'green'},'Debate'),
           React.createElement('span',{className:'white'},'OS'),
-          team && team.plan && React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:team.status==='active'||team.status==='trialing'?'#22c55e20':'#f59e0b20',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
+          team && React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:team.status==='active'||team.status==='trialing'?'#22c55e20':'#f59e0b20',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
           React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:6,fontWeight:600,background:theme==='light'?'#3b82f620':'#f59e0b20',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'LIGHT':'DARK')
         ),
       ),
@@ -6682,6 +6695,7 @@ function App() {
       tabPane('shared', React.createElement(SharedCases, { user: user, team: team })),
       tabPane('team', React.createElement(TeamDashboard, { user: user, team: team, teamLoading: teamLoading, onTeamCreated: setTeam })),
       tabPane('analytics', React.createElement(Analytics, { user: user, team: team })),
+      toast && React.createElement('div', {style:{position:'fixed',bottom:24,left:'50%',transform:'translateX(-50%)',padding:'10px 24px',background:'#22c55e',color:'#fff',borderRadius:8,fontWeight:600,fontSize:'.88rem',zIndex:99999,boxShadow:'0 4px 12px rgba(0,0,0,.3)',animation:'fadeIn .2s ease',pointerEvents:'none'}}, toast),
     )
   );
 }
