@@ -1156,31 +1156,19 @@ function cleanOutput(text, asHtml) {
   return t;
 }
 
-// Throttled streaming: batches rapid onChunk calls into one React update per frame
-function createStreamThrottle(onChunk, outputRef) {
+// Smooth streaming: batches rapid SSE events into one React state update per
+// animation frame (~60 fps). This gives a smooth, ChatGPT-like text fill effect
+// instead of stuttery per-token re-renders.
+function createStreamThrottle(onChunk) {
   let latestText = '';
+  let committed = '';
   let rafId = null;
-  let lastCommit = 0;
-  const COMMIT_INTERVAL = Infinity; // only commit on finish()
 
   function flush() {
     rafId = null;
-    const now = Date.now();
-    if (now - lastCommit >= COMMIT_INTERVAL) {
-      lastCommit = now;
+    if (latestText !== committed) {
+      committed = latestText;
       onChunk(latestText);
-    } else {
-      // Write directly to DOM for instant visual feedback without React re-render
-      if (outputRef && outputRef.current) {
-        const el = outputRef.current;
-        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){_t.children[_pc].classList.add('stream-new'); el.appendChild(_t.children[_pc]);}
-        // Auto-scroll if near bottom
-        if (el.scrollHeight - el.scrollop - el.clientHeight < 150) {
-          el.scrollTop = el.scrollHeight;
-        }
-      }
-      // Schedule the next React commit
-      rafId = requestAnimationFrame(flush);
     }
   }
 
@@ -1189,10 +1177,12 @@ function createStreamThrottle(onChunk, outputRef) {
       latestText = text;
       if (!rafId) rafId = requestAnimationFrame(flush);
     },
-    // Final flush: commit everything to React state
     finish() {
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      onChunk(latestText);
+      if (latestText !== committed) {
+        committed = latestText;
+        onChunk(latestText);
+      }
     },
     cancel() {
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
@@ -1361,6 +1351,21 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   let lastProgressPct = -1;
   let stopReason = 'end_turn';
 
+  // Smooth streaming: buffer text and commit to React at ~60fps
+  let dirty = false;
+  let rafId = null;
+  function scheduleFlush() {
+    if (!rafId) {
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (dirty) {
+          dirty = false;
+          onChunk(fullText);
+        }
+      });
+    }
+  }
+
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -1398,8 +1403,8 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
           if (parsed.type === 'content_block_delta') {
             if (parsed.delta?.type === 'text_delta' && parsed.delta?.text) {
               fullText += parsed.delta.text;
-              // Strip markdown bold/italic/headers in real-time
-              onChunk(fullText);
+              dirty = true;
+              scheduleFlush();
               if (onProgress) {
                 const wordCount = fullText.split(/\s+/).length;
                 const writePct = Math.min(70, (wordCount / expectedWords) * 70);
@@ -1421,6 +1426,9 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
       }
     }
   }
+  // Final flush — ensure all remaining text is committed
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  onChunk(fullText);
 
   // ── AUTO-CONTINUATION: if generation was cut off, continue where it left off ──
   let continuations = 0;
@@ -1477,7 +1485,8 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
             }
             if (cp.type === 'content_block_delta' && !contInThinking && cp.delta?.type === 'text_delta' && cp.delta?.text) {
               fullText += cp.delta.text;
-              onChunk(fullText);
+              dirty = true;
+              scheduleFlush();
             }
             if (cp.type === 'message_delta' && cp.delta?.stop_reason) {
               stopReason = cp.delta.stop_reason;
@@ -1487,6 +1496,10 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
       }
     }
   }
+
+  // Final flush after continuations
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  onChunk(fullText);
 
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
   // Strip any markdown bold/italic that slipped through despite prompt instructions
@@ -2165,7 +2178,7 @@ Write ONLY the background text. No labels, no "Background:" header.`;
 
     const throttle = createStreamThrottle((text) => {
       setOutput(text);
-    }, outputRef);
+    });
 
     try {
       const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;

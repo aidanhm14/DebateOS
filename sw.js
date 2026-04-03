@@ -1,4 +1,4 @@
-const CACHE_NAME = 'debateos-v3';
+const CACHE_NAME = 'debateos-v4';
 
 const APP_SHELL = [
   '/',
