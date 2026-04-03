@@ -17,7 +17,8 @@
     "cases": "Cas",
     "team": "Équipe",
     "analytics": "Analyse",
-    "resources": "Ressources"
+    "resources": "Ressources",
+    "debateBot": "Debat Bot"
   },
   "hero": {
     "title1": "L'",
@@ -238,6 +239,27 @@
     "totalLogged": "Total enregistré",
     "dailyUsage": "Utilisation quotidienne",
     "featureUsage": "Utilisation par fonctionnalité"
+  },
+  "debateBot": {
+    "title": "D\u00e9bat contre le Bot",
+    "desc": "Affrontez La Machine \u2014 un adversaire IA \u00e0 la langue ac\u00e9r\u00e9e et aux arguments encore plus tranchants. Choisissez une motion, votre c\u00f4t\u00e9, et \u00e9changez des discours. Apr\u00e8s 3 \u00e9changes chacun, obtenez un feedback de coaching.",
+    "motionPlaceholder": "Entrez une motion \u00e0 d\u00e9battre...",
+    "start": "D\u00e9fier La Machine",
+    "endDebate": "Terminer le d\u00e9bat",
+    "machine": "La Machine",
+    "you": "Vous",
+    "thinking": "La Machine r\u00e9fl\u00e9chit...",
+    "yourTurn": "Votre tour",
+    "openingHint": "Ouvrez avec votre cadre et vos arguments",
+    "closingHint": "Discours final \u2014 cristallisez et pesez",
+    "respondHint": "R\u00e9pondez \u00e0 La Machine et \u00e9tendez votre cas",
+    "inputPlaceholder": "Tapez votre discours ou utilisez le micro...",
+    "submit": "Envoyer le discours",
+    "complete": "D\u00e9bat termin\u00e9",
+    "completeDesc": "Tous les discours ont \u00e9t\u00e9 prononc\u00e9s. Feedback de coaching ci-dessous.",
+    "judging": "Analyse de votre performance...",
+    "coachFeedback": "Feedback du coach",
+    "newDebate": "Nouveau d\u00e9bat"
   },
   "common": {
     "copy": "Copier",

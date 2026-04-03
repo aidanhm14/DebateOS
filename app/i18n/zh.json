@@ -17,7 +17,8 @@
     "cases": "案例",
     "team": "团队",
     "analytics": "数据",
-    "resources": "资源"
+    "resources": "资源",
+    "debateBot": "辩论机器人"
   },
   "hero": {
     "title1": "竞技辩论者的",
@@ -238,6 +239,27 @@
     "totalLogged": "总计记录",
     "dailyUsage": "每日用量",
     "featureUsage": "功能用量"
+  },
+  "debateBot": {
+    "title": "与机器辩论",
+    "desc": "与机器对决——一个言辞犀利、论证更犀利的AI对手。选择一个动议和你的立场，轮流发表演讲。各3轮交锋后获得教练反馈。",
+    "motionPlaceholder": "输入辩论动议...",
+    "start": "挑战机器",
+    "endDebate": "结束辩论",
+    "machine": "机器",
+    "you": "你",
+    "thinking": "机器正在思考...",
+    "yourTurn": "你的回合",
+    "openingHint": "用框架和论点开场",
+    "closingHint": "最后发言——总结并权衡",
+    "respondHint": "回应机器并扩展你的论点",
+    "inputPlaceholder": "输入演讲内容或使用麦克风...",
+    "submit": "发送演讲",
+    "complete": "辩论结束",
+    "completeDesc": "所有演讲已完成。教练反馈如下。",
+    "judging": "正在分析你的表现...",
+    "coachFeedback": "教练反馈",
+    "newDebate": "新辩论"
   },
   "common": {
     "copy": "复制",

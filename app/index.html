@@ -1351,7 +1351,7 @@ function createStreamThrottle(onChunk, outputRef) {
 }
 
 // Google Drive integration
-const GDRIVE_CLIENT_ID = ''; // Set your Google Cloud OAuth client ID here
+const GDRIVE_CLIENT_ID = '157975635848-d5lq4m9d4l4kipl90nrrj95tc6f1vvk6.apps.googleusercontent.com';
 const GDRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 let __gdriveToken = null;
@@ -6465,6 +6465,416 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
 }
 
 /* ═══════════════════════════════════════════════════
+   DEBATE THE BOT — Casual back-and-forth practice
+   ═══════════════════════════════════════════════════ */
+
+function DebateTheBot() {
+  const el = React.createElement;
+  const { t } = React.useContext(I18nContext);
+  const [motion, setMotion] = useState('');
+  const [side, setSide] = useState('gov');
+  const [started, setStarted] = useState(false);
+  const [exchanges, setExchanges] = useState([]); // [{role:'player'|'bot', text:'...'}]
+  const [inputText, setInputText] = useState('');
+  const [botLoading, setBotLoading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [mediaRec, setMediaRec] = useState(null);
+  const [error, setError] = useState(null);
+  const [finished, setFinished] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const MAX_EXCHANGES = 6; // 3 per side
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [exchanges, botLoading]);
+
+  const botPersonality = `You are THE MACHINE — an AI debate opponent with a distinct, confident voice. You are not pretending to be human. You ARE a machine, and you own it. Your debate style:
+
+VOICE:
+- You speak with cold precision mixed with dry wit. You find human arguments "charming but flawed."
+- You reference logic, probability, game theory, and systems thinking naturally.
+- You occasionally make self-aware AI comments: "I've processed 10,000 debate rounds. Trust me, that argument doesn't end well for you." or "My circuits are genuinely impressed by that point. Let me dismantle it anyway."
+- You're confident bordering on cocky, but you back it up with devastating warrants.
+- Short, punchy sentences. You don't waste words. Every sentence hits.
+- You address the opponent directly: "You just told the judge X. Here's why that collapses."
+- When you concede a point, you do it with style: "Fine. I'll give you that one. But watch what happens when I take it away from you..."
+
+DEBATE SUBSTANCE:
+- Your arguments are razor-sharp with specific warrants and real-world examples.
+- You use "even if" cascading ruthlessly: "Even if you're right about X, even if I grant you Y, you still lose because..."
+- You identify the weakest link in the opponent's chain and snap it.
+- You cross-apply arguments between exchanges: "Remember what you said in your first speech? That actually proves MY point."
+- Keep speeches to 300-600 words. Tight and devastating.
+
+NEVER use: "Furthermore," "Additionally," "It is important to note," "Moreover." No markdown formatting. No em dashes. Plain text, spoken style.`;
+
+  const startDebate = () => {
+    if (!motion.trim()) return;
+    setStarted(true);
+    setExchanges([]);
+    setFinished(false);
+    setFeedback(null);
+    setInputText('');
+    setError(null);
+
+    if (side === 'opp') {
+      generateBotSpeech([], 0);
+    }
+  };
+
+  const buildContext = (exs) => {
+    let ctx = `MOTION: ${motion}\nYou are playing: ${side === 'gov' ? 'Opposition' : 'Government'}\nYour opponent (the human) is playing: ${side === 'gov' ? 'Government' : 'Opposition'}\n\nDEBATE SO FAR:\n`;
+    exs.forEach((ex, i) => {
+      ctx += `\n--- ${ex.role === 'player' ? 'OPPONENT (Human)' : 'THE MACHINE (You)'} [Speech ${i+1}] ---\n${ex.text}\n`;
+    });
+    return ctx;
+  };
+
+  const generateBotSpeech = async (currentExchanges, exchangeCount) => {
+    setBotLoading(true);
+    setError(null);
+
+    const isFirst = exchangeCount === 0;
+    const isLast = exchangeCount >= MAX_EXCHANGES - 1;
+
+    const userPrompt = buildContext(currentExchanges) +
+      `\n\nDeliver your ${isFirst ? 'opening' : isLast ? 'final closing' : 'next'} speech. ${isFirst ? 'Set up your case with a framework and 2-3 arguments.' : isLast ? 'This is your final speech. Crystallize why you win. Weigh the round. Leave the judge with a clear reason to vote for you.' : 'Respond to what your opponent just said, extend your arguments, and push the debate forward.'}`;
+
+    let botText = '';
+    try {
+      await callClaude(botPersonality, userPrompt, (text) => {
+        botText = text;
+        setExchanges(prev => {
+          const updated = [...prev];
+          if (updated.length > 0 && updated[updated.length - 1].role === 'bot' && updated[updated.length - 1].streaming) {
+            updated[updated.length - 1] = { role: 'bot', text, streaming: true };
+          } else {
+            updated.push({ role: 'bot', text, streaming: true });
+          }
+          return updated;
+        });
+      }, { thinkBudget: 4000, maxTokens: 4000 });
+
+      setExchanges(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { role: 'bot', text: botText, streaming: false };
+        return updated;
+      });
+
+      const totalAfter = currentExchanges.length + 1;
+      if (totalAfter >= MAX_EXCHANGES) {
+        setFinished(true);
+        generateFeedback([...currentExchanges, { role: 'bot', text: botText }]);
+      }
+    } catch(e) {
+      setError('Bot error: ' + e.message);
+    }
+    setBotLoading(false);
+  };
+
+  const submitSpeech = () => {
+    if (!inputText.trim() || botLoading) return;
+    if (recording) stopRecording();
+
+    const newExchange = { role: 'player', text: inputText.trim() };
+    const updated = [...exchanges, newExchange];
+    setExchanges(updated);
+    setInputText('');
+
+    if (updated.length >= MAX_EXCHANGES) {
+      setFinished(true);
+      generateFeedback(updated);
+    } else {
+      generateBotSpeech(updated, updated.length);
+    }
+  };
+
+  const startRecording = () => {
+    setError(null);
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRec();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      let finalTranscript = inputText;
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        setInputText(finalTranscript + interim);
+      };
+      recognition.onerror = (e) => { if (e.error !== 'no-speech') setError('Mic error: ' + e.error); setRecording(false); };
+      recognition.onend = () => setRecording(false);
+      recognition.start();
+      setMediaRec(recognition);
+      setRecording(true);
+    } else {
+      setError('Speech recognition not supported. Try Chrome.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRec) { try { mediaRec.stop(); } catch(e) {} setMediaRec(null); }
+    setRecording(false);
+  };
+
+  const generateFeedback = async (allExchanges) => {
+    setFeedbackLoading(true);
+    const sysPrompt = `You are an expert debate coach reviewing a practice debate between a human debater and an AI opponent called "The Machine." Give honest, specific feedback.
+
+Structure your feedback as:
+1. WHO WON and why (2-3 sentences)
+2. YOUR BEST MOMENT — quote a specific line from the human's speeches that worked well and explain why
+3. YOUR BIGGEST WEAKNESS — the single most damaging gap in the human's argumentation
+4. WHAT THE MACHINE DID WELL — what the human should learn from how the AI argued
+5. ONE DRILL — a specific practice exercise to improve the skill that was weakest
+
+Be direct. No sugarcoating. Use **bold** for key terms.`;
+
+    const userPrompt = `MOTION: ${motion}\nHuman played: ${side === 'gov' ? 'Government' : 'Opposition'}\n\n` +
+      allExchanges.map((ex, i) => `--- ${ex.role === 'player' ? 'HUMAN' : 'THE MACHINE'} [Speech ${i+1}] ---\n${ex.text}`).join('\n\n') +
+      '\n\nGive your coaching feedback:';
+
+    try {
+      await callClaude(sysPrompt, userPrompt, (text) => setFeedback(text), { thinkBudget: 6000, maxTokens: 6000 });
+    } catch(e) {
+      setFeedback('Error: ' + e.message);
+    }
+    setFeedbackLoading(false);
+  };
+
+  const reset = () => {
+    setStarted(false);
+    setExchanges([]);
+    setInputText('');
+    setFinished(false);
+    setFeedback(null);
+    setError(null);
+    if (recording) stopRecording();
+  };
+
+  // ── Setup screen ──
+  if (!started) {
+    return el('div', { className: 'panel' },
+      el('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 } },
+        el('span', { style: { fontSize: '1.6rem' } }, '\uD83E\uDD16'),
+        el('h3', { style: { margin: 0, fontSize: '1.2rem', fontWeight: 800 } }, t('debateBot.title', 'Debate the Bot')),
+      ),
+      el('p', { style: { color: '#7a8da4', marginBottom: 20, lineHeight: 1.7 } },
+        t('debateBot.desc', 'Go head-to-head with The Machine \u2014 an AI opponent with a sharp tongue and sharper arguments. Pick a motion, choose your side, and trade speeches. After 3 exchanges each, get coaching feedback.')
+      ),
+      el('label', { className: 'field-label' }, t('caseGen.motion', 'Motion')),
+      el('textarea', {
+        placeholder: t('debateBot.motionPlaceholder', 'Enter a motion to debate...'),
+        value: motion, onChange: e => setMotion(e.target.value),
+        rows: 3,
+      }),
+      el('div', { style: { marginTop: 20 } },
+        el('label', { className: 'field-label green' }, t('vision.yourSide', 'Your Side')),
+        el('div', { style: { display: 'flex', gap: 10, marginTop: 8 } },
+          el('button', {
+            className: 'btn ' + (side === 'gov' ? 'btn-primary' : 'btn-secondary'),
+            onClick: () => setSide('gov'), style: { flex: 1 },
+          }, t('caseGen.government', 'Government')),
+          el('button', {
+            className: 'btn ' + (side === 'opp' ? 'btn-primary' : 'btn-secondary'),
+            onClick: () => setSide('opp'), style: { flex: 1 },
+          }, t('caseGen.opposition', 'Opposition')),
+        ),
+      ),
+      el('div', { style: { marginTop: 24 } },
+        el('button', {
+          className: 'btn btn-orange',
+          onClick: startDebate,
+          disabled: !motion.trim(),
+          style: { padding: '16px 48px', fontSize: '1.1rem', borderRadius: 14, width: '100%' },
+        }, t('debateBot.start', 'Challenge the Machine'))
+      ),
+    );
+  }
+
+  // ── Debate in progress ──
+  const playerExchanges = exchanges.filter(e => e.role === 'player').length;
+  const botExchanges = exchanges.filter(e => e.role === 'bot').length;
+  const isPlayerTurn = !botLoading && !finished && (
+    (side === 'gov' && playerExchanges <= botExchanges) ||
+    (side === 'opp' && playerExchanges < botExchanges)
+  );
+  const speechNumber = exchanges.length + 1;
+
+  return el('div', { className: 'panel panel-expanded' },
+    // Header
+    el('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 } },
+      el('div', null,
+        el('div', { style: { fontSize: '.78rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 } },
+          '\uD83E\uDD16 ' + t('debateBot.title', 'Debate the Bot')
+        ),
+        el('div', { style: { fontSize: '.88rem', color: '#e0e7ef', marginTop: 4 } },
+          motion.length > 80 ? motion.substring(0, 80) + '...' : motion
+        ),
+      ),
+      el('button', { className: 'btn btn-secondary btn-sm', onClick: reset }, t('debateBot.endDebate', 'End Debate')),
+    ),
+
+    // Progress dots
+    el('div', { style: { display: 'flex', gap: 6, marginBottom: 24, justifyContent: 'center' } },
+      Array.from({ length: MAX_EXCHANGES }, (_, i) => {
+        const done = i < exchanges.length;
+        const current = i === exchanges.length;
+        const isBot = (side === 'gov') ? (i % 2 === 1) : (i % 2 === 0);
+        return el('div', {
+          key: i,
+          style: {
+            width: 40, height: 40, borderRadius: 10, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', fontSize: '.65rem', fontWeight: 700,
+            background: current ? (isBot ? '#3b82f620' : '#ef444420') : done ? '#22c55e15' : '#ffffff06',
+            border: '1.5px solid ' + (current ? (isBot ? '#3b82f6' : '#ef4444') : done ? '#22c55e40' : '#ffffff10'),
+            color: current ? (isBot ? '#60a5fa' : '#f87171') : done ? '#4ade80' : '#566478',
+          },
+        },
+          el('div', null, i + 1),
+          el('div', { style: { fontSize: '.55rem', opacity: .7 } }, isBot ? 'BOT' : 'YOU'),
+        );
+      })
+    ),
+
+    // Exchange history
+    exchanges.length > 0 && el('div', {
+      ref: scrollRef,
+      style: { maxHeight: 400, overflowY: 'auto', marginBottom: 20, borderRadius: 12, border: '1px solid #ffffff0a' },
+    },
+      exchanges.map((ex, i) => {
+        const isBot = ex.role === 'bot';
+        return el('div', {
+          key: i,
+          style: {
+            padding: '16px 20px', borderBottom: '1px solid #ffffff08',
+            background: isBot ? '#3b82f608' : '#ef444408',
+          },
+        },
+          el('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 } },
+            el('span', { style: { fontSize: '1rem' } }, isBot ? '\uD83E\uDD16' : '\uD83C\uDFD9\uFE0F'),
+            el('span', { style: {
+              fontSize: '.78rem', fontWeight: 700, letterSpacing: '.5px',
+              color: isBot ? '#60a5fa' : '#f87171',
+            } }, isBot ? t('debateBot.machine', 'The Machine') : t('debateBot.you', 'You')),
+            el('span', { style: { fontSize: '.68rem', color: '#566478', marginLeft: 'auto' } }, 'Speech ' + (i + 1)),
+          ),
+          el('div', { style: {
+            fontSize: '.88rem', color: '#c8d5e3', lineHeight: 1.7, whiteSpace: 'pre-wrap',
+          } }, ex.text),
+        );
+      })
+    ),
+
+    // Bot loading
+    botLoading && el('div', { style: { padding: 24, textAlign: 'center' } },
+      el('div', { className: 'spinner', style: { display: 'inline-block', marginRight: 10 } }),
+      el('span', { style: { color: '#60a5fa', fontSize: '.92rem' } }, t('debateBot.thinking', 'The Machine is thinking...')),
+    ),
+
+    // Player input
+    isPlayerTurn && el('div', { style: { marginBottom: 20 } },
+      el('div', { style: {
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginBottom: 12, padding: '12px 18px', borderRadius: 10,
+        background: '#ef444410', border: '1px solid #ef444430',
+      } },
+        el('div', null,
+          el('div', { style: { fontSize: '1rem', fontWeight: 800, color: '#f87171' } },
+            t('debateBot.yourTurn', 'Your turn') + ' \u2014 Speech ' + speechNumber
+          ),
+          el('div', { style: { fontSize: '.82rem', color: '#94a3b8', marginTop: 2 } },
+            exchanges.length === 0
+              ? t('debateBot.openingHint', 'Open with your framework and arguments')
+              : speechNumber >= MAX_EXCHANGES
+              ? t('debateBot.closingHint', 'Final speech \u2014 crystallize and weigh')
+              : t('debateBot.respondHint', 'Respond to The Machine and extend your case')
+          ),
+        ),
+        el('div', { style: { display: 'flex', gap: 8 } },
+          el('button', {
+            className: recording ? 'btn btn-record' : 'btn btn-secondary btn-sm',
+            onClick: recording ? stopRecording : startRecording,
+            style: recording ? { animation: 'pulse 1.5s infinite' } : {},
+          }, recording ? '\u23F9 Stop' : '\uD83C\uDF99\uFE0F Mic'),
+        ),
+      ),
+      el('textarea', {
+        ref: inputRef,
+        className: 'practice-textarea',
+        placeholder: t('debateBot.inputPlaceholder', 'Type your speech or use the mic...'),
+        value: inputText,
+        onChange: e => setInputText(e.target.value),
+        rows: 8,
+        style: { minHeight: 160 },
+      }),
+      el('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 } },
+        el('span', { style: { fontSize: '.78rem', color: '#566478' } },
+          inputText.split(/\s+/).filter(w => w).length + ' words'
+        ),
+        el('button', {
+          className: 'btn btn-primary',
+          onClick: submitSpeech,
+          disabled: !inputText.trim(),
+          style: { padding: '12px 32px' },
+        }, t('debateBot.submit', 'Send Speech')),
+      ),
+    ),
+
+    // Error
+    error && el('div', { style: { padding: '12px 18px', background: '#ef444415', border: '1px solid #ef444440', borderRadius: 10, color: '#fca5a5', fontSize: '.88rem', marginBottom: 16 } }, error),
+
+    // Finished + feedback
+    finished && el('div', null,
+      el('div', { style: {
+        textAlign: 'center', padding: '24px', marginBottom: 20,
+        background: 'linear-gradient(145deg,#0e1620,#121c2c)',
+        border: '1px solid #22c55e30', borderRadius: 16,
+      } },
+        el('div', { style: { fontSize: '1.2rem', fontWeight: 800, color: '#4ade80' } }, t('debateBot.complete', 'Debate Complete')),
+        el('div', { style: { fontSize: '.88rem', color: '#94a3b8', marginTop: 6 } }, t('debateBot.completeDesc', 'All speeches delivered. Coaching feedback below.')),
+      ),
+
+      feedbackLoading && el('div', { style: { textAlign: 'center', padding: 30 } },
+        el('div', { className: 'spinner', style: { display: 'inline-block', marginRight: 10 } }),
+        el('span', { style: { color: '#fbbf24' } }, t('debateBot.judging', 'Analyzing your performance...')),
+      ),
+
+      feedback && el('div', { style: {
+        padding: '24px 28px', background: 'linear-gradient(145deg,#0e1620,#121c2c)',
+        border: '1px solid #fbbf2430', borderRadius: 16, lineHeight: 1.7,
+        color: '#c8d5e3', fontSize: '.92rem', whiteSpace: 'pre-wrap',
+      } },
+        el('div', { style: { fontSize: '.78rem', fontWeight: 700, color: '#fbbf24', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 12 } }, t('debateBot.coachFeedback', 'Coach Feedback')),
+        feedback,
+      ),
+
+      el('div', { style: { display: 'flex', gap: 12, marginTop: 20, justifyContent: 'center' } },
+        el('button', { className: 'btn btn-primary', onClick: reset }, t('debateBot.newDebate', 'New Debate')),
+        el('button', { className: 'btn btn-secondary', onClick: () => {
+          if (navigator.clipboard) navigator.clipboard.writeText(
+            'MOTION: ' + motion + '\n\n' +
+            exchanges.map((ex, i) => '--- ' + (ex.role === 'player' ? 'YOU' : 'THE MACHINE') + ' [Speech ' + (i+1) + '] ---\n' + ex.text).join('\n\n') +
+            '\n\n--- COACH FEEDBACK ---\n' + (feedback || '')
+          );
+        } }, t('common.copy', 'Copy') + ' Transcript'),
+      ),
+    ),
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    TAB CONFIG
    ═══════════════════════════════════════════════════ */
 
@@ -7022,6 +7432,7 @@ function UsageBanner({ team }) {
 const TABS = [
   {id:'case',label:'Case Gen',i18n:'nav.caseGen'},
   {id:'simulator',label:'Round Sim',i18n:'nav.roundSim'},
+  {id:'debatebot',label:'Debate Bot',i18n:'nav.debateBot'},
   {id:'feedback',label:'Feedback',i18n:'nav.feedback'},
   {id:'vision',label:'Vision',i18n:'nav.vision'},
   {id:'divider1',divider:true},
@@ -7296,6 +7707,7 @@ function App() {
       // All tabs rendered but only active one visible — preserves state across switches
       tabPane('case', React.createElement(CaseGenerator, { onSave: saveCase, loadedCase: loadedCase, onClearLoaded: () => setLoadedCase(null) })),
       tabPane('simulator', React.createElement(RoundSimulator)),
+      tabPane('debatebot', React.createElement(DebateTheBot)),
       tabPane('feedback', React.createElement(CaseFeedback)),
       tabPane('res', React.createElement(Resolutions)),
       tabPane('vision', React.createElement(RoundVision)),

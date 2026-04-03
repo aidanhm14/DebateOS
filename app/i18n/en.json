@@ -17,7 +17,8 @@
     "cases": "Cases",
     "team": "Team",
     "analytics": "Analytics",
-    "resources": "Resources"
+    "resources": "Resources",
+    "debateBot": "Debate Bot"
   },
   "hero": {
     "title1": "The ",
@@ -238,6 +239,27 @@
     "totalLogged": "Total Logged",
     "dailyUsage": "Daily Usage",
     "featureUsage": "Feature Usage"
+  },
+  "debateBot": {
+    "title": "Debate the Bot",
+    "desc": "Go head-to-head with The Machine \u2014 an AI opponent with a sharp tongue and sharper arguments. Pick a motion, choose your side, and trade speeches. After 3 exchanges each, get coaching feedback.",
+    "motionPlaceholder": "Enter a motion to debate...",
+    "start": "Challenge the Machine",
+    "endDebate": "End Debate",
+    "machine": "The Machine",
+    "you": "You",
+    "thinking": "The Machine is thinking...",
+    "yourTurn": "Your turn",
+    "openingHint": "Open with your framework and arguments",
+    "closingHint": "Final speech \u2014 crystallize and weigh",
+    "respondHint": "Respond to The Machine and extend your case",
+    "inputPlaceholder": "Type your speech or use the mic...",
+    "submit": "Send Speech",
+    "complete": "Debate Complete",
+    "completeDesc": "All speeches delivered. Coaching feedback below.",
+    "judging": "Analyzing your performance...",
+    "coachFeedback": "Coach Feedback",
+    "newDebate": "New Debate"
   },
   "common": {
     "copy": "Copy",

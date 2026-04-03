@@ -17,7 +17,8 @@
     "cases": "Casos",
     "team": "Equipo",
     "analytics": "Análisis",
-    "resources": "Recursos"
+    "resources": "Recursos",
+    "debateBot": "Debate Bot"
   },
   "hero": {
     "title1": "El ",
@@ -238,6 +239,27 @@
     "totalLogged": "Total registrado",
     "dailyUsage": "Uso diario",
     "featureUsage": "Uso por función"
+  },
+  "debateBot": {
+    "title": "Debate contra el Bot",
+    "desc": "Enfr\u00e9ntate a La M\u00e1quina \u2014 un oponente IA con lengua afilada y argumentos a\u00fan m\u00e1s cortantes. Elige una moci\u00f3n, tu lado e intercambia discursos. Despu\u00e9s de 3 intercambios cada uno, obt\u00e9n feedback de coaching.",
+    "motionPlaceholder": "Ingresa una moci\u00f3n para debatir...",
+    "start": "Desafiar a La M\u00e1quina",
+    "endDebate": "Terminar debate",
+    "machine": "La M\u00e1quina",
+    "you": "T\u00fa",
+    "thinking": "La M\u00e1quina est\u00e1 pensando...",
+    "yourTurn": "Tu turno",
+    "openingHint": "Abre con tu marco y argumentos",
+    "closingHint": "Discurso final \u2014 cristaliza y pondera",
+    "respondHint": "Responde a La M\u00e1quina y extiende tu caso",
+    "inputPlaceholder": "Escribe tu discurso o usa el micr\u00f3fono...",
+    "submit": "Enviar discurso",
+    "complete": "Debate completado",
+    "completeDesc": "Todos los discursos entregados. Feedback de coaching abajo.",
+    "judging": "Analizando tu desempe\u00f1o...",
+    "coachFeedback": "Feedback del coach",
+    "newDebate": "Nuevo debate"
   },
   "common": {
     "copy": "Copiar",

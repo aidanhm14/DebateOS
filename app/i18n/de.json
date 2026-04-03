@@ -17,7 +17,8 @@
     "cases": "Fälle",
     "team": "Team",
     "analytics": "Analyse",
-    "resources": "Ressourcen"
+    "resources": "Ressourcen",
+    "debateBot": "Debattier-Bot"
   },
   "hero": {
     "title1": "Das ",
@@ -238,6 +239,27 @@
     "totalLogged": "Insgesamt erfasst",
     "dailyUsage": "Tägliche Nutzung",
     "featureUsage": "Nutzung nach Funktion"
+  },
+  "debateBot": {
+    "title": "Debattier-Bot",
+    "desc": "Tritt gegen Die Maschine an \u2014 einen KI-Gegner mit scharfer Zunge und noch sch\u00e4rferen Argumenten. W\u00e4hle einen Antrag, deine Seite und tausche Reden. Nach je 3 Reden erh\u00e4ltst du Coaching-Feedback.",
+    "motionPlaceholder": "Antrag zum Debattieren eingeben...",
+    "start": "Die Maschine herausfordern",
+    "endDebate": "Debatte beenden",
+    "machine": "Die Maschine",
+    "you": "Du",
+    "thinking": "Die Maschine denkt nach...",
+    "yourTurn": "Du bist dran",
+    "openingHint": "\u00d6ffne mit deinem Rahmen und Argumenten",
+    "closingHint": "Letzte Rede \u2014 kristallisiere und gewichte",
+    "respondHint": "Antworte auf Die Maschine und erweitere deinen Fall",
+    "inputPlaceholder": "Rede eintippen oder Mikrofon benutzen...",
+    "submit": "Rede senden",
+    "complete": "Debatte abgeschlossen",
+    "completeDesc": "Alle Reden gehalten. Coaching-Feedback unten.",
+    "judging": "Leistung wird analysiert...",
+    "coachFeedback": "Coach-Feedback",
+    "newDebate": "Neue Debatte"
   },
   "common": {
     "copy": "Kopieren",

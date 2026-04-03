@@ -17,7 +17,8 @@
     "cases": "케이스",
     "team": "팀",
     "analytics": "분석",
-    "resources": "자료"
+    "resources": "자료",
+    "debateBot": "토론 봇"
   },
   "hero": {
     "title1": "경쟁 토론자를 위한 ",
@@ -238,6 +239,27 @@
     "totalLogged": "총 기록",
     "dailyUsage": "일일 사용량",
     "featureUsage": "기능별 사용량"
+  },
+  "debateBot": {
+    "title": "토론 봇과 대결",
+    "desc": "더 머신과 맞서세요 — 날카로운 혀와 더 날카로운 논증을 가진 AI 상대입니다. 안건을 고르고, 편을 선택하고, 연설을 교환하세요. 각 3번의 교환 후 코칭 피드백을 받습니다.",
+    "motionPlaceholder": "토론할 안건을 입력하세요...",
+    "start": "더 머신에 도전",
+    "endDebate": "토론 종료",
+    "machine": "더 머신",
+    "you": "나",
+    "thinking": "더 머신이 생각 중...",
+    "yourTurn": "당신 차례",
+    "openingHint": "프레임워크와 논증으로 시작하세요",
+    "closingHint": "마지막 연설 — 정리하고 비중을 따지세요",
+    "respondHint": "더 머신에 응답하고 논증을 확장하세요",
+    "inputPlaceholder": "연설을 입력하거나 마이크를 사용하세요...",
+    "submit": "연설 보내기",
+    "complete": "토론 완료",
+    "completeDesc": "모든 연설이 끝났습니다. 아래에서 코칭 피드백을 확인하세요.",
+    "judging": "성과를 분석하는 중...",
+    "coachFeedback": "코치 피드백",
+    "newDebate": "새 토론"
   },
   "common": {
     "copy": "복사",
