@@ -345,18 +345,26 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   padding:24px 32px;white-space:pre-line;line-height:1.65;
   font-size:1.04rem;max-height:80vh;overflow-y:auto;
   min-height:300px;letter-spacing:-.01em;word-spacing:-.02em;
-  will-change:contents;contain:layout style;
+  scroll-behavior:smooth;
 }
 .output.streaming-active{overflow-anchor:auto}
+.output.streaming-active > *:last-child{animation:streamFade .3s ease both}
+.output.streaming-active::after{
+  content:'';display:inline-block;width:2px;height:1.1em;
+  background:#ef4444;margin-left:3px;vertical-align:text-bottom;
+  animation:cursorBlink .8s steps(2) infinite;
+}
+@keyframes streamFade{from{opacity:.3;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cursorBlink{0%{opacity:1}100%{opacity:0}}
 .output *{margin:0;padding:0}
 .output strong{color:#fbbf24;font-weight:700}
 .output em{color:#94a3b8;font-style:italic}
-.output p,.output .ai-p{margin:8px 0;line-height:1.65}
-.output .ai-h3{color:#fbbf24;margin:22px 0 8px;font-size:1.12rem;font-weight:700;padding-bottom:5px;border-bottom:1px solid #fbbf2420}
-.output .ai-h1{color:#60a5fa;margin:24px 0 8px;font-size:1.18rem;font-weight:700;padding-bottom:6px;border-bottom:1px solid #60a5fa20}
-.output .ai-h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;font-weight:600}
-.output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422}
-.output h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
+.output p,.output .ai-p{margin:8px 0;line-height:1.65;animation:streamFade .25s ease both}
+.output .ai-h3{color:#fbbf24;margin:22px 0 8px;font-size:1.12rem;font-weight:700;padding-bottom:5px;border-bottom:1px solid #fbbf2420;animation:streamFade .35s ease both}
+.output .ai-h1{color:#60a5fa;margin:24px 0 8px;font-size:1.18rem;font-weight:700;padding-bottom:6px;border-bottom:1px solid #60a5fa20;animation:streamFade .35s ease both}
+.output .ai-h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;font-weight:600;animation:streamFade .35s ease both}
+.output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422;animation:streamFade .35s ease both}
+.output h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600;animation:streamFade .35s ease both}
 .output .section{margin-bottom:12px}
 .phil-output{background:linear-gradient(145deg,#0e1620,#121c2c);border:1px solid #ffffff10;border-radius:16px;padding:28px 36px;margin-top:20px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
 .phil-output .output{padding:0;min-height:0;max-height:none;line-height:1.7;font-size:1.05rem}
@@ -1159,49 +1167,6 @@ function cleanOutput(text, asHtml) {
   return t;
 }
 
-// Throttled streaming: batches rapid onChunk calls into one React update per frame
-function createStreamThrottle(onChunk, outputRef) {
-  let latestText = '';
-  let rafId = null;
-  let lastCommit = 0;
-  const COMMIT_INTERVAL = Infinity; // only commit on finish()
-
-  function flush() {
-    rafId = null;
-    const now = Date.now();
-    if (now - lastCommit >= COMMIT_INTERVAL) {
-      lastCommit = now;
-      onChunk(latestText);
-    } else {
-      // Write directly to DOM for instant visual feedback without React re-render
-      if (outputRef && outputRef.current) {
-        const el = outputRef.current;
-        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){_t.children[_pc].classList.add('stream-new'); el.appendChild(_t.children[_pc]);}
-        // Auto-scroll if near bottom
-        if (el.scrollHeight - el.scrollop - el.clientHeight < 150) {
-          el.scrollTop = el.scrollHeight;
-        }
-      }
-      // Schedule the next React commit
-      rafId = requestAnimationFrame(flush);
-    }
-  }
-
-  return {
-    update(text) {
-      latestText = text;
-      if (!rafId) rafId = requestAnimationFrame(flush);
-    },
-    // Final flush: commit everything to React state
-    finish() {
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      onChunk(latestText);
-    },
-    cancel() {
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-    }
-  };
-}
 
 function SaveToDocsButton({text, filename}) {
   if (!text) return null;
@@ -2076,6 +2041,16 @@ function CaseGenerator({ onSave, loadedCase, onClearLoaded }) {
   const outputRef = useRef(null);
   const streamAreaRef = useRef(null);
 
+  // Auto-scroll to bottom during streaming
+  useEffect(() => {
+    if (streaming && outputRef.current) {
+      const el = outputRef.current;
+      if (el.scrollHeight - el.scrollTop - el.clientHeight < 200) {
+        el.scrollTop = el.scrollHeight;
+      }
+    }
+  }, [output, streaming]);
+
   // Load a saved case when selected from sidebar
   useEffect(() => {
     if (loadedCase) {
@@ -2180,20 +2155,15 @@ Write ONLY the background text. No labels, no "Background:" header.`;
 
     const expectedWords = depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600;
 
-    const throttle = createStreamThrottle((text) => {
-      setOutput(text);
-    }, outputRef);
-
     try {
       const depthMaxTokens = depth === 'competition' ? 32000 : depth === 'standard' ? 16000 : 8000;
       const depthThinkBudget = depth === 'competition' ? 4000 : depth === 'standard' ? 2000 : 1024;
       await callClaude(sysPrompt, userPrompt, (text) => {
-        throttle.update(text);
+        setOutput(text);
       }, { thinkBudget: depthThinkBudget, maxTokens: depthMaxTokens, expectedWords, onProgress: (p) => setProgress(p) });
     } catch (err) {
       setError(err.message);
     }
-    throttle.finish(); // Final commit to React state
     setLoading(false);
     setStreaming(false);
     setProgress({ phase: 'idle', percent: 0 });
