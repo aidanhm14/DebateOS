@@ -1448,7 +1448,7 @@ function SaveToDocsButton({text, filename, caseId}) {
     setError(null);
     try {
       const token = await requestGDriveToken();
-      const htmlContent = '<html><body>' + cleanOutput(text, true) + '</body></html>';
+      const htmlContent = '<html><head><meta charset="utf-8"><title>' + (filename || 'DebateOS') + '</title></head><body style="font-family:Georgia,serif;font-size:12pt;line-height:1.6;max-width:700px;margin:0 auto;padding:20px">' + cleanOutput(text, true) + '</body></html>';
       let result;
       if (existingFileId) {
         result = await gdriveUpdateDoc(existingFileId, htmlContent, token);
@@ -1471,7 +1471,7 @@ function SaveToDocsButton({text, filename, caseId}) {
   };
 
   const label = saving ? 'Saving...' : saved ? 'Saved to Drive!' : error ? 'Error' : existingFileId ? 'Update in Drive' : 'Save to Google Drive';
-  const style = {marginTop:12,fontSize:'.85rem'};
+  const style = {fontSize:'.85rem',minWidth:160};
   if (saved) style.borderColor = '#22c55e40';
   if (error) style.borderColor = '#ef444440';
 
@@ -2839,50 +2839,11 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
         },
         style:{ minWidth: 140 },
       }, '\uD83D\uDCCB Copy Text'),
-      React.createElement('button',{
-        className:'btn btn-secondary',
-        onClick:async () => {
-          if (!output) return;
-          // Build a rich HTML document so Google Docs preserves formatting
-          const title = motion ? motion.substring(0, 80) : 'DebateOS Case';
-          const lines = output.split('\n');
-          let html = '<html><head><meta charset="utf-8"><title>' + title + '</title></head><body style="font-family:Georgia,serif;font-size:12pt;line-height:1.6">';
-          lines.forEach(line => {
-            const trimmed = line.trim();
-            if (!trimmed) { html += '<br>'; return; }
-            // Detect section headers (all caps or starts with "Argument", "Framework", "Background", "A2:", "MG")
-            if (/^(BACKGROUND|FRAMEWORK|ARGUMENT \d|A2:|MG OVERVIEW|PMR|FRAMING|OPP ARGUMENTS|CASE STATEMENT|WEIGHING|STRATEGIC|COLLAPSE)/i.test(trimmed) || (trimmed === trimmed.toUpperCase() && trimmed.length > 3 && trimmed.length < 80)) {
-              html += '<h3 style="margin:18px 0 6px;font-size:14pt">' + trimmed + '</h3>';
-            } else {
-              html += '<p style="margin:4px 0">' + trimmed + '</p>';
-            }
-          });
-          html += '</body></html>';
-          // Copy the rich HTML to clipboard so Google Docs picks up formatting
-          try {
-            const blob = new Blob([html], {type: 'text/html'});
-            const plainBlob = new Blob([output], {type: 'text/plain'});
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                'text/html': blob,
-                'text/plain': plainBlob
-              })
-            ]);
-          } catch(e) {
-            // Fallback: just copy plain text
-            await navigator.clipboard.writeText(output);
-          }
-          // Open a new Google Doc
-          window.open('https://docs.google.com/document/create', '_blank');
-          // Show a toast notification
-          const toast = document.createElement('div');
-          toast.textContent = 'Case copied! Paste into your new doc (Ctrl+V / Cmd+V)';
-          toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ef4444;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:fadeIn .3s ease';
-          document.body.appendChild(toast);
-          setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .5s'; setTimeout(() => toast.remove(), 500); }, 4000);
-        },
-        style:{ minWidth: 160 },
-      }, 'Export to Google Docs'),
+      React.createElement(SaveToDocsButton, {
+        text: output,
+        filename: (motion ? motion.substring(0, 60) : 'DebateOS Case') + ' (' + side + ')',
+        caseId: motion ? 'case_' + motion.substring(0, 40).replace(/\s+/g, '_') + '_' + side : null,
+      }),
       // Thumbs up/down for feedback loop
       React.createElement('div',{style:{display:'flex',gap:6,marginLeft:8}},
         React.createElement('button',{
