@@ -6067,7 +6067,20 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setMsg('Team created! You have a 14-day free trial.');
-      onTeamCreated(data);
+      // Normalize to match the shape returned by /api/teams/usage
+      onTeamCreated({
+        teamId: data.id,
+        teamName: data.name,
+        plan: data.plan || 'trial',
+        status: data.status || 'trialing',
+        role: 'owner',
+        usageThisPeriod: data.usageThisPeriod || 0,
+        usageLimit: data.usageLimit || 25,
+        memberCount: data.memberCount || 1,
+        maxMembers: data.maxMembers || 3,
+        currentPeriodEnd: data.currentPeriodEnd,
+        trialEndsAt: data.trialEndsAt,
+      });
     } catch (err) { setMsg('Error: ' + err.message); }
     setActionLoading(false);
   };
@@ -6605,7 +6618,7 @@ function App() {
         React.createElement('h1',{className:'logo'},
           React.createElement('span',{className:'green'},'Debate'),
           React.createElement('span',{className:'white'},'OS'),
-          team && React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:team.status==='active'||team.status==='trialing'?'#22c55e20':'#f59e0b20',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
+          team && team.plan && React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:12,fontWeight:600,background:team.status==='active'||team.status==='trialing'?'#22c55e20':'#f59e0b20',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
           React.createElement('span',{style:{fontSize:'.65rem',padding:'2px 8px',borderRadius:4,marginLeft:6,fontWeight:600,background:theme==='light'?'#3b82f620':'#f59e0b20',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'LIGHT':'DARK')
         ),
       ),
