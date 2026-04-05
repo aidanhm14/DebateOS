@@ -1966,7 +1966,7 @@ function SaveToDocsButton({text, filename, caseId}) {
     setError(null);
     try {
       const token = await requestGDriveToken();
-      const htmlContent = '<html><head><meta charset="utf-8"><title>' + (filename || "Devil's Advocate") + '</title><style>body{font-family:"Google Sans",Roboto,Arial,sans-serif;font-size:11pt;line-height:1.7;max-width:720px;margin:0 auto;padding:24px;color:#1a1a1a}h1,h2,h3{font-family:"Google Sans",Roboto,Arial,sans-serif;color:#1a1a1a;margin-top:24px;margin-bottom:8px}h1{font-size:18pt;border-bottom:2px solid #4285f4;padding-bottom:6px}h2{font-size:14pt}h3{font-size:12pt;color:#5f6368}strong{color:#1a73e8}em{color:#5f6368}p{margin:8px 0}</style></head><body>' + cleanOutput(text, true) + '</body></html>';
+      const htmlContent = '<html><head><meta charset="utf-8"><title>' + (filename || "Devil's Advocate") + '</title><style>body{font-family:"Google Sans",Roboto,Arial,sans-serif;font-size:11pt;line-height:1.7;max-width:720px;margin:0 auto;padding:24px;color:#0a0e18}h1,h2,h3{font-family:"Google Sans",Roboto,Arial,sans-serif;color:#0a0e18;margin-top:24px;margin-bottom:8px}h1{font-size:18pt;border-bottom:2px solid #4285f4;padding-bottom:6px}h2{font-size:14pt}h3{font-size:12pt;color:#5f6368}strong{color:#1a73e8}em{color:#5f6368}p{margin:8px 0}</style></head><body>' + cleanOutput(text, true) + '</body></html>';
       let result;
       if (existingFileId) {
         result = await gdriveUpdateDoc(existingFileId, htmlContent, token);

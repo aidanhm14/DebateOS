@@ -1,16 +1,3 @@
 [build]
   publish = "."
   functions = "netlify/functions"
-
-# /app redirects to root for backwards compatibility
-[[redirects]]
-  from = "/app"
-  to = "/"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/app/"
-  to = "/"
-  status = 301
-  force = true
