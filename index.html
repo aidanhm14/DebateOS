@@ -6458,6 +6458,12 @@ function Newbies() {
         el('p',{key:3},"AI-generated cases also tend toward a certain sameness. Even with all our prompt engineering to make output sound more human, a Nationals-caliber debater will write cases with a creativity, specificity, and strategic depth that AI struggles to match. The best cases come from personal experience, niche knowledge, and genuine passion for an argument. AI doesn't have those."),
         el('p',{key:4},"Think of DebateOS as a training partner, not a replacement for the real thing. It can help you brainstorm, pressure-test your arguments, and learn debate concepts faster. But the growth that matters happens in actual rounds, with real partners, against real opponents. The AI gets you ready. The rounds make you good.")
       )
+    ),
+    // Community coming soon
+    el('div',{style:{marginTop:32,padding:'24px 28px',background:'linear-gradient(145deg,#0e1620,#121c2c)',border:'1px solid #ffffff10',borderRadius:14,textAlign:'center'}},
+      el('div',{style:{fontSize:'1.4rem',marginBottom:8}},'\u{1F91D}'),
+      el('h3',{style:{color:'#e4e8f0',fontSize:'1.1rem',fontWeight:700,marginBottom:8}},'Community Feature Coming Soon'),
+      el('p',{style:{color:'#94a3b8',fontSize:'.88rem',lineHeight:1.6,maxWidth:500,margin:'0 auto'}},'We\'re building a space for debaters to share cases, discuss strategy, find practice partners, and connect across circuits. Stay tuned.')
     )
   );
 }
@@ -7744,7 +7750,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginTop:24}},
       ...[
         {name:'Trial',price:'Free',requests:'25/mo',members:'3 members',highlight:false},
-        {name:'Individual',price:'$5/mo',requests:'500/mo',members:'1 member',highlight:true},
+        {name:'Individual',price:'$5/mo',requests:'300/mo',members:'1 member',highlight:true},
         {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false},
       ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
         p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},t('team.mostPopular','Most Popular')),
@@ -7791,7 +7797,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
         el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'14px 16px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:10,color:'#60a5fa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
           el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#3b82f6',marginBottom:2}}, '$5/mo'),
-          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Individual \u2022 500 requests'),
+          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Individual \u2022 300 requests'),
         ),
         el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'14px 16px',background:'#8b5cf615',border:'1px solid #8b5cf640',borderRadius:10,color:'#a78bfa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s',position:'relative'}},
           el('div', {style:{position:'absolute',top:-8,right:12,fontSize:'.6rem',fontWeight:700,color:'#fff',background:'#8b5cf6',padding:'2px 8px',borderRadius:10,letterSpacing:'.5px',textTransform:'uppercase'}}, 'Popular'),
@@ -8196,7 +8202,6 @@ const TABS = [
   {id:'phil',label:'Philosophy',i18n:'nav.philosophy'},
   {id:'divider2',divider:true},
   {id:'judge',label:'Judge',i18n:'nav.judge'},
-  {id:'forum',label:'Forum',i18n:'nav.forum'},
   {id:'newbies',label:'Guide',i18n:'nav.guide'},
   {id:'shared',label:'Cases',i18n:'nav.cases'},
   {id:'divider3',divider:true},
@@ -8496,7 +8501,6 @@ function App() {
       tabPane('phil', React.createElement(Philosophy)),
       tabPane('practice', React.createElement(Practice)),
       tabPane('judge', React.createElement(Judge)),
-      tabPane('forum', React.createElement(Forum, { user: user, onSignIn: () => setShowAuth(true) })),
       tabPane('newbies', React.createElement(Newbies)),
       tabPane('shared', React.createElement(SharedCases, { user: user, team: team })),
       tabPane('team', React.createElement(TeamDashboard, { user: user, team: team, teamLoading: teamLoading, onTeamCreated: setTeam })),
