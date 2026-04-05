@@ -238,7 +238,8 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .output-wrapper{display:flex;gap:0;margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid #ffffff14;background:linear-gradient(145deg,#0e1620,#121c2c);margin-left:-24px;margin-right:-24px;box-shadow:0 4px 24px rgba(0,0,0,.3);animation:wrapperFadeIn .5s ease-out both}
 @keyframes wrapperFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .output-reveal{animation:outputReveal .6s ease-out both}
-@keyframes outputReveal{from{opacity:0;transform:translateY(16px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes outputReveal{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.output-reveal.streaming-mask{animation:none;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 var(--reveal-pct,0%),transparent calc(var(--reveal-pct,0%) + 8%));mask-image:linear-gradient(to bottom,#000 0%,#000 var(--reveal-pct,0%),transparent calc(var(--reveal-pct,0%) + 8%));transition:-webkit-mask-image .4s ease,mask-image .4s ease}
 .output-main{flex:1;min-width:0}
 .output-stream{position:relative}
 .output-stream .stream-indicator{
@@ -3496,12 +3497,17 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
       )
     ),
 
-    // Output with highlight-to-comment + revision sidebar (only shown after streaming completes)
-    output && !streaming && React.createElement('div',{className:'output-reveal'},
+    // Output with progressive reveal during streaming, full after done
+    output && React.createElement('div',{
+      className:'output-reveal' + (streaming ? ' streaming-mask' : ''),
+      style: streaming ? {
+        '--reveal-pct': Math.min(100, Math.max(0, (progress.percent - 30) * 1.5)) + '%',
+      } : {}
+    },
       React.createElement(HighlightableOutput, {
         output:output,
         outputRef:outputRef,
-        streaming:false,
+        streaming:streaming,
         onRevise:(revisedText) => { setOutput(revisedText); setSaved(false); },
         motion:motion,
         depth:depth,
