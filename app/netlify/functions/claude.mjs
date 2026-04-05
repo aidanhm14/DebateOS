@@ -84,6 +84,10 @@ export default async (request, context) => {
   try {
     const body = await request.json();
 
+    // Extract and strip _feature before forwarding to Anthropic
+    const feature = body._feature || 'unknown';
+    delete body._feature;
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -96,9 +100,7 @@ export default async (request, context) => {
 
     // Log usage for authenticated requests (fire-and-forget, don't block response)
     if (teamId && userId) {
-      const feature = body._feature || 'unknown';
-      // Clone body to avoid reading stream issues; log asynchronously
-      logUsage(teamId, userId, feature).catch(() => {});
+      logUsage(teamId, userId, feature).catch(err => console.error('logUsage failed:', err));
     }
 
     // Stream the response through to the client

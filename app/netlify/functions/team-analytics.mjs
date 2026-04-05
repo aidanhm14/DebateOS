@@ -24,11 +24,22 @@ export default async (request) => {
   try {
     const { getDb } = await import('./lib/firestore.mjs');
     const db = getDb();
-    const snap = await db.collection('usage_logs')
-      .where('teamId', '==', team.id)
-      .orderBy('timestamp', 'desc')
-      .limit(200)
-      .get();
+    let snap;
+    try {
+      // Requires composite index on teamId + timestamp
+      snap = await db.collection('usage_logs')
+        .where('teamId', '==', team.id)
+        .orderBy('timestamp', 'desc')
+        .limit(200)
+        .get();
+    } catch (indexErr) {
+      // Fallback: query without ordering if composite index doesn't exist
+      console.warn('Composite index missing, falling back:', indexErr.message);
+      snap = await db.collection('usage_logs')
+        .where('teamId', '==', team.id)
+        .limit(200)
+        .get();
+    }
 
     const logs = snap.docs.map(d => {
       const data = d.data();
