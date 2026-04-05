@@ -239,7 +239,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 @keyframes wrapperFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .output-reveal{animation:outputReveal .6s ease-out both}
 @keyframes outputReveal{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.output-reveal.streaming-mask{animation:none;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 var(--reveal-pct,0%),rgba(0,0,0,.4) calc(var(--reveal-pct,0%) + 10%),transparent calc(var(--reveal-pct,0%) + 22%));mask-image:linear-gradient(to bottom,#000 0%,#000 var(--reveal-pct,0%),rgba(0,0,0,.4) calc(var(--reveal-pct,0%) + 10%),transparent calc(var(--reveal-pct,0%) + 22%));transition:-webkit-mask-image .6s ease,mask-image .6s ease}
+.output-reveal.streaming-mask{animation:none;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 var(--reveal-pct,0%),rgba(0,0,0,.3) calc(var(--reveal-pct,0%) + 15%),transparent calc(var(--reveal-pct,0%) + 30%));mask-image:linear-gradient(to bottom,#000 0%,#000 var(--reveal-pct,0%),rgba(0,0,0,.3) calc(var(--reveal-pct,0%) + 15%),transparent calc(var(--reveal-pct,0%) + 30%));transition:-webkit-mask-image 1.2s ease-out,mask-image 1.2s ease-out}
 .output-main{flex:1;min-width:0}
 .output-stream{position:relative}
 .output-stream .stream-indicator{
@@ -765,7 +765,7 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme .panel-inner{background:#f8fafc!important;border-color:#e2e8f0!important}
 .light-theme h2,.light-theme h3{color:#1a1a2e!important}
 .light-theme p,.light-theme span,.light-theme label,.light-theme li{color:#475569!important}
-.light-theme textarea,.light-theme input[type=text],.light-theme input[type=password],.light-theme select{background:#fff!important;color:#1a1a2e!important;border-color:#cbd5e1!important}
+.light-theme textarea,.light-theme input[type=text],.light-theme input[type=password],.light-theme input:not([type]),.light-theme select{background:#fff!important;color:#1a1a2e!important;border-color:#cbd5e1!important}
 .light-theme textarea::placeholder,.light-theme input::placeholder{color:#94a3b8!important}
 .light-theme .btn{background:#e8f0fe!important;color:#2563eb!important;border-color:#93c5fd!important}
 .light-theme .btn:hover{background:#2563eb!important;color:#fff!important}
@@ -1885,13 +1885,7 @@ function createStreamThrottle(onChunk, outputRef) {
     if (intervalId) return;
     intervalId = setInterval(() => {
       onChunk(latestText);
-      // Auto-scroll if near bottom
-      if (outputRef && outputRef.current) {
-        const el = outputRef.current;
-        if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
-          el.scrollTop = el.scrollHeight;
-        }
-      }
+      // Let user control scroll — no forced auto-scroll
     }, COMMIT_INTERVAL);
   }
 
@@ -3106,12 +3100,7 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
     setStreaming(true);
     setFormCollapsed(true);
     setProgress({ phase: 'thinking', percent: 0 });
-    // Scroll to the output area after a tick so React renders it
-    setTimeout(() => {
-      if (streamAreaRef.current) {
-        streamAreaRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+    // Don't force scroll — let user control their own scroll position
 
     // Use whatever background the user provided (or none)
     let activeBg = background;
@@ -8539,13 +8528,6 @@ function App() {
       // Why APDA? explainer card
       React.createElement(WhyAPDA),
       React.createElement('nav',{className:'nav'},
-        React.createElement('button',{
-          className:'nav-btn nav-back',
-          onClick:goBack,
-          disabled:tabHistory.length===0,
-          title:'Go back',
-          style:{opacity:tabHistory.length===0?.3:1,fontSize:'.9rem',padding:'6px 10px',minWidth:36}
-        },'\u2190'),
         TABS.map(tb =>
           tb.divider
             ? React.createElement('div',{key:tb.id,className:'nav-divider'})
