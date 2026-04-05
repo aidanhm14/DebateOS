@@ -8220,6 +8220,34 @@ function UsageBanner({ team }) {
   return el('div', {style:{marginTop:8}}, ...parts);
 }
 
+function AdBanner({ team }) {
+  const el = React.createElement;
+  // Hide for paid users
+  if (team && team.plan !== 'trial') return null;
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+
+  const ads = [
+    { text: 'Upgrade to Individual for 300 requests/month', cta: 'Upgrade', color: '#3b82f6', action: 'upgrade' },
+    { text: 'Get unlimited case revisions + style customization', cta: 'Go Pro', color: '#8b5cf6', action: 'upgrade' },
+    { text: 'Join 100+ debaters using Devil\'s Advocate', cta: 'Share', color: '#f59e0b', action: 'share' },
+  ];
+  const ad = ads[Math.floor(Date.now() / 60000) % ads.length]; // rotates every minute
+
+  return el('div', {style:{
+    maxWidth:900,width:'94%',margin:'8px auto 0',padding:'8px 16px',
+    background:'linear-gradient(135deg,' + ad.color + '08,' + ad.color + '04)',
+    border:'1px solid ' + ad.color + '20',borderRadius:10,
+    display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,
+  }},
+    el('span', {style:{color:'#94a3b8',fontSize:'.78rem',flex:1}}, ad.text),
+    el('button', {onClick:()=>{
+      if (ad.action === 'share') { navigator.clipboard && navigator.clipboard.writeText(window.location.origin); setDismissed(true); }
+    }, style:{padding:'4px 14px',background:ad.color+'18',border:'1px solid '+ad.color+'35',borderRadius:6,color:ad.color,fontWeight:600,cursor:'pointer',fontSize:'.75rem',whiteSpace:'nowrap',fontFamily:'inherit'}}, ad.cta),
+    el('button', {onClick:()=>setDismissed(true), style:{background:'none',border:'none',color:'#64748b',cursor:'pointer',fontSize:'.8rem',padding:'2px 6px'}}, '\u2715'),
+  );
+}
+
 const TABS = [
   {id:'case',label:'Case Gen',i18n:'nav.caseGen'},
   {id:'simulator',label:'Round Sim',i18n:'nav.roundSim'},
@@ -8527,6 +8555,7 @@ function App() {
         )
       ),
       React.createElement(UsageBanner, { team: team }),
+      React.createElement(AdBanner, { team: team }),
       // All tabs rendered but only active one visible — preserves state across switches
       tabPane('case', React.createElement(CaseGenerator, { onSave: saveCase, loadedCase: loadedCase, onClearLoaded: () => setLoadedCase(null) })),
       tabPane('simulator', React.createElement(RoundSimulator)),
