@@ -8095,33 +8095,33 @@ function WhyAPDA() {
     ),
     el('div', {className:'apda-body', style:{maxHeight:open?'1400px':'0px',opacity:open?1:0,marginTop:open?0:-4}},
       el('div', {className:'apda-body-inner'},
-        // Section 1: Why APDA
-        el('h3', null, t('about.apdaTitle','Why we default to APDA')),
-        el('p', null, t('about.apdaBody1','DebateOS is structured around the American Parliamentary Debate Association format because APDA trains the skills that matter most: thinking on your feet, building persuasive frameworks under time pressure, and engaging directly with opposing arguments. Every tool in this app maps to a real moment in a round.')),
-        el('p', null, t('about.apdaBody2','The structured speech order (PMR, LOC, MG, MOC, LOR, PMR rebuttal) creates natural checkpoints for case construction, clash analysis, and strategic collapse. AI-assisted prep lets you pressure-test arguments before you walk into the round, not replace the thinking that wins debates.')),
+        // Section 1: Why debate makes you better
+        el('h3', null, 'Why debate makes you sharper, smarter, and more strategic'),
+        el('p', null, 'Debate is the fastest way to level up how you think. Every round forces you to build arguments under pressure, anticipate what the other side will say before they say it, and defend your position in real time. There is no hiding behind a script. You either know your stuff or you get exposed.'),
+        el('p', null, 'The skills transfer everywhere: job interviews, negotiations, writing, leadership. Debaters learn to think in structures, weigh tradeoffs, and communicate with precision. Whether you compete on a college circuit or just want to argue better, training your brain to think like a debater makes you harder to outmaneuver in any room.'),
         el('div', {className:'apda-grid'},
           el('div', {className:'apda-card'},
-            el('div', {className:'ac-label'}, t('about.caseGen','Case Gen')),
-            el('div', {className:'ac-text'}, t('about.caseGenDesc','Generates structured PMR/LOC cases with frameworks, warrants, and impacts tailored to your motion and side.'))
+            el('div', {className:'ac-label'}, 'Case Gen'),
+            el('div', {className:'ac-text'}, 'Generates structured cases with frameworks, warrants, and impacts tailored to your motion, side, and debate format.')
           ),
           el('div', {className:'apda-card'},
-            el('div', {className:'ac-label'}, t('about.roundSim','Round Sim')),
-            el('div', {className:'ac-text'}, t('about.roundSimDesc','Simulates full rounds speech-by-speech so you can practice responding to real opposition pressure.'))
+            el('div', {className:'ac-label'}, 'Round Sim'),
+            el('div', {className:'ac-text'}, 'Simulates full rounds speech-by-speech so you can practice responding to real opposition pressure.')
           ),
           el('div', {className:'apda-card'},
-            el('div', {className:'ac-label'}, t('about.argMap','Argument Map')),
-            el('div', {className:'ac-text'}, t('about.argMapDesc','Visualizes clash points between Gov and Opp to find where your case is strongest and where it leaks.'))
+            el('div', {className:'ac-label'}, 'Argument Map'),
+            el('div', {className:'ac-text'}, 'Visualizes clash points between Gov and Opp to find where your case is strongest and where it leaks.')
           ),
           el('div', {className:'apda-card'},
-            el('div', {className:'ac-label'}, t('about.judgeFeedback','Judge Feedback')),
-            el('div', {className:'ac-text'}, t('about.judgeFeedbackDesc','Gives tab-room-style feedback on your cases so you can improve before tournament day.'))
+            el('div', {className:'ac-label'}, 'Judge Feedback'),
+            el('div', {className:'ac-text'}, 'Gives tab-room-style feedback on your cases so you can improve before tournament day.')
           ),
         ),
 
-        // Section 2: Other Debate Formats
+        // Section 2: Supported Debate Formats
         el('div', {style:{borderTop:'1px solid #ffffff0c',marginTop:20,paddingTop:20}},
-          el('h3', null, t('formats.title','Other Debate Formats')),
-          el('p', null, t('about.formatsBody','DebateOS supports multiple competitive debate formats used around the world. Select your format in the Case Generator to get cases structured for your circuit.')),
+          el('h3', null, 'Supported Debate Formats'),
+          el('p', null, 'Devil\'s Advocate supports multiple competitive debate formats used around the world. Select your format in the Case Generator to get cases structured for your circuit. We currently default to APDA (American Parliamentary Debate Association) because its 2v2 structure and impromptu case-writing make it the ideal format for AI-assisted prep, but every tool works across formats.'),
           el('div', {className:'apda-grid', style:{gridTemplateColumns:'1fr 1fr 1fr'}},
             DEBATE_FORMATS.map(f => {
               const fKey = f.id.toLowerCase().replace(/ /g,'_');
