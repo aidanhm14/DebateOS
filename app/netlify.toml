@@ -2,13 +2,13 @@
   publish = "."
   functions = "netlify/functions"
 
-# Landing page as homepage, app at /app
+# App at /app (with and without trailing slash)
 [[redirects]]
-  from = "/"
-  to = "/landing.html"
+  from = "/app"
+  to = "/index.html"
   status = 200
 
 [[redirects]]
-  from = "/app"
+  from = "/app/"
   to = "/index.html"
   status = 200
