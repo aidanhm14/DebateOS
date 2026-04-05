@@ -2,15 +2,15 @@
   publish = "."
   functions = "netlify/functions"
 
-# App at /app (with and without trailing slash)
+# /app redirects to root for backwards compatibility
 [[redirects]]
   from = "/app"
-  to = "/index.html"
-  status = 200
+  to = "/"
+  status = 301
   force = true
 
 [[redirects]]
   from = "/app/"
-  to = "/index.html"
-  status = 200
+  to = "/"
+  status = 301
   force = true

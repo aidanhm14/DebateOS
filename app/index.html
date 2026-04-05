@@ -7641,7 +7641,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
   const getToken = async () => user ? await user.getIdToken() : null;
   const errMsg = (err) => 'Error: ' + (err?.message || err?.error || 'Something went wrong');
 
-  const referralLink = team ? (window.location.origin + '/app?ref=' + (team.teamId || '')) : '';
+  const referralLink = team ? (window.location.origin + '/?ref=' + (team.teamId || '')) : '';
 
   const copyLink = () => {
     navigator.clipboard.writeText(referralLink).then(() => {
@@ -7809,7 +7809,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         el('span', {style:{fontSize:'1.1rem'}}, '\u26A1'),
         el('div', {style:{fontWeight:800,color:'#f59e0b',fontSize:'.95rem'}}, t('team.upgradePlan','Upgrade Your Plan')),
       ),
-      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free plan with ' + (team.usageLimit||10) + ' requests/month. Upgrade for more power and team collaboration.'),
+      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free plan with ' + (team.usageLimit||25) + ' requests/month. Upgrade for more power and team collaboration.'),
       el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
         el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'14px 16px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:10,color:'#60a5fa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
           el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#3b82f6',marginBottom:2}}, '$5/mo'),
