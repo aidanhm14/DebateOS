@@ -398,9 +398,9 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 @keyframes sectionFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sectionSlideLeft{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
 @keyframes sectionGlow{from{border-left-color:transparent}to{border-left-color:#fbbf2444}}
-.output .ai-h1,.output .ai-h3,.output h3{animation:sectionFadeIn .4s ease-out both}
-.output .ai-h4,.output h4{animation:sectionSlideLeft .35s ease-out both}
-.output .ai-p,.output p{animation:sectionFadeIn .3s ease-out both}
+.output:not(.streaming-active) .ai-h1,.output:not(.streaming-active) .ai-h3,.output:not(.streaming-active) h3{animation:sectionFadeIn .4s ease-out both}
+.output:not(.streaming-active) .ai-h4,.output:not(.streaming-active) h4{animation:sectionSlideLeft .35s ease-out both}
+.output:not(.streaming-active) .ai-p,.output:not(.streaming-active) p{animation:sectionFadeIn .3s ease-out both}
 
 /* ── Unique section structure: left accent bars ─ */
 .output .ai-h1{border-left:3px solid #60a5fa;padding-left:12px}
@@ -2017,43 +2017,34 @@ function cleanOutput(text, asHtml) {
 // Throttled streaming: batches rapid onChunk calls into one React update per frame
 function createStreamThrottle(onChunk, outputRef) {
   let latestText = '';
-  let rafId = null;
-  let lastCommit = 0;
-  const COMMIT_INTERVAL = 500; // commit to React state every 500ms for smooth reconciliation
+  let intervalId = null;
+  const COMMIT_INTERVAL = 120; // smooth 8fps React state updates
 
-  function flush() {
-    rafId = null;
-    const now = Date.now();
-    if (now - lastCommit >= COMMIT_INTERVAL) {
-      lastCommit = now;
+  function startInterval() {
+    if (intervalId) return;
+    intervalId = setInterval(() => {
       onChunk(latestText);
-    } else {
-      // Write directly to DOM for instant visual feedback without React re-render
+      // Auto-scroll if near bottom
       if (outputRef && outputRef.current) {
         const el = outputRef.current;
-        const _h = cleanOutput(latestText, true); const _t = document.createElement('div'); _t.innerHTML = _h; const _pc = el.children.length; if(_pc > 0 && _t.children.length >= _pc) el.children[_pc-1].innerHTML = _t.children[_pc-1].innerHTML; while(_t.children.length > _pc){const _newEl = _t.children[_pc]; _newEl.classList.add('stream-new'); _newEl.classList.add('stream-section-' + Math.min(_pc % 10, 9)); el.appendChild(_newEl);}
-        // Auto-scroll if near bottom
         if (el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
           el.scrollTop = el.scrollHeight;
         }
       }
-      // Schedule the next React commit
-      rafId = requestAnimationFrame(flush);
-    }
+    }, COMMIT_INTERVAL);
   }
 
   return {
     update(text) {
       latestText = text;
-      if (!rafId) rafId = requestAnimationFrame(flush);
+      startInterval();
     },
-    // Final flush: commit everything to React state
     finish() {
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      if (intervalId) { clearInterval(intervalId); intervalId = null; }
       onChunk(latestText);
     },
     cancel() {
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      if (intervalId) { clearInterval(intervalId); intervalId = null; }
     }
   };
 }
@@ -8458,11 +8449,9 @@ function App() {
           ),
         ),
       ),
-      // Hero section
-      React.createElement('div',{className:'hero'},
-        React.createElement('p',{className:'hero-tagline'},
-          t('hero.tagline', 'Generate cases, simulate rounds, map arguments, and get judge-level feedback.')
-        ),
+      // Tagline — compact, below badges
+      React.createElement('p',{style:{textAlign:'center',color:'#94a3b8',fontSize:'.88rem',lineHeight:1.5,margin:'12px auto 16px',maxWidth:520}},
+        t('hero.tagline', 'Generate cases, simulate rounds, map arguments, and get judge-level feedback.')
       ),
       // Why APDA? explainer card
       React.createElement(WhyAPDA),
