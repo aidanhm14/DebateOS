@@ -1,3 +1,4 @@
+// Claude API proxy — strips _feature before forwarding to Anthropic
 import { verifyIdToken, extractBearerToken } from './lib/auth.mjs';
 import { getUserTeam, logUsage, PLANS } from './lib/firestore.mjs';
 
