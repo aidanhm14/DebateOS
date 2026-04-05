@@ -2269,12 +2269,30 @@ function SavedCasesSidebar({ isOpen, onClose, cases, onSelect, onDelete, onExpor
   );
 }
 
+function buildStyleBlock() {
+  const sp = window.__styleProfile;
+  if (!sp) return '';
+  const parts = [];
+  if (sp.tone && sp.tone !== 'balanced') parts.push('TONE: Write in a ' + sp.tone + ' style.');
+  if (sp.framework && sp.framework !== 'mixed') parts.push('FRAMEWORK PREFERENCE: Lean toward ' + sp.framework + ' frameworks and evidence.');
+  if (sp.detail === 'dense') parts.push('DETAIL LEVEL: Write densely with maximum warrants per argument.');
+  if (sp.detail === 'concise') parts.push('DETAIL LEVEL: Keep it tight and concise. Every sentence must earn its place.');
+  if (sp.instructions) parts.push('USER CUSTOM INSTRUCTIONS: ' + sp.instructions);
+  if (sp.samples && sp.samples.length > 0) {
+    parts.push('WRITING SAMPLES FROM THIS USER (match their voice, vocabulary, and argument structure):\n---\n' + sp.samples.join('\n---\n') + '\n---');
+  }
+  return parts.length ? '\n\nUSER WRITING STYLE PROFILE:\n' + parts.join('\n') : '';
+}
+
 async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   const thinkBudget = opts.thinkBudget || 10000;
   const maxTokens = opts.maxTokens || 16000;
   const messages = opts.messages || [{ role: 'user', content: userPrompt }];
   const onProgress = opts.onProgress || null;
   const expectedWords = opts.expectedWords || 1200;
+
+  // Inject user style profile into system prompt
+  const fullSystemPrompt = systemPrompt + buildStyleBlock();
 
   // Ensure budget_tokens < max_tokens and >= 1024 (API requirements)
   const safeBudget = Math.max(1024, Math.min(thinkBudget, maxTokens - 1024));
@@ -2286,7 +2304,7 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
     max_tokens: safeMaxTokens,
     stream: true,
     thinking: { type: 'enabled', budget_tokens: safeBudget },
-    system: systemPrompt,
+    system: fullSystemPrompt,
     messages: messages,
   };
 
@@ -2941,7 +2959,15 @@ PATTERN 19: "WAITING GAME" COUNTER-STRATEGY
 Sometimes the strongest opposition move is showing that demographics, trends, or structural forces already solve the problem without government action. "These are folk religions which lack institutional organization. Every generation, more people fall out. The status quo trajectory already solves." When writing Gov cases, pre-empt this by showing why the status quo trajectory is insufficient, why timing matters, or why the trend will reverse without intervention. When writing Opp strategies, always consider whether "do nothing and let existing forces work" is a viable counter-strategy.
 
 PATTERN 20: SHADOW EXTENSION AWARENESS
-In elite rounds, experienced debaters explicitly warn against "shadow extensions" where the PMR introduces new analysis that the MO never got to respond to. Design your case so the MG actually extends the substantive arguments with new depth. If the MG ignores the case and the PMR suddenly revives it with new warrants, that is a shadow extension and competent judges will not weigh it. Build explicit MG instructions that say "extend THIS argument with THIS new depth" so the PMR has legitimate ground to stand on.`;
+In elite rounds, experienced debaters explicitly warn against "shadow extensions" where the PMR introduces new analysis that the MO never got to respond to. Design your case so the MG actually extends the substantive arguments with new depth. If the MG ignores the case and the PMR suddenly revives it with new warrants, that is a shadow extension and competent judges will not weigh it. Build explicit MG instructions that say "extend THIS argument with THIS new depth" so the PMR has legitimate ground to stand on.
+
+SPECIFICITY REQUIREMENTS (NON-NEGOTIABLE):
+
+Every case MUST include at minimum:
+- 2+ real-world examples with specific dates, numbers, or named events (e.g. "the 2008 Heller decision," "Thailand's 1997 currency crisis," "Denmark's 2012 fat tax repeal after 15 months")
+- 2+ named thinkers, scholars, or practitioners whose work directly supports your mechanism (e.g. "Amartya Sen's capability approach," "Elinor Ostrom's work on common pool resources," "James Scott's argument in Seeing Like a State about legibility")
+- Zero filler phrases. BANNED: "it is important to note," "this is significant because," "in today's world," "throughout history," "experts agree," "studies show" (without naming the study), "in many cases," "it can be argued," "this raises questions about." If you catch yourself writing any of these, delete the entire sentence and replace it with a specific claim backed by a specific warrant.
+- Every warrant must pass the "only in THIS case" test: could this sentence appear in a case about a completely different topic? If yes, it is too generic. Rewrite it with details unique to this motion.`;
 
 
 
@@ -5783,12 +5809,18 @@ Rules:
                   r.text
                 )
               ),
+              // Quick revision buttons when active
+              activeComment === c.id && el('div', {style:{display:'flex',gap:6,flexWrap:'wrap',marginTop:6,marginLeft:12}},
+                ['Make More Specific','Add Examples','Strengthen Warrants','Make More Aggressive','Restructure'].map(action =>
+                  el('button', {key:action, onClick:()=>{setReplyText(action);setTimeout(()=>handleReply(c.id),50);}, disabled:revising, style:{padding:'5px 10px',background:'#ffffff06',border:'1px solid #ffffff12',borderRadius:6,color:'#94a3b8',fontSize:'.72rem',cursor:'pointer',transition:'.15s',fontFamily:'inherit'}}, action)
+                )
+              ),
               // Reply input when active
               activeComment === c.id && el('div', {className:'fb-reply-box'},
                 el('textarea', {
                   value: replyText,
                   onChange: e => setReplyText(e.target.value),
-                  placeholder: 'Reply with revision instructions (e.g. "strengthen the warrant here" or "add a specific example")...',
+                  placeholder: 'Or type custom revision instructions...',
                   onKeyDown: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleReply(c.id); } }
                 }),
                 el('button', {
@@ -7682,6 +7714,48 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
   const [actionLoading, setActionLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [friendEmail, setFriendEmail] = useState('');
+  // Writing style profile
+  const [styleInstructions, setStyleInstructions] = useState('');
+  const [styleTone, setStyleTone] = useState('balanced');
+  const [styleFramework, setStyleFramework] = useState('mixed');
+  const [styleDetail, setStyleDetail] = useState('standard');
+  const [caseSamples, setCaseSamples] = useState(['','','']);
+  const [styleSaving, setStyleSaving] = useState(false);
+  const [styleSaved, setStyleSaved] = useState(false);
+
+  // Load style profile from Firestore
+  useEffect(() => {
+    if (!user || !firebaseDb) return;
+    firebaseDb.collection('user_profiles').doc(user.uid).get().then(doc => {
+      if (doc.exists && doc.data().styleProfile) {
+        const sp = doc.data().styleProfile;
+        if (sp.instructions) setStyleInstructions(sp.instructions);
+        if (sp.tone) setStyleTone(sp.tone);
+        if (sp.framework) setStyleFramework(sp.framework);
+        if (sp.detail) setStyleDetail(sp.detail);
+        if (sp.samples) setCaseSamples(sp.samples.concat(['','','']).slice(0,3));
+      }
+    }).catch(() => {});
+  }, [user]);
+
+  const saveStyleProfile = async () => {
+    if (!user || !firebaseDb) return;
+    setStyleSaving(true);
+    const profile = {
+      instructions: styleInstructions.trim(),
+      tone: styleTone,
+      framework: styleFramework,
+      detail: styleDetail,
+      samples: caseSamples.filter(s => s.trim()),
+    };
+    try {
+      await firebaseDb.collection('user_profiles').doc(user.uid).set({ styleProfile: profile }, { merge: true });
+      window.__styleProfile = profile;
+      setStyleSaved(true);
+      setTimeout(() => setStyleSaved(false), 2000);
+    } catch(err) { setMsg(errMsg(err)); }
+    setStyleSaving(false);
+  };
 
   const getToken = async () => user ? await user.getIdToken() : null;
   const errMsg = (err) => 'Error: ' + (err?.message || err?.error || 'Something went wrong');
@@ -7900,6 +7974,66 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         el('span', {style:{color:'#64748b',fontSize:'.78rem',whiteSpace:'nowrap'}}, 'Or send directly:'),
         el('input', {value:friendEmail, onChange:e=>setFriendEmail(e.target.value), placeholder:'friend@email.com', style:{flex:1,padding:'7px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.83rem',outline:'none'}}),
         el('button', {onClick:()=>{shareViaEmail(friendEmail);setFriendEmail('');}, disabled:!friendEmail.trim(), style:{padding:'7px 14px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:8,color:'#60a5fa',fontWeight:600,cursor:'pointer',fontSize:'.82rem',opacity:friendEmail.trim()?1:.5}}, 'Send'),
+      ),
+    ),
+    // Writing Style Profile — paid feature
+    el('div', {style:{marginTop:24,padding:20,background:'linear-gradient(135deg,#ef444408,#f59e0b08)',border:'1px solid #ef444420',borderRadius:12,position:'relative',overflow:'hidden'}},
+      team.plan === 'trial' && el('div', {style:{position:'absolute',inset:0,background:'#0a0e18cc',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2,backdropFilter:'blur(3px)',borderRadius:12}},
+        el('div', {style:{textAlign:'center',padding:20}},
+          el('div', {style:{fontSize:'1.5rem',marginBottom:8}}, '\uD83D\uDD12'),
+          el('div', {style:{color:'#f59e0b',fontWeight:700,fontSize:'.9rem',marginBottom:4}}, 'Upgrade to Customize'),
+          el('div', {style:{color:'#94a3b8',fontSize:'.8rem'}}, 'Personalize how the AI writes for you.'),
+        )
+      ),
+      el('div', {style:{display:'flex',alignItems:'center',gap:8,marginBottom:8}},
+        el('span', {style:{fontSize:'1.1rem'}}, '\u270D\uFE0F'),
+        el('div', {style:{fontWeight:800,color:'#ef4444',fontSize:'.95rem'}}, 'Writing Style Profile'),
+      ),
+      el('p', {style:{color:'#94a3b8',fontSize:'.83rem',lineHeight:1.5,marginBottom:16}}, 'Customize how the AI writes cases for you. Your style preferences are applied to all generations.'),
+      // Writing instructions
+      el('label', {style:{color:'#e4e8f0',fontSize:'.82rem',fontWeight:600,display:'block',marginBottom:6}}, 'Custom Instructions'),
+      el('textarea', {value:styleInstructions, onChange:e=>setStyleInstructions(e.target.value), placeholder:'e.g. "I prefer philosophical frameworks over empirical ones. Always include Rawlsian analysis when applicable. I like aggressive framing with strong turns. My style is dense and warrant-heavy."', style:{width:'100%',minHeight:80,padding:'10px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.83rem',outline:'none',resize:'vertical',fontFamily:'inherit',lineHeight:1.5,marginBottom:16}}),
+      // Style presets row
+      el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12,marginBottom:16}},
+        // Tone
+        el('div', null,
+          el('label', {style:{color:'#94a3b8',fontSize:'.75rem',fontWeight:600,display:'block',marginBottom:4,textTransform:'uppercase',letterSpacing:'.5px'}}, 'Tone'),
+          el('select', {value:styleTone, onChange:e=>setStyleTone(e.target.value), style:{width:'100%',padding:'8px 10px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.83rem',outline:'none'}},
+            el('option',{value:'aggressive'},'Aggressive'),
+            el('option',{value:'measured'},'Measured'),
+            el('option',{value:'balanced'},'Balanced'),
+          )
+        ),
+        // Framework
+        el('div', null,
+          el('label', {style:{color:'#94a3b8',fontSize:'.75rem',fontWeight:600,display:'block',marginBottom:4,textTransform:'uppercase',letterSpacing:'.5px'}}, 'Framework'),
+          el('select', {value:styleFramework, onChange:e=>setStyleFramework(e.target.value), style:{width:'100%',padding:'8px 10px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.83rem',outline:'none'}},
+            el('option',{value:'philosophical'},'Philosophical'),
+            el('option',{value:'empirical'},'Empirical'),
+            el('option',{value:'mixed'},'Mixed'),
+          )
+        ),
+        // Detail
+        el('div', null,
+          el('label', {style:{color:'#94a3b8',fontSize:'.75rem',fontWeight:600,display:'block',marginBottom:4,textTransform:'uppercase',letterSpacing:'.5px'}}, 'Detail Level'),
+          el('select', {value:styleDetail, onChange:e=>setStyleDetail(e.target.value), style:{width:'100%',padding:'8px 10px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.83rem',outline:'none'}},
+            el('option',{value:'dense'},'Dense'),
+            el('option',{value:'standard'},'Standard'),
+            el('option',{value:'concise'},'Concise'),
+          )
+        ),
+      ),
+      // Case samples
+      el('label', {style:{color:'#e4e8f0',fontSize:'.82rem',fontWeight:600,display:'block',marginBottom:6}}, 'Case Samples (paste excerpts from your best cases)'),
+      el('p', {style:{color:'#64748b',fontSize:'.75rem',marginBottom:8}}, 'The AI will learn your writing patterns from these samples.'),
+      caseSamples.map((sample, i) =>
+        el('textarea', {key:i, value:sample, onChange:e=>{const s=[...caseSamples]; s[i]=e.target.value; setCaseSamples(s);}, placeholder:'Paste case excerpt ' + (i+1) + '...', style:{width:'100%',minHeight:60,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.8rem',outline:'none',resize:'vertical',fontFamily:'inherit',lineHeight:1.5,marginBottom:8}})
+      ),
+      // Save button
+      el('div', {style:{display:'flex',justifyContent:'flex-end',marginTop:8}},
+        el('button', {onClick:saveStyleProfile, disabled:styleSaving, style:{padding:'10px 24px',background:styleSaved?'#22c55e20':'#ef444420',border:'1px solid '+(styleSaved?'#22c55e40':'#ef444440'),borderRadius:8,color:styleSaved?'#4ade80':'#ef4444',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
+          styleSaving ? 'Saving...' : styleSaved ? 'Saved!' : 'Save Style Profile'
+        ),
       ),
     ),
     msg && el('div', {style:{marginTop:12,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
@@ -8356,6 +8490,19 @@ function App() {
       } catch { setTeam(null); }
       setTeamLoading(false);
     })();
+  }, [user]);
+
+  // Writing style profile — loaded from Firestore for paid users
+  const [styleProfile, setStyleProfile] = useState(null);
+  useEffect(() => {
+    if (!user || !firebaseDb) return;
+    const unsub = firebaseDb.collection('user_profiles').doc(user.uid).onSnapshot(doc => {
+      if (doc.exists && doc.data().styleProfile) {
+        setStyleProfile(doc.data().styleProfile);
+        window.__styleProfile = doc.data().styleProfile;
+      }
+    });
+    return () => unsub();
   }, [user]);
 
   const closeGuide = useCallback(() => {
