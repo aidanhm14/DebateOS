@@ -7,8 +7,10 @@
   from = "/app"
   to = "/index.html"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/app/"
   to = "/index.html"
   status = 200
+  force = true
