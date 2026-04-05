@@ -32,15 +32,15 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 .bg-debate-side{position:fixed;top:0;bottom:0;width:200px;z-index:0;pointer-events:none;overflow:hidden}
 .bg-debate-left{left:0}
 .bg-debate-right{right:0}
-.bg-debate-side::before,.bg-debate-side::after{content:'';position:absolute;border:1px solid #ffffff06;border-radius:2px;transform:rotate(15deg);animation:geoFloat 20s ease-in-out infinite alternate}
-.bg-debate-left::before{width:120px;height:120px;top:15%;left:-20px;border-color:#ef444410;transform:rotate(25deg) perspective(400px) rotateY(15deg)}
-.bg-debate-left::after{width:80px;height:80px;bottom:25%;left:30px;border-color:#f59e0b08;transform:rotate(-10deg) perspective(300px) rotateX(20deg);animation-delay:-8s}
-.bg-debate-right::before{width:100px;height:100px;top:30%;right:-10px;border-color:#3b82f60a;transform:rotate(-20deg) perspective(400px) rotateY(-15deg);animation-delay:-4s}
-.bg-debate-right::after{width:140px;height:140px;bottom:15%;right:-30px;border-color:#ef444408;transform:rotate(30deg) perspective(500px) rotateX(-10deg) rotateY(25deg);animation-delay:-12s}
-.geo-shape{position:absolute;border:1px solid;opacity:.5;animation:geoFloat 25s ease-in-out infinite alternate}
-.geo-diamond{width:60px;height:60px;top:40%;left:50%;transform:rotate(45deg) perspective(300px) rotateX(15deg);border-color:#ef444412}
-.geo-hex{width:50px;height:50px;top:60%;left:20%;border-radius:12px;transform:rotate(30deg) perspective(400px) rotateY(20deg);border-color:#f59e0b0a;animation-delay:-6s}
-.geo-ring{width:90px;height:90px;top:20%;left:40%;border-radius:50%;border-color:#3b82f60a;border-width:1.5px;animation-delay:-14s}
+.bg-debate-side::before,.bg-debate-side::after{content:'';position:absolute;border:1.5px solid #ffffff0a;border-radius:2px;transform:rotate(15deg);animation:geoFloat 20s ease-in-out infinite alternate}
+.bg-debate-left::before{width:120px;height:120px;top:15%;left:-20px;border-color:#ef444425;transform:rotate(25deg) perspective(400px) rotateY(15deg)}
+.bg-debate-left::after{width:80px;height:80px;bottom:25%;left:30px;border-color:#f59e0b18;transform:rotate(-10deg) perspective(300px) rotateX(20deg);animation-delay:-8s}
+.bg-debate-right::before{width:100px;height:100px;top:30%;right:-10px;border-color:#3b82f618;transform:rotate(-20deg) perspective(400px) rotateY(-15deg);animation-delay:-4s}
+.bg-debate-right::after{width:140px;height:140px;bottom:15%;right:-30px;border-color:#ef444418;transform:rotate(30deg) perspective(500px) rotateX(-10deg) rotateY(25deg);animation-delay:-12s}
+.geo-shape{position:absolute;border:1.5px solid;opacity:1;animation:geoFloat 25s ease-in-out infinite alternate}
+.geo-diamond{width:70px;height:70px;top:40%;left:50%;transform:rotate(45deg) perspective(300px) rotateX(15deg);border-color:#ef444430}
+.geo-hex{width:55px;height:55px;top:60%;left:20%;border-radius:12px;transform:rotate(30deg) perspective(400px) rotateY(20deg);border-color:#f59e0b20;animation-delay:-6s}
+.geo-ring{width:100px;height:100px;top:20%;left:40%;border-radius:50%;border-color:#3b82f620;border-width:1.5px;animation-delay:-14s}
 .bg-debate-right .geo-diamond{top:55%;left:auto;right:40%;animation-delay:-3s}
 .bg-debate-right .geo-hex{top:75%;left:auto;right:60%;animation-delay:-10s}
 .bg-debate-right .geo-ring{top:35%;left:auto;right:20%;animation-delay:-18s}
@@ -5653,7 +5653,11 @@ Rules:
             ? el('span', {
                 key: i,
                 className: 'fb-highlight' + (activeComment === seg.commentId ? ' active' : ''),
-                onClick: () => setActiveComment(seg.commentId),
+                onClick: () => {
+                  setActiveComment(seg.commentId);
+                  const commentEl = document.querySelector('.fb-comment[data-id="'+seg.commentId+'"]');
+                  if (commentEl) commentEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+                },
                 'data-comment': seg.commentId,
               }, seg.text)
             : el('span', {key:i}, seg.text)
@@ -5667,7 +5671,12 @@ Rules:
             el('div', {key:c.id},
               el('div', {
                 className: 'fb-comment' + (activeComment === c.id ? ' active' : ''),
-                onClick: () => setActiveComment(activeComment === c.id ? null : c.id),
+                'data-id': c.id,
+                onClick: () => {
+                  setActiveComment(activeComment === c.id ? null : c.id);
+                  const hlEl = document.querySelector('.fb-highlight[data-comment="'+c.id+'"]');
+                  if (hlEl) hlEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+                },
               },
                 el('div', {className:'fb-comment-excerpt'}, '"' + c.excerpt.substring(0, 80) + (c.excerpt.length > 80 ? '...' : '') + '"'),
                 el('div', {className:'fb-comment-text'}, c.feedback)
@@ -7800,7 +7809,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         el('span', {style:{fontSize:'1.1rem'}}, '\u26A1'),
         el('div', {style:{fontWeight:800,color:'#f59e0b',fontSize:'.95rem'}}, t('team.upgradePlan','Upgrade Your Plan')),
       ),
-      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free plan with ' + (team.usageLimit||25) + ' requests/month. Upgrade for more power and team collaboration.'),
+      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free plan with ' + (team.usageLimit||10) + ' requests/month. Upgrade for more power and team collaboration.'),
       el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
         el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'14px 16px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:10,color:'#60a5fa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
           el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#3b82f6',marginBottom:2}}, '$5/mo'),
