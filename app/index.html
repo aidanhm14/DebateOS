@@ -7680,9 +7680,27 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const [msg, setMsg] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [friendEmail, setFriendEmail] = useState('');
 
   const getToken = async () => user ? await user.getIdToken() : null;
   const errMsg = (err) => 'Error: ' + (err?.message || err?.error || 'Something went wrong');
+
+  const referralLink = team ? (window.location.origin + '/app?ref=' + (team.teamId || '')) : '';
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(referralLink).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const shareViaEmail = (email) => {
+    const subject = encodeURIComponent('Join me on Devil\'s Advocate - AI Debate Toolkit');
+    const body = encodeURIComponent('Hey! I\'ve been using Devil\'s Advocate (powered by DebateOS) to prep for debate rounds. It\'s an AI toolkit that generates cases, simulates rounds, maps arguments, and gives judge-level feedback.\n\nCheck it out: ' + referralLink + '\n\nLet me know if you want to join my team!');
+    const to = email ? encodeURIComponent(email.trim()) : '';
+    window.open('mailto:' + to + '?subject=' + subject + '&body=' + body, '_self');
+  };
 
   // Clear stale messages when team changes
   useEffect(() => { setMsg(''); }, [team]);
@@ -7862,6 +7880,26 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       isOwner && el('div', {style:{display:'flex',gap:8,marginTop:12}},
         el('input', {value:inviteEmail, onChange:e=>setInviteEmail(e.target.value), placeholder:t('team.invitePlaceholder','teammate@email.com'), style:{flex:1,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.85rem',outline:'none'}}),
         el('button', {onClick:inviteMember, disabled:actionLoading||!inviteEmail.trim(), style:{padding:'8px 14px',background:'#22c55e20',border:'1px solid #22c55e40',borderRadius:8,color:'#4ade80',fontWeight:600,cursor:'pointer',fontSize:'.82rem'}}, t('team.invite','Invite')),
+      ),
+    ),
+    // Invite Friends section
+    el('div', {style:{marginTop:24,padding:20,background:'linear-gradient(135deg,#3b82f608,#8b5cf608)',border:'1px solid #3b82f620',borderRadius:12}},
+      el('div', {style:{display:'flex',alignItems:'center',gap:8,marginBottom:8}},
+        el('span', {style:{fontSize:'1.1rem'}}, '\uD83D\uDD17'),
+        el('div', {style:{fontWeight:800,color:'#60a5fa',fontSize:'.95rem'}}, 'Invite Friends to Devil\'s Advocate'),
+      ),
+      el('p', {style:{color:'#94a3b8',fontSize:'.83rem',lineHeight:1.5,marginBottom:14}}, 'Share the app with your debate friends. They can sign up and create their own team, or ask to join yours.'),
+      // Referral link row
+      el('div', {style:{display:'flex',gap:8,marginBottom:12,flexWrap:'wrap'}},
+        el('div', {style:{flex:1,minWidth:200,padding:'8px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#94a3b8',fontSize:'.8rem',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',lineHeight:'24px'}}, referralLink),
+        el('button', {onClick:copyLink, style:{padding:'8px 16px',background:copied?'#22c55e20':'#3b82f615',border:'1px solid '+(copied?'#22c55e40':'#3b82f640'),borderRadius:8,color:copied?'#4ade80':'#60a5fa',fontWeight:600,cursor:'pointer',fontSize:'.82rem',transition:'.2s',whiteSpace:'nowrap'}}, copied ? 'Copied!' : 'Copy Link'),
+        el('button', {onClick:()=>shareViaEmail(''), style:{padding:'8px 16px',background:'#8b5cf615',border:'1px solid #8b5cf640',borderRadius:8,color:'#a78bfa',fontWeight:600,cursor:'pointer',fontSize:'.82rem',whiteSpace:'nowrap'}}, 'Share via Email'),
+      ),
+      // Direct email invite
+      el('div', {style:{display:'flex',gap:8,alignItems:'center'}},
+        el('span', {style:{color:'#64748b',fontSize:'.78rem',whiteSpace:'nowrap'}}, 'Or send directly:'),
+        el('input', {value:friendEmail, onChange:e=>setFriendEmail(e.target.value), placeholder:'friend@email.com', style:{flex:1,padding:'7px 12px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.83rem',outline:'none'}}),
+        el('button', {onClick:()=>{shareViaEmail(friendEmail);setFriendEmail('');}, disabled:!friendEmail.trim(), style:{padding:'7px 14px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:8,color:'#60a5fa',fontWeight:600,cursor:'pointer',fontSize:'.82rem',opacity:friendEmail.trim()?1:.5}}, 'Send'),
       ),
     ),
     msg && el('div', {style:{marginTop:12,padding:'10px 16px',borderRadius:8,background:msg.startsWith('Error')?'#ef444420':'#22c55e20',color:msg.startsWith('Error')?'#f87171':'#4ade80',fontSize:'.85rem'}}, msg),
