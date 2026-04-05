@@ -37,7 +37,7 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
 .header{text-align:center;padding:28px 20px 0}
-.logo{font-size:3.2rem;font-weight:900;letter-spacing:-2px;line-height:1;display:flex;align-items:center;justify-content:center;gap:3px}
+.logo{font-size:4rem;font-weight:900;letter-spacing:-2px;line-height:1;display:flex;align-items:center;justify-content:center;gap:3px}
 .logo .green{color:#ef4444;text-shadow:0 0 30px #ef444425}
 .logo .white{color:#fff;font-weight:300;letter-spacing:1px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
 .subtitle{display:none}
@@ -705,7 +705,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   .nav::-webkit-scrollbar{display:none}
   .nav-btn{padding:10px 16px;font-size:.72rem;min-height:44px;flex-shrink:0}
   .nav-divider{display:none}
-  .logo{font-size:1.8rem;flex-wrap:wrap;justify-content:center;text-align:center}
+  .logo{font-size:2.2rem;flex-wrap:wrap;justify-content:center;text-align:center}
   .header{padding:48px 16px 0;text-align:center}
   .cases-toggle{top:12px;left:12px;padding:8px 12px;font-size:.95rem;min-width:44px;min-height:44px}
   .profile-badge{top:12px;right:12px;padding:6px 10px;gap:6px;min-height:44px}
@@ -8160,22 +8160,22 @@ function UsageBanner({ team }) {
   if (team.status === 'trialing' && team.trialEndsAt) {
     const daysLeft = Math.ceil((new Date(team.trialEndsAt) - new Date()) / (1000*60*60*24));
     if (daysLeft <= 4 && daysLeft > 0) {
-      parts.push(el('div', {key:'trial-warn',style:{fontSize:'.75rem',color:'#f59e0b',textAlign:'center',padding:'2px 0'}}, 'Trial ends in ' + daysLeft + ' day' + (daysLeft!==1?'s':'') + ' — upgrade to keep access'));
+      parts.push(el('div', {key:'trial-warn',style:{fontSize:'.75rem',color:'#f59e0b',textAlign:'center',padding:'2px 0'}}, 'Trial ends in ' + daysLeft + ' day' + (daysLeft!==1?'s':'') + ' \u2014 upgrade to keep access'));
     } else if (daysLeft <= 0) {
-      parts.push(el('div', {key:'trial-expired',style:{fontSize:'.75rem',color:'#ef4444',textAlign:'center',padding:'2px 0'}}, 'Trial expired — upgrade to continue using DebateOS'));
+      parts.push(el('div', {key:'trial-expired',style:{fontSize:'.75rem',color:'#ef4444',textAlign:'center',padding:'2px 0'}}, 'Trial expired \u2014 upgrade to continue'));
     }
   }
 
-  // Usage bar
+  // Only warn at 15 and 5 cases remaining (case generation uses tokens, revisions are free)
   if (team.usageLimit) {
-    const pct = Math.min(100, Math.round((team.usageThisPeriod / team.usageLimit) * 100));
-    const color = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e';
-    parts.push(el('div', {key:'usage',style:{display:'flex',alignItems:'center',gap:8,padding:'4px 12px',margin:'0 auto',maxWidth:300}},
-      el('div', {style:{flex:1,height:4,background:'#ffffff08',borderRadius:2,overflow:'hidden'}},
-        el('div', {style:{height:'100%',width:pct+'%',background:color,borderRadius:2,transition:'width .3s ease'}}),
-      ),
-      el('span', {style:{fontSize:'.7rem',color:'#64748b',whiteSpace:'nowrap'}}, (team.usageThisPeriod||0) + '/' + (team.usageLimit||0)),
-    ));
+    const remaining = (team.usageLimit || 0) - (team.usageThisPeriod || 0);
+    if (remaining <= 0) {
+      parts.push(el('div', {key:'usage-warn',style:{fontSize:'.75rem',color:'#ef4444',textAlign:'center',padding:'4px 0',fontWeight:600}}, 'No generations remaining this period. Upgrade or wait for reset. Revisions are still free.'));
+    } else if (remaining <= 5) {
+      parts.push(el('div', {key:'usage-warn',style:{fontSize:'.75rem',color:'#ef4444',textAlign:'center',padding:'4px 0',fontWeight:600}}, remaining + ' case generation' + (remaining!==1?'s':'') + ' remaining. Revisions are unlimited.'));
+    } else if (remaining <= 15) {
+      parts.push(el('div', {key:'usage-warn',style:{fontSize:'.75rem',color:'#f59e0b',textAlign:'center',padding:'4px 0'}}, remaining + ' case generations remaining. Revisions are unlimited.'));
+    }
   }
 
   if (parts.length === 0) return null;
@@ -8420,9 +8420,10 @@ function App() {
       }, '\uD83D\uDCCB'),
       // Profile badge
       user
-        ? React.createElement('div',{className:'profile-badge', onClick:signOut, title:'Sign out'},
+        ? React.createElement('div',{className:'profile-badge'},
             React.createElement('div',{className:'profile-avatar'}, (user.displayName || user.email || 'U').charAt(0).toUpperCase()),
             React.createElement('span',{className:'profile-name'}, user.displayName || user.email),
+            React.createElement('button',{onClick:signOut,style:{background:'#ef444420',border:'1px solid #ef444440',borderRadius:6,color:'#f87171',fontSize:'.65rem',fontWeight:700,padding:'3px 8px',cursor:'pointer',fontFamily:'inherit',letterSpacing:'.3px'}},'Sign Out'),
           )
         : React.createElement('div',{className:'profile-badge', onClick:()=>setShowAuth(true), title:'Sign in', style:{padding:'6px 8px'}},
             React.createElement('div',{className:'profile-avatar',style:{background:'#64748b',width:28,height:28,fontSize:'.8rem'}}, '\uD83D\uDC64'),
