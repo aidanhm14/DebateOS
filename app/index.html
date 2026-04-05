@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DebateOS — AI-powered debate toolkit</title>
+<title>Devil's Advocate — AI-powered debate toolkit</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -83,6 +83,16 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 }
 .nav-btn:hover{color:#e4e8f0;background:#ffffff08}
 .nav-btn.active,.nav-btn.active-orange{color:#ef4444;border-color:#ef444435;background:#ef444410;box-shadow:0 2px 10px #ef444412}
+.nav-back{transition:opacity .2s,transform .15s}.nav-back:hover:not(:disabled){transform:translateX(-2px)}
+.nav-back:disabled{cursor:default;pointer-events:none}
+
+/* ── Tab page transitions ────────────────────── */
+.tab-pane{will-change:opacity,transform}
+.tab-pane.active{animation:none}
+.tab-pane.tab-enter{animation:tabFadeIn .35s ease-out both}
+.tab-pane.tab-exit{animation:tabFadeOut .15s ease-in both}
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tabFadeOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-8px)}}
 .nav-divider{width:1px;background:#ffffff0c;margin:4px 2px;align-self:stretch}
 
 /* ── Cards / Panels ───────────────────────────── */
@@ -96,7 +106,7 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
   transition:max-width .4s cubic-bezier(.16,1,.3,1), padding .3s ease;
 }
 .panel.panel-expanded{
-  max-width:1100px;padding:32px 40px;
+  max-width:1400px;padding:32px 40px;width:96%;
 }
 .panel:hover{border-color:#ffffff14;box-shadow:0 4px 24px rgba(0,0,0,.3),0 0 60px rgba(239,68,68,.02)}
 .panel textarea,.panel input[type="text"]{width:100%;box-sizing:border-box}
@@ -156,6 +166,9 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 }
 .chip:hover{border-color:#ffffff30;color:#e0e7ef;background:#ffffff0c}
 .chip.active{border-color:#f8717150;color:#f87171;background:#f8717114;box-shadow:0 2px 10px #f8717118}
+.chip-size-3{font-size:.88rem;padding:7px 16px;font-weight:700}
+.chip-size-2{font-size:.78rem;padding:5px 13px;font-weight:600}
+.chip-size-1{font-size:.68rem;padding:4px 10px;font-weight:500;opacity:.75}
 
 /* ── Speech Cards (Judge) ─────────────────────── */
 .speech-card{
@@ -222,7 +235,8 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .thinking-status{font-size:.92rem;color:#cbd5e1;text-align:center;min-height:20px}
 
 /* ── Streaming output ─────────────────────────── */
-.output-wrapper{display:flex;gap:0;margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid #ffffff14;background:linear-gradient(145deg,#0e1620,#121c2c);margin-left:-12px;margin-right:-12px;box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.output-wrapper{display:flex;gap:0;margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid #ffffff14;background:linear-gradient(145deg,#0e1620,#121c2c);margin-left:-24px;margin-right:-24px;box-shadow:0 4px 24px rgba(0,0,0,.3);animation:wrapperFadeIn .5s ease-out both}
+@keyframes wrapperFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .output-main{flex:1;min-width:0}
 .output-stream{position:relative}
 .output-stream .stream-indicator{
@@ -235,7 +249,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 /* ── Revision Sidebar ─────────────────────────── */
 .revision-sidebar{
-  width:280px;min-width:280px;border-left:1px solid #ffffff10;
+  width:220px;min-width:220px;border-left:1px solid #ffffff10;
   background:#18203888;display:flex;flex-direction:column;
 }
 .revision-header{
@@ -288,8 +302,8 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 /* ── Argument Map Visualization ──────────────── */
 .argmap-container{position:relative;width:100%;min-height:560px;background:radial-gradient(ellipse at 30% 20%,#111c2e 0%,#0b1220 50%,#080e1a 100%);border:1px solid #ffffff0c;border-radius:18px;overflow:hidden;margin-top:20px;box-shadow:0 8px 40px rgba(0,0,0,.5),inset 0 1px 0 #ffffff08}
 .argmap-svg{width:100%;height:100%;position:absolute;top:0;left:0;pointer-events:none;z-index:1}
-.argmap-columns{display:flex;justify-content:space-between;padding:28px 24px 20px;position:relative;z-index:2;gap:20px}
-.argmap-col{flex:1;display:flex;flex-direction:column;gap:12px;max-width:33%}
+.argmap-columns{display:flex;justify-content:space-between;padding:28px 40px 20px;position:relative;z-index:2;gap:48px}
+.argmap-col{flex:1;display:flex;flex-direction:column;gap:12px;max-width:30%}
 .argmap-col-header{text-align:center;padding:10px 0 8px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;position:relative}
 .argmap-col-header::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;border-radius:1px}
 .argmap-col-header.gov{color:#60a5fa}.argmap-col-header.gov::after{background:linear-gradient(90deg,transparent,#3b82f6,transparent)}
@@ -369,8 +383,8 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 /* ── Generated Output ─────────────────────────── */
 .output{
-  padding:24px 32px;white-space:pre-line;line-height:1.65;
-  font-size:1.04rem;max-height:80vh;overflow-y:auto;
+  padding:24px 32px;white-space:pre-line;line-height:1.55;
+  font-size:.88rem;max-height:80vh;overflow-y:auto;
   min-height:300px;letter-spacing:-.01em;word-spacing:-.02em;
   will-change:contents;contain:layout style;
 }
@@ -378,15 +392,28 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .output *{margin:0;padding:0}
 .output strong{color:#fbbf24;font-weight:700}
 .output em{color:#94a3b8;font-style:italic}
-.output p,.output .ai-p{margin:8px 0;line-height:1.65}
-.output .ai-h3{color:#fbbf24;margin:22px 0 8px;font-size:1.12rem;font-weight:700;padding-bottom:5px;border-bottom:1px solid #fbbf2420}
-.output .ai-h1{color:#60a5fa;margin:24px 0 8px;font-size:1.18rem;font-weight:700;padding-bottom:6px;border-bottom:1px solid #60a5fa20}
-.output .ai-h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;font-weight:600}
-.output h3{color:#fbbf24;margin:24px 0 8px;font-size:1.15rem;line-height:1.3;font-weight:700;padding-bottom:6px;border-bottom:1px solid #fbbf2422}
-.output h4{color:#f87171;margin:16px 0 6px;font-size:1.04rem;line-height:1.3;font-weight:600}
+.output p,.output .ai-p{margin:6px 0;line-height:1.55}
+
+/* ── Staggered section fade-ins ──────────────── */
+@keyframes sectionFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sectionSlideLeft{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes sectionGlow{from{border-left-color:transparent}to{border-left-color:#fbbf2444}}
+.output .ai-h1,.output .ai-h3,.output h3{animation:sectionFadeIn .4s ease-out both}
+.output .ai-h4,.output h4{animation:sectionSlideLeft .35s ease-out both}
+.output .ai-p,.output p{animation:sectionFadeIn .3s ease-out both}
+
+/* ── Unique section structure: left accent bars ─ */
+.output .ai-h1{border-left:3px solid #60a5fa;padding-left:12px}
+.output .ai-h3,.output h3{border-left:3px solid #fbbf24;padding-left:12px;border-bottom:none;padding-bottom:0;background:linear-gradient(90deg,#fbbf2406,transparent);border-radius:2px}
+.output .ai-h4,.output h4{border-left:2px solid #f87171;padding-left:10px;background:linear-gradient(90deg,#f8717106,transparent);border-radius:2px}
+.output .ai-h3{color:#fbbf24;margin:18px 0 6px;font-size:.95rem;font-weight:700;padding-bottom:4px;border-bottom:1px solid #fbbf2420}
+.output .ai-h1{color:#60a5fa;margin:20px 0 6px;font-size:1.02rem;font-weight:700;padding-bottom:5px;border-bottom:1px solid #60a5fa20}
+.output .ai-h4{color:#f87171;margin:14px 0 5px;font-size:.9rem;font-weight:600}
+.output h3{color:#fbbf24;margin:20px 0 6px;font-size:.98rem;line-height:1.3;font-weight:700;padding-bottom:5px;border-bottom:1px solid #fbbf2422}
+.output h4{color:#f87171;margin:14px 0 5px;font-size:.9rem;line-height:1.3;font-weight:600}
 .output .section{margin-bottom:12px}
 .phil-output{background:linear-gradient(145deg,#0e1620,#121c2c);border:1px solid #ffffff10;border-radius:16px;padding:28px 36px;margin-top:20px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
-.phil-output .output{padding:0;min-height:0;max-height:none;line-height:1.7;font-size:1.05rem}
+.phil-output .output{padding:0;min-height:0;max-height:none;line-height:1.55;font-size:.88rem}
 .phil-output .output h3{font-size:1.2rem;margin-top:28px}
 
 /* ── Case Feedback ───────────────────────────── */
@@ -395,15 +422,24 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .fb-sidebar{width:320px;min-width:280px;border-left:1px solid #ffffff10;background:#131b2c;overflow-y:auto;max-height:70vh;display:flex;flex-direction:column}
 .fb-sidebar-header{padding:14px 16px;font-weight:700;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;color:#fbbf24;border-bottom:1px solid #ffffff10}
 .fb-comments{flex:1;overflow-y:auto;padding:10px}
-.fb-comment{padding:10px 12px;margin-bottom:8px;background:#1a2538;border:1px solid #ffffff08;border-radius:8px;font-size:.85rem;cursor:pointer;transition:.2s}
-.fb-comment:hover{border-color:#fbbf2444;background:#1a253dee}
+.fb-comment{padding:12px 14px;margin-bottom:10px;background:#1a2538;border:1px solid #ffffff08;border-radius:10px;font-size:.85rem;cursor:pointer;transition:.25s;border-left:3px solid #fbbf24}
+.fb-comment:hover{border-color:#fbbf2444;background:#1a253dee;transform:translateX(2px)}
+.fb-comment:nth-child(3n+1){border-left-color:#3b82f6}
+.fb-comment:nth-child(3n+2){border-left-color:#f87171}
+.fb-comment:nth-child(3n+3){border-left-color:#22c55e}
 .fb-comment-label{color:#fbbf24;font-weight:600;font-size:.78rem;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
 .fb-comment-excerpt{color:#b0bec5;font-size:.78rem;font-style:italic;margin-bottom:6px;line-height:1.3}
-.fb-comment-text{color:#ccc;line-height:1.4}
-.fb-comment.active{border-color:#f87171;background:#ef444408}
-.fb-highlight{background:#fbbf2418;border-bottom:2px solid #fbbf2466;cursor:pointer;transition:.15s;padding:1px 0}
+.fb-comment-text{color:#ccc;line-height:1.5}
+.fb-comment.active{border-color:#f87171;background:#ef444408;box-shadow:0 0 12px #ef444415}
+.fb-highlight{background:#fbbf2418;border-bottom:2px solid #fbbf2466;cursor:pointer;transition:.2s;padding:1px 0;border-radius:2px}
 .fb-highlight:hover{background:#fbbf2430}
 .fb-highlight.active{background:#ef444420;border-bottom-color:#f87171}
+.fb-highlight:nth-of-type(3n+1){background:#3b82f615;border-bottom-color:#3b82f666}
+.fb-highlight:nth-of-type(3n+2){background:#f8717115;border-bottom-color:#f8717166}
+.fb-highlight:nth-of-type(3n+3){background:#22c55e15;border-bottom-color:#22c55e66}
+.fb-highlight:nth-of-type(3n+1).active{background:#3b82f625}
+.fb-highlight:nth-of-type(3n+2).active{background:#f8717125}
+.fb-highlight:nth-of-type(3n+3).active{background:#22c55e25}
 .fb-reply-box{padding:12px;border-top:1px solid #ffffff10;background:#0f1724}
 .fb-reply-box textarea{min-height:60px;font-size:.88rem}
 .fb-reply-box .btn{margin-top:8px;padding:8px 16px;font-size:.85rem}
@@ -841,6 +877,31 @@ const RESOLUTIONS_DB = {
     "This house prefers a world without venture capital.",
     "This house would cap CEO compensation at 50x median employee salary.",
     "This house believes student debt should be fully dischargeable in bankruptcy.",
+    "This house would abolish the Federal Reserve.",
+    "This house believes universal basic income should replace all welfare programs.",
+    "This house would ban payday lending.",
+    "This house believes inflation is preferable to austerity.",
+    "This house would tax all financial transactions.",
+    "This house believes pension funds should divest from fossil fuels.",
+    "This house would ban hedge funds.",
+    "This house believes the gold standard was superior to fiat currency.",
+    "This house would abolish inheritance above $5 million.",
+    "This house believes credit scores do more harm than good.",
+    "This house would ban algorithmic trading.",
+    "This house believes IMF structural adjustment programs are neo-colonial.",
+    "This house would nationalize all retirement savings.",
+    "This house believes financial literacy should be mandatory in schools.",
+    "This house would impose a maximum wage.",
+    "This house believes offshore banking should be illegal.",
+    "This house would cancel all developing-world debt.",
+    "This house believes that profit-driven banking is incompatible with social welfare.",
+    "This house would ban leveraged buyouts.",
+    "This house believes cryptocurrency will replace the dollar as the global reserve currency.",
+    "This house would implement a land value tax.",
+    "This house believes index funds are bad for the economy.",
+    "This house would ban stock buybacks.",
+    "This house believes central bank independence is undemocratic.",
+    "This house would abolish private equity.",
   ],
   Philosophy: [
     "This house believes free will is an illusion.",
@@ -853,6 +914,34 @@ const RESOLUTIONS_DB = {
     "This house would choose immortality.",
     "This house believes meaning requires suffering.",
     "This house, as an existentialist, embraces radical freedom over bad faith.",
+    "This house believes the trolley problem reveals nothing useful about morality.",
+    "This house would rather be Socrates dissatisfied than a fool satisfied.",
+    "This house believes there are no moral facts.",
+    "This house believes we have stronger obligations to future generations than to the current poor.",
+    "This house believes the veil of ignorance is the best tool for designing a just society.",
+    "This house prefers Nietzsche's will to power over Kantian duty.",
+    "This house believes consciousness is an illusion.",
+    "This house would embrace antinatalism.",
+    "This house believes moral progress is real.",
+    "This house believes all thought is essentially metaphorical.",
+    "This house regrets the Enlightenment.",
+    "This house believes animals have rights, not just welfare interests.",
+    "This house believes time is not real.",
+    "This house would choose a life of certainty over a life of wonder.",
+    "This house believes the ship of Theseus proves personal identity is incoherent.",
+    "This house prefers virtue ethics over consequentialism.",
+    "This house believes knowledge is justified true belief.",
+    "This house believes moral relativism is self-defeating.",
+    "This house would rather live in Plato's Republic than in a liberal democracy.",
+    "This house believes epistemic humility is the highest intellectual virtue.",
+    "This house believes the naturalistic fallacy undermines most political arguments.",
+    "This house fears a world without death.",
+    "This house believes aesthetic experience is as important as moral experience.",
+    "This house believes pragmatism is the most honest philosophy.",
+    "This house would abolish the concept of desert in moral reasoning.",
+    "This house believes all philosophy is a footnote to Plato.",
+    "This house believes the problem of evil disproves God.",
+    "This house prefers a world where emotions are chosen rationally.",
   ],
   Politics: [
     "This house would abolish the Electoral College.",
@@ -865,6 +954,31 @@ const RESOLUTIONS_DB = {
     "This house would abolish the Senate filibuster.",
     "This house supports reparations for slavery.",
     "This house would implement ranked-choice voting nationwide.",
+    "This house would abolish the Supreme Court's power of judicial review.",
+    "This house believes technocracy is preferable to democracy.",
+    "This house would ban political dynasties.",
+    "This house believes gerrymandering is a feature, not a bug.",
+    "This house would require all politicians to have term limits.",
+    "This house believes direct democracy is preferable to representative democracy.",
+    "This house would ban corporate donations to political campaigns.",
+    "This house believes the filibuster protects minority rights.",
+    "This house would make voting a legal obligation.",
+    "This house believes federalism has outlived its usefulness.",
+    "This house would elect judges rather than appoint them.",
+    "This house believes populism is a legitimate democratic force.",
+    "This house would ban politicians from trading stocks.",
+    "This house supports proportional representation over first-past-the-post.",
+    "This house believes the presidency is too powerful.",
+    "This house would lower the age of eligibility for Congress to 21.",
+    "This house believes sortition is better than elections.",
+    "This house would give extra votes to the young.",
+    "This house believes political parties should be abolished.",
+    "This house would allow non-citizens with permanent residency to vote.",
+    "This house believes coalitions weaken governance.",
+    "This house would ban former politicians from becoming lobbyists.",
+    "This house believes compulsory national service strengthens democracy.",
+    "This house would grant statehood to Washington D.C. and Puerto Rico.",
+    "This house fears the decline of democratic norms more than any single policy.",
   ],
   Technology: [
     "This house would ban facial recognition technology.",
@@ -877,6 +991,32 @@ const RESOLUTIONS_DB = {
     "This house would mandate open-source for all government software.",
     "This house believes remote work is net negative for society.",
     "This house would ban targeted advertising.",
+    "This house believes the metaverse will do more harm than good.",
+    "This house would require algorithmic transparency for all platforms.",
+    "This house believes we should slow down AI development.",
+    "This house would grant users ownership of their data.",
+    "This house believes technology companies should be liable for content on their platforms.",
+    "This house would ban deepfakes.",
+    "This house believes quantum computing poses an existential risk.",
+    "This house would nationalize broadband internet.",
+    "This house believes the right to be forgotten should be absolute.",
+    "This house would ban children under 16 from social media.",
+    "This house believes open-source AI is more dangerous than closed-source AI.",
+    "This house would impose a robot tax.",
+    "This house believes blockchain technology is a solution in search of a problem.",
+    "This house would ban predictive policing algorithms.",
+    "This house fears brain-computer interfaces.",
+    "This house believes tech whistleblowers should have blanket legal protection.",
+    "This house would regulate recommendation algorithms as addictive products.",
+    "This house believes the Luddites were right.",
+    "This house would ban planned obsolescence in electronics.",
+    "This house believes decentralized social media is the answer to platform power.",
+    "This house would prohibit governments from using zero-day exploits.",
+    "This house believes virtual reality will make humanity worse.",
+    "This house would mandate interoperability between all tech platforms.",
+    "This house fears a world where AI writes most human communication.",
+    "This house believes the digital divide is the civil rights issue of our time.",
+    "This house would ban surveillance capitalism.",
   ],
   Ethics: [
     "This house believes it is ethical to eat meat.",
@@ -889,6 +1029,32 @@ const RESOLUTIONS_DB = {
     "This house would allow genetic engineering of human embryos.",
     "This house believes parents should not impose religion on children.",
     "This house would prioritize animal rights over cultural practices.",
+    "This house believes whistleblowing is always morally justified.",
+    "This house would allow physician-assisted suicide for mental illness.",
+    "This house believes the ends justify the means.",
+    "This house would ban unpaid internships.",
+    "This house believes charities should be abolished in favor of state welfare.",
+    "This house would allow minors to make irreversible medical decisions.",
+    "This house believes moral courage is more important than physical courage.",
+    "This house would ban boxing and MMA.",
+    "This house believes wealthy nations are obligated to accept unlimited refugees.",
+    "This house believes that honesty without compassion is cruelty.",
+    "This house would ban gambling.",
+    "This house believes consent is sufficient to make any act ethical.",
+    "This house would allow parents to select the sex of their children.",
+    "This house believes taxation is theft.",
+    "This house fears a world without moral absolutes.",
+    "This house believes it is wrong to have children in the current climate crisis.",
+    "This house would ban trophy hunting even if it funds conservation.",
+    "This house believes moral intuitions are unreliable.",
+    "This house would allow the sale of kidneys from living donors.",
+    "This house believes corporations can be moral agents.",
+    "This house would ban conversion therapy worldwide.",
+    "This house believes ethical consumerism is a myth.",
+    "This house would allow prisoners to donate organs for reduced sentences.",
+    "This house believes in a moral duty to disobey unjust laws.",
+    "This house believes there is no ethical consumption under capitalism.",
+    "This house would ban factory-farmed meat.",
   ],
   'International Relations': [
     "This house would dissolve NATO.",
@@ -901,6 +1067,31 @@ const RESOLUTIONS_DB = {
     "This house believes China's Belt and Road Initiative is neo-colonialism.",
     "This house would withdraw all foreign military bases.",
     "This house believes humanitarian intervention is justified without UN approval.",
+    "This house believes the liberal international order is dead.",
+    "This house would create a United Nations standing army.",
+    "This house supports the right of regions to unilateral secession.",
+    "This house believes foreign aid does more harm than good.",
+    "This house would sanction countries that violate press freedom.",
+    "This house believes multipolarity is safer than unipolarity.",
+    "This house would grant the International Criminal Court universal jurisdiction.",
+    "This house believes refugees should have the right to choose their destination country.",
+    "This house fears a new Cold War between the US and China.",
+    "This house would abolish the World Bank.",
+    "This house believes the Westphalian model of sovereignty is outdated.",
+    "This house would allow failed states to be placed under international trusteeship.",
+    "This house believes peacekeeping missions do more harm than good.",
+    "This house would ban the arms trade.",
+    "This house believes regional blocs are preferable to global institutions.",
+    "This house would condition trade agreements on human rights records.",
+    "This house believes the global south should refuse to pay climate debt.",
+    "This house supports a permanent seat for Africa on the UN Security Council.",
+    "This house would abolish diplomatic immunity.",
+    "This house believes the responsibility to protect has failed.",
+    "This house would recognize Taiwan as an independent state.",
+    "This house believes NATO expansion caused the Ukraine war.",
+    "This house would allow countries to sue each other for climate damage.",
+    "This house believes non-alignment is the best foreign policy for developing nations.",
+    "This house fears the weaponization of economic interdependence.",
   ],
   Science: [
     "This house would ban gain-of-function research.",
@@ -913,6 +1104,31 @@ const RESOLUTIONS_DB = {
     "This house believes scientific literacy should be required for political office.",
     "This house would ban human cloning.",
     "This house believes geoengineering is a necessary evil.",
+    "This house would make all publicly funded research open-access.",
+    "This house believes the replication crisis has undermined trust in science.",
+    "This house would ban patents on genes.",
+    "This house fears de-extinction technology.",
+    "This house believes we should send humans to Mars even at great risk.",
+    "This house would ban cosmetic surgery for minors.",
+    "This house believes peer review is broken.",
+    "This house would fund space exploration over ocean exploration.",
+    "This house believes science should be value-free.",
+    "This house would ban neuroenhancement drugs in academia.",
+    "This house fears synthetic biology more than nuclear weapons.",
+    "This house believes the scientific method is culturally biased.",
+    "This house would ban experiments on great apes.",
+    "This house believes lab-grown meat will save the planet.",
+    "This house would require all clinical trials to be pre-registered.",
+    "This house believes space should be governed as a global commons.",
+    "This house fears the dual-use potential of AI in biology.",
+    "This house would ban private companies from owning celestial bodies.",
+    "This house believes we should pause large hadron collider experiments.",
+    "This house would mandate genetic screening for all newborns.",
+    "This house believes pandemics are an existential risk we are not taking seriously.",
+    "This house would ban germline gene editing in humans.",
+    "This house believes nuclear fusion will come too late to matter.",
+    "This house would prioritize antibiotic resistance over cancer research.",
+    "This house fears the consequences of life extension technology.",
   ],
   Culture: [
     "This house believes cancel culture does more good than harm.",
@@ -925,6 +1141,32 @@ const RESOLUTIONS_DB = {
     "This house would ban reality television.",
     "This house prefers a world where everyone speaks one language.",
     "This house believes nostalgia is dangerous.",
+    "This house believes the Western canon should be abolished in education.",
+    "This house would ban music with explicitly violent lyrics.",
+    "This house believes museums should return all colonial-era artifacts.",
+    "This house fears the homogenization of global culture.",
+    "This house believes true multiculturalism is impossible.",
+    "This house would ban influencer marketing to children.",
+    "This house believes dating apps have ruined romance.",
+    "This house would require trigger warnings on all media.",
+    "This house believes satire should have no limits.",
+    "This house fears a post-truth world.",
+    "This house believes the Oscars are irrelevant.",
+    "This house would ban books from school libraries only by court order.",
+    "This house believes fandoms do more harm than good.",
+    "This house prefers a world without national anthems.",
+    "This house believes street art is as valid as gallery art.",
+    "This house would ban fast fashion.",
+    "This house believes the concept of cultural authenticity is harmful.",
+    "This house fears the death of local languages.",
+    "This house believes true artistic genius requires suffering.",
+    "This house would require all films to pass the Bechdel test for public funding.",
+    "This house believes social media has destroyed attention spans permanently.",
+    "This house would ban celebrity endorsements of political candidates.",
+    "This house believes tradition is the enemy of progress.",
+    "This house fears a world without physical books.",
+    "This house believes comedy should comfort the disturbed and disturb the comfortable.",
+    "This house would abolish the concept of high and low culture.",
   ],
   Law: [
     "This house would abolish the prison system.",
@@ -937,6 +1179,32 @@ const RESOLUTIONS_DB = {
     "This house would legalize sex work.",
     "This house supports restorative justice over punitive justice.",
     "This house would ban non-compete agreements.",
+    "This house believes the right to privacy is absolute.",
+    "This house would abolish the insanity defense.",
+    "This house believes mandatory minimums should be abolished.",
+    "This house would allow cameras in the Supreme Court.",
+    "This house supports a constitutional right to housing.",
+    "This house believes civil asset forfeiture should be banned.",
+    "This house would abolish the death penalty worldwide.",
+    "This house believes algorithmic sentencing reduces bias.",
+    "This house would grant legal standing to future generations.",
+    "This house believes truth commissions are preferable to criminal prosecution.",
+    "This house would legalize polygamy.",
+    "This house believes corporations should face criminal prosecution, not just fines.",
+    "This house would abolish solitary confinement.",
+    "This house supports a universal right to internet access.",
+    "This house believes genetic evidence should be inadmissible when obtained without consent.",
+    "This house would allow class-action lawsuits against governments for climate inaction.",
+    "This house believes intellectual property law does more harm than good.",
+    "This house would ban life sentences without parole.",
+    "This house believes the Second Amendment is obsolete.",
+    "This house would grant amnesty to all nonviolent drug offenders.",
+    "This house believes judicial elections undermine justice.",
+    "This house would allow AI to serve as arbitrators in civil disputes.",
+    "This house supports a right to die.",
+    "This house believes three-strikes laws are unjust.",
+    "This house would ban private prisons.",
+    "This house believes international law is only as strong as the willingness to enforce it.",
   ],
   Environment: [
     "This house would ban all fossil fuels by 2035.",
@@ -949,6 +1217,446 @@ const RESOLUTIONS_DB = {
     "This house would ban single-use plastics globally.",
     "This house believes individual action is meaningless in fighting climate change.",
     "This house would prioritize biodiversity over economic development.",
+    "This house believes green capitalism is an oxymoron.",
+    "This house would ban private jets.",
+    "This house believes we have already passed the point of no return on climate.",
+    "This house would force corporations to internalize all environmental costs.",
+    "This house believes zoos should be abolished.",
+    "This house would ban deep-sea mining.",
+    "This house believes overpopulation is the root cause of environmental destruction.",
+    "This house would require all new buildings to be net-zero carbon.",
+    "This house believes indigenous land management is superior to Western conservation.",
+    "This house would ban the sale of SUVs.",
+    "This house believes carbon capture is a dangerous distraction.",
+    "This house would mandate veganism to save the planet.",
+    "This house fears geoengineering more than climate change itself.",
+    "This house believes water should never be privately owned.",
+    "This house would impose personal carbon budgets.",
+    "This house believes the environmental movement has failed.",
+    "This house would ban all deforestation globally.",
+    "This house believes eco-terrorism is justified.",
+    "This house would shut down all coal plants within five years.",
+    "This house believes climate change is a national security issue above all else.",
+    "This house would ban cruise ships.",
+    "This house believes rewilding is more important than renewable energy.",
+    "This house fears the extinction of pollinators more than rising sea levels.",
+    "This house would make ecocide an international crime.",
+    "This house believes the next generation will not forgive our inaction on climate.",
+  ],
+  Education: [
+    "This house would abolish standardized testing.",
+    "This house believes college is not worth the cost.",
+    "This house would ban homework.",
+    "This house believes teachers should be paid as much as doctors.",
+    "This house would abolish tenure in universities.",
+    "This house believes trade schools are undervalued compared to universities.",
+    "This house would make all public universities tuition-free.",
+    "This house believes the liberal arts are dying and that is a tragedy.",
+    "This house would ban legacy admissions.",
+    "This house believes AI tutors will replace human teachers.",
+    "This house would require philosophy to be taught in all high schools.",
+    "This house believes grade inflation has devalued education.",
+    "This house would abolish Greek life at universities.",
+    "This house believes gap years should be mandatory before college.",
+    "This house would ban for-profit universities.",
+    "This house believes school choice through vouchers helps the poor.",
+    "This house would require all students to learn a second language from age 5.",
+    "This house believes competitive admissions are harmful.",
+    "This house would ban smartphones in schools.",
+    "This house believes universities have an obligation to be politically neutral.",
+    "This house would abolish elite universities.",
+    "This house believes the purpose of education is to create citizens, not workers.",
+    "This house would make coding a required subject from elementary school.",
+    "This house believes affirmative action in admissions is justified.",
+    "This house fears the corporatization of higher education.",
+    "This house would abolish student rankings and class standings.",
+    "This house believes religious schools undermine social cohesion.",
+    "This house would require all university research to be publicly accessible.",
+    "This house believes the Socratic method is the best form of teaching.",
+    "This house would pay students to attend school in low-income areas.",
+    "This house believes single-sex education is beneficial.",
+    "This house would ban unpaid academic labor by graduate students.",
+    "This house fears a world where credentials matter more than knowledge.",
+    "This house believes lifelong learning should be publicly funded.",
+    "This house would abolish the PhD as we know it.",
+    "This house believes memorization is underrated in modern education.",
+  ],
+  Health: [
+    "This house would implement universal single-payer healthcare.",
+    "This house believes pharmaceutical companies are the enemy of public health.",
+    "This house would ban direct-to-consumer drug advertising.",
+    "This house believes mental health days should be legally protected.",
+    "This house would decriminalize all drug use.",
+    "This house believes obesity should be treated as a public health crisis, not a personal choice.",
+    "This house would ban sugar in the same way we regulate tobacco.",
+    "This house fears the medicalization of normal human experiences.",
+    "This house would mandate organ donation as opt-out.",
+    "This house believes healthcare is a human right, not a privilege.",
+    "This house would allow experimental drugs for terminally ill patients.",
+    "This house believes the WHO has too much power.",
+    "This house would ban private health insurance.",
+    "This house believes therapy should be free for everyone.",
+    "This house fears the overuse of antidepressants.",
+    "This house would legalize psychedelics for therapeutic use.",
+    "This house believes vaccine patents should be waived during pandemics.",
+    "This house would require fast food restaurants to display calorie counts prominently.",
+    "This house believes loneliness is the greatest public health threat of our time.",
+    "This house would ban alcohol advertising.",
+    "This house believes traditional medicine deserves more respect from Western science.",
+    "This house would impose a tax on unhealthy foods.",
+    "This house believes the fitness industry does more harm than good.",
+    "This house would ban cosmetic procedures for minors.",
+    "This house fears a world where genetic testing determines insurance premiums.",
+    "This house believes burnout should be classified as an occupational disease.",
+    "This house would fund prevention over treatment in all healthcare systems.",
+    "This house believes the anti-vax movement is an existential threat.",
+    "This house would require mental health screening in schools.",
+    "This house believes the opioid crisis was a crime, not a mistake.",
+    "This house would ban energy drinks for people under 18.",
+    "This house believes pandemic preparedness should be a constitutional obligation.",
+    "This house fears the privatization of genomic data.",
+    "This house would allow surrogacy as a commercial practice.",
+    "This house believes we overvalue longevity over quality of life.",
+  ],
+  Economics: [
+    "This house believes capitalism is the best economic system despite its flaws.",
+    "This house would implement a four-day work week.",
+    "This house believes automation will create more jobs than it destroys.",
+    "This house would abolish billionaires.",
+    "This house believes free trade does more harm than good for developing nations.",
+    "This house would nationalize all essential services.",
+    "This house believes gig economy workers should be classified as employees.",
+    "This house fears late-stage capitalism.",
+    "This house would ban advertising to children.",
+    "This house believes economic growth is incompatible with sustainability.",
+    "This house would implement a universal basic income.",
+    "This house believes trickle-down economics has been disproven.",
+    "This house would break up all monopolies.",
+    "This house believes unions should be mandatory in all industries.",
+    "This house fears a world without economic growth.",
+    "This house would ban planned obsolescence.",
+    "This house believes cooperatives are superior to corporations.",
+    "This house would abolish the minimum wage in favor of UBI.",
+    "This house believes the gig economy is the future of work.",
+    "This house would impose tariffs on all goods made with child labor.",
+    "This house believes economic inequality is the greatest threat to democracy.",
+    "This house fears the concentration of wealth in fewer and fewer hands.",
+    "This house would ban unpaid internships.",
+    "This house believes rent control does more harm than good.",
+    "This house would implement a maximum income.",
+    "This house believes intellectual property should expire after 10 years.",
+    "This house fears the rise of corporate feudalism.",
+    "This house would give workers seats on corporate boards.",
+    "This house believes GDP is a useless measure of national wellbeing.",
+    "This house would abolish corporate personhood.",
+    "This house believes free markets require strong regulation.",
+    "This house fears a world where algorithms set prices for everything.",
+    "This house would ban zero-hour contracts.",
+    "This house believes the sharing economy is really the exploitation economy.",
+    "This house would tax wealth, not income.",
+    "This house believes economic sanctions punish the innocent.",
+  ],
+  History: [
+    "This house believes the French Revolution was a net positive for humanity.",
+    "This house would put historical figures on trial by modern standards.",
+    "This house believes colonialism's legacy is primarily negative.",
+    "This house believes the atomic bombings of Hiroshima and Nagasaki were justified.",
+    "This house would tear down all statues of morally compromised historical figures.",
+    "This house believes the Cold War was avoidable.",
+    "This house fears repeating the mistakes of Weimar Germany.",
+    "This house believes the British Empire did more harm than good.",
+    "This house would apologize for historical atrocities committed by previous governments.",
+    "This house believes history is written by the victors.",
+    "This house believes the Enlightenment caused more harm than good.",
+    "This house would have supported appeasement in 1938.",
+    "This house believes the fall of the Soviet Union was a tragedy for the global poor.",
+    "This house fears we are living through a new Gilded Age.",
+    "This house believes the League of Nations could have prevented World War II.",
+    "This house would have voted against the Treaty of Versailles.",
+    "This house believes decolonization was incomplete.",
+    "This house fears a return to great power politics.",
+    "This house believes the American Revolution was more conservative than revolutionary.",
+    "This house would undo the partition of India.",
+    "This house believes the Renaissance was overrated.",
+    "This house fears that democratic backsliding mirrors the 1930s.",
+    "This house believes the Reformation did more harm than good.",
+    "This house would have supported the Luddites.",
+    "This house believes the Marshall Plan was American imperialism in disguise.",
+    "This house fears the lessons of the 2008 financial crisis have been forgotten.",
+    "This house believes truth and reconciliation processes are preferable to Nuremberg-style trials.",
+    "This house would rewrite history textbooks to center marginalized voices.",
+    "This house believes the Industrial Revolution was not worth the human cost.",
+    "This house fears that empires always rise and fall in the same way.",
+    "This house believes the abolition of slavery was too slow.",
+    "This house would have opposed the Vietnam War from the start.",
+    "This house believes the Silk Road was more important than any single empire.",
+    "This house fears the decline of American hegemony.",
+    "This house believes history repeats itself, and we are too ignorant to notice.",
+  ],
+  Media: [
+    "This house would ban 24-hour news channels.",
+    "This house believes journalism is dying and democracy will follow.",
+    "This house would require social media platforms to verify user identities.",
+    "This house believes public broadcasting should be expanded, not defunded.",
+    "This house would ban political advertising on social media.",
+    "This house fears the death of local journalism.",
+    "This house believes algorithms should not decide what news people see.",
+    "This house would break up media conglomerates.",
+    "This house believes citizen journalism is as valuable as professional journalism.",
+    "This house fears the rise of state-controlled media worldwide.",
+    "This house would require corrections to be given equal prominence as original stories.",
+    "This house believes paywalls on news are bad for democracy.",
+    "This house would ban anonymous accounts on social media.",
+    "This house believes podcasts have replaced meaningful long-form journalism.",
+    "This house fears the era of post-truth media.",
+    "This house would require media ownership transparency.",
+    "This house believes satirical news has become more trusted than real news.",
+    "This house would tax digital advertising revenue to fund public journalism.",
+    "This house believes war reporting should show the full horror of conflict.",
+    "This house fears the concentration of media power in Silicon Valley.",
+    "This house would ban bot accounts on social media.",
+    "This house believes the printing press was the most important invention in history.",
+    "This house fears AI-generated news will destroy trust in media.",
+    "This house would grant journalists absolute source protection.",
+    "This house believes tabloid journalism serves a democratic function.",
+    "This house would require fact-checking labels on all political content.",
+    "This house fears a world where everyone is a publisher but no one is an editor.",
+    "This house believes streaming services have killed cinema.",
+    "This house would ban foreign ownership of domestic media outlets.",
+    "This house believes the fairness doctrine should be reinstated.",
+    "This house fears the weaponization of memes in political discourse.",
+    "This house would make media literacy a mandatory school subject.",
+    "This house believes whistleblower platforms like WikiLeaks do more good than harm.",
+    "This house fears a world without investigative journalism.",
+    "This house believes the attention economy is the root of all media failure.",
+  ],
+  Identity: [
+    "This house believes identity politics does more harm than good.",
+    "This house would abolish the concept of race on government forms.",
+    "This house believes gender is entirely a social construct.",
+    "This house fears a world without cultural identity.",
+    "This house believes assimilation is preferable to multiculturalism.",
+    "This house would ban religious symbols in government buildings.",
+    "This house believes intersectionality is the most useful framework for understanding oppression.",
+    "This house fears the politicization of personal identity.",
+    "This house believes colorblindness is a form of racism.",
+    "This house would allow individuals to choose their own racial classification.",
+    "This house believes nationalism and patriotism are fundamentally different.",
+    "This house fears the erosion of indigenous identities.",
+    "This house believes code-switching is a survival skill, not a betrayal.",
+    "This house would ban ethnic-based affinity groups in the workplace.",
+    "This house believes the concept of whiteness is harmful.",
+    "This house fears a world where identity is reduced to data points.",
+    "This house believes diaspora communities have a right to self-determination.",
+    "This house would abolish gendered language.",
+    "This house believes religion is a net negative for humanity.",
+    "This house fears the commodification of identity.",
+    "This house believes in the right to be forgotten by your past identity.",
+    "This house would require companies to disclose diversity statistics.",
+    "This house believes language shapes thought more than thought shapes language.",
+    "This house fears the death of the nation-state as an identity anchor.",
+    "This house believes that privilege is real and measurable.",
+    "This house would ban racial profiling in all its forms.",
+    "This house believes cultural pride can coexist with cultural criticism.",
+    "This house fears a future where identity is algorithmically assigned.",
+    "This house believes masculinity is in crisis.",
+    "This house would recognize non-binary gender identities in all legal systems.",
+    "This house believes immigration strengthens national identity.",
+    "This house fears the tribalization of politics along identity lines.",
+    "This house believes authentic selfhood is impossible in a performative society.",
+    "This house would ban DNA ancestry testing companies.",
+    "This house believes the concept of a homeland is outdated.",
+  ],
+  'Criminal Justice': [
+    "This house would abolish police forces and replace them with community safety programs.",
+    "This house believes the war on drugs has been a catastrophic failure.",
+    "This house would end cash bail.",
+    "This house believes felons should have their voting rights restored immediately upon release.",
+    "This house would decriminalize poverty-related offenses.",
+    "This house believes predictive policing is inherently racist.",
+    "This house would require body cameras on all police officers at all times.",
+    "This house believes prisons should focus on rehabilitation, not punishment.",
+    "This house would ban the death penalty worldwide.",
+    "This house believes stand-your-ground laws encourage violence.",
+    "This house would allow prisoners to vote while incarcerated.",
+    "This house believes police unions protect bad officers.",
+    "This house would ban the use of no-knock warrants.",
+    "This house believes wrongful convictions are an acceptable cost of the justice system.",
+    "This house would end mandatory minimum sentences.",
+    "This house fears the school-to-prison pipeline.",
+    "This house believes juveniles should never be tried as adults.",
+    "This house would require a college degree for all police officers.",
+    "This house believes white-collar crime should carry the same sentences as violent crime.",
+    "This house would ban private prisons.",
+    "This house fears mass surveillance in the name of public safety.",
+    "This house believes three-strikes laws are cruel and unusual.",
+    "This house would implement drug courts instead of criminal courts for all drug offenses.",
+    "This house believes sex offender registries do more harm than good.",
+    "This house would ban solitary confinement as torture.",
+    "This house fears the militarization of police forces.",
+    "This house believes restorative justice should replace incarceration for nonviolent crimes.",
+    "This house would grant automatic expungement for all marijuana convictions.",
+    "This house believes the insanity defense should be expanded.",
+    "This house fears a surveillance state disguised as public safety.",
+    "This house would require prosecutors to disclose all evidence to the defense.",
+    "This house believes plea bargaining coerces the innocent into guilty pleas.",
+    "This house would ban life sentences for minors.",
+    "This house fears the erosion of the presumption of innocence.",
+    "This house believes justice delayed is justice denied.",
+  ],
+  Art: [
+    "This house believes art should be publicly funded.",
+    "This house would ban AI-generated art from competitions.",
+    "This house believes NFTs have destroyed the art market.",
+    "This house fears a world where art is only valued for its price.",
+    "This house believes art must be political to be meaningful.",
+    "This house would return all looted art to its country of origin.",
+    "This house believes the death of the author is the birth of the reader.",
+    "This house fears a world without arts education.",
+    "This house believes graffiti is a legitimate art form.",
+    "This house would ban art depicting violence against women.",
+    "This house believes AI cannot create real art.",
+    "This house fears the homogenization of artistic style by algorithms.",
+    "This house believes art should comfort the disturbed and disturb the comfortable.",
+    "This house would impose a luxury tax on art sales above $1 million.",
+    "This house believes modern art is a scam.",
+    "This house fears a world where artists cannot make a living.",
+    "This house believes censorship of art is never justified.",
+    "This house would require all public spaces to include art installations.",
+    "This house believes the best art comes from pain.",
+    "This house fears the decline of craftsmanship in a digital age.",
+    "This house believes performance art is the purest form of expression.",
+    "This house would ban art forgery even if the forgery is beautiful.",
+    "This house believes separating art from the artist is impossible.",
+    "This house fears a future where machines are better artists than humans.",
+    "This house believes every child should learn a musical instrument.",
+    "This house would make art galleries free worldwide.",
+    "This house believes originality in art is dead.",
+    "This house fears the corporatization of the art world.",
+    "This house believes architecture is the most important art form.",
+    "This house would ban the destruction of street art.",
+    "This house believes the novel is dead.",
+    "This house fears a world where beauty is defined by data.",
+    "This house believes art museums should decolonize their collections.",
+    "This house would pay artists a universal basic income.",
+    "This house believes art is the only thing that can save us.",
+  ],
+  'Space & Future': [
+    "This house believes space colonization is humanity's destiny.",
+    "This house fears a future controlled by corporations in space.",
+    "This house would ban weapons in space.",
+    "This house believes we should prioritize fixing Earth over colonizing Mars.",
+    "This house fears first contact with extraterrestrial intelligence.",
+    "This house would make space a demilitarized zone.",
+    "This house believes asteroid mining should be governed as a global commons.",
+    "This house fears the rise of a spacefaring oligarchy.",
+    "This house would invest in generation ships over terraforming.",
+    "This house believes the Fermi Paradox should terrify us.",
+    "This house fears a future where only the rich can leave Earth.",
+    "This house would ban human experimentation for space adaptation.",
+    "This house believes interstellar travel is a waste of resources.",
+    "This house fears the weaponization of satellites.",
+    "This house would grant citizenship to the first humans born on Mars.",
+    "This house believes posthumanism is the next stage of evolution.",
+    "This house fears a future where AI governs humanity.",
+    "This house would cryogenically preserve humans for future revival.",
+    "This house believes the singularity will happen within 50 years.",
+    "This house fears a world run by algorithms.",
+    "This house would upload consciousness to achieve immortality.",
+    "This house believes transhumanism is dangerous.",
+    "This house fears a future without privacy.",
+    "This house would build a space elevator.",
+    "This house believes the future of governance is digital direct democracy.",
+    "This house fears designer babies will create a genetic underclass.",
+    "This house would establish a permanent lunar base before going to Mars.",
+    "This house believes the future will be radically better than the present.",
+    "This house fears runaway nanotechnology.",
+    "This house would terraform Venus instead of Mars.",
+    "This house believes humanity will be multiplanetary within 100 years.",
+    "This house fears extinction more than any other outcome.",
+    "This house would create a time capsule for civilizations that follow ours.",
+    "This house believes optimism about the future is irrational.",
+    "This house fears we are living in a simulation.",
+    "This house believes the greatest risk to humanity is humanity itself.",
+  ],
+  Sport: [
+    "This house would ban heading in soccer to prevent brain injuries.",
+    "This house believes the Olympics do more harm than good for host cities.",
+    "This house would allow doping in professional sports.",
+    "This house believes college athletes should be paid.",
+    "This house would ban combat sports.",
+    "This house believes esports are real sports.",
+    "This house fears the commercialization of youth sports.",
+    "This house would require equal funding for men's and women's sports.",
+    "This house believes sports boycotts are an effective political tool.",
+    "This house would ban private ownership of sports teams.",
+    "This house believes the World Cup should not be held in authoritarian countries.",
+    "This house fears the death of amateur sports.",
+    "This house would cap player salaries in professional sports.",
+    "This house believes transgender athletes should compete in their identified gender.",
+    "This house would abolish the NCAA.",
+    "This house fears the gambling industry's influence on professional sports.",
+    "This house believes sports build character.",
+    "This house would ban alcohol sponsorship in sports.",
+    "This house believes VAR and replay technology hurt the spirit of the game.",
+    "This house fears the globalization of sports leagues at the expense of local clubs.",
+    "This house would ban cheerleading as a sport.",
+    "This house believes the IOC is a corrupt institution.",
+    "This house would require all professional athletes to donate a percentage of earnings to youth sports.",
+    "This house fears a future where AI coaches replace human coaches.",
+    "This house believes sport is the most powerful force for social change.",
+    "This house would ban tackle football for children under 14.",
+    "This house believes the best athletes are born, not made.",
+    "This house fears performance-enhancing technology will ruin sports.",
+    "This house would integrate men's and women's sports where possible.",
+    "This house believes sports scholarships distort the purpose of universities.",
+    "This house fears the rise of sportswashing by authoritarian regimes.",
+    "This house would ban lifetime bans in sports.",
+    "This house believes fantasy sports are a form of gambling.",
+    "This house would abolish relegation in professional leagues.",
+    "This house believes the beautiful game is dying.",
+  ],
+  'Actor & Historical POV': [
+    "This house, as the Soviet Politburo in 1962, would not place missiles in Cuba.",
+    "This house, as Abraham Lincoln in 1861, would let the South secede peacefully.",
+    "This house, as Oppenheimer in 1945, would refuse to build the atomic bomb.",
+    "This house, as the Weimar Republic in 1933, would ban the Nazi Party.",
+    "This house, as Gorbachev in 1985, would not pursue glasnost and perestroika.",
+    "This house, as the founding fathers, would not include the Second Amendment.",
+    "This house, as Nelson Mandela in 1990, would pursue retributive justice over reconciliation.",
+    "This house, as the Vatican in 1633, would not prosecute Galileo.",
+    "This house, as Napoleon in 1812, would not invade Russia.",
+    "This house, as FDR in 1941, would have entered WWII before Pearl Harbor.",
+    "This house, as Truman in 1945, would not drop the atomic bombs on Japan.",
+    "This house, as the British Empire in 1947, would delay Indian independence by 20 years.",
+    "This house, as Deng Xiaoping in 1989, would not suppress the Tiananmen protests.",
+    "This house, as the Roman Senate in 49 BC, would grant Caesar's demands.",
+    "This house, as Martin Luther King Jr., would embrace Malcolm X's methods.",
+    "This house, as Chamberlain in 1938, would refuse to sign the Munich Agreement.",
+    "This house, as the UN in 1994, would intervene militarily in Rwanda.",
+    "This house, as the Ottoman Empire in 1915, regrets the Armenian genocide.",
+    "This house, as Woodrow Wilson in 1919, would join the League of Nations without reservations.",
+    "This house, as a CIA director in 1953, would not overthrow Mossadegh in Iran.",
+    "This house, as the Athenian assembly, would not execute Socrates.",
+    "This house, as Queen Elizabeth I, would marry to secure the succession.",
+    "This house, as Thomas Jefferson, would free all enslaved people in 1776.",
+    "This house, as the Meiji Emperor, would not westernize Japan.",
+    "This house, as Churchill in 1940, would negotiate peace with Hitler.",
+    "This house, as LBJ in 1964, would not escalate in Vietnam.",
+    "This house, as the WHO in January 2020, would declare a pandemic immediately.",
+    "This house, as a Silicon Valley CEO, would refuse to operate in authoritarian countries.",
+    "This house, as the EU in 2015, would close all borders during the refugee crisis.",
+    "This house, as the Federal Reserve in 2008, would let Lehman Brothers fail.",
+    "This house, as a pharmaceutical CEO, would waive all COVID vaccine patents.",
+    "This house, as the Supreme Court in 1954, would not rule on Brown v. Board.",
+    "This house, as George Washington, would accept a third term as president.",
+    "This house, as the French revolutionaries, would spare Louis XVI.",
+    "This house, as Thatcher in 1984, would negotiate with the miners' union.",
+    "This house, as a tech whistleblower, would leak classified surveillance programs.",
+    "This house, as the Mongol Empire, would preserve the libraries it conquered.",
+    "This house, as Rosa Parks, believes individual acts of defiance change history.",
+    "This house, as Alexander the Great, would stop at Persia and consolidate.",
+    "This house, as a modern university president, would abolish legacy admissions unilaterally.",
   ],
 };
 
@@ -2527,40 +3235,50 @@ Respond with JSON: {"sufficient": true/false, "suggestion": "If insufficient, wr
       }
     }, 100);
 
-    // AUTO-GENERATE BACKGROUND WITH ACTOR only if background is truly empty
+    // Use whatever background the user provided (or none)
     let activeBg = background;
-    const bgCheck = (background || '').trim().toLowerCase();
-    const userDeclinedBg = bgCheck === 'n/a' || bgCheck === 'na' || bgCheck === 'none' || bgCheck === 'no';
-    if (!bgCheck && !userDeclinedBg) {
-      try {
-        const bgSys = `You are an elite APDA debate case architect. Given a motion, generate a vivid, specific BACKGROUND with an ACTOR for a debate case. Your background should:
 
-1. Choose a specific, interesting ACTOR for the case (a person, institution, government body, or character in a defined situation). Use "TH as [Actor]" framing when an actor makes sense, or "THBT/THW" for policy/value motions.
-2. Set the scene with cinematic specificity: time period, location, key context, stakes.
-3. Define the actor's constraints, incentives, and psychology if applicable.
-4. Keep it 60-120 words. Be concrete, not generic.
-5. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points.
-6. Do NOT use em dashes or en dashes.
+    let sysPrompt, userPrompt;
+    if (genMode === 'sneaky') {
+      sysPrompt = `You are an elite APDA debate strategist who specializes in winning rounds through technical brilliance, semantic precision, and strategic tricks that are 100% legitimate but catch opponents off guard. You think like a chess player: every definitional choice, framing decision, and structural move is designed to control the round before the opposition even stands up.
 
-Write ONLY the background text. No labels, no "Background:" header.`;
-        const bgUser = `Motion: ${motion.trim()}\nSide: ${side}\n\nGenerate a vivid background with actor:`;
-        let bgResult = '';
-        await callClaude(bgSys, bgUser, (text) => { bgResult = text; }, { thinkBudget: 3000, maxTokens: 2000 });
-        if (bgResult.trim()) {
-          activeBg = bgResult.trim();
-          setBackground(activeBg);
-        }
-      } catch(e) {
-        // If background generation fails, proceed without it
-      }
+Your output should be structured, practical, and immediately usable in a round.`;
+      const bgClean = (activeBg || '').trim().toLowerCase();
+      const bgText = (activeBg && bgClean !== 'n/a' && bgClean !== 'na' && bgClean !== 'none') ? `\nBackground: ${activeBg}` : '';
+      userPrompt = `Motion: ${motion.trim()}${bgText}\nSide: ${side}\nFormat: ${format}
+
+Generate SNEAKY STRATEGIES for winning this round through technical and strategic brilliance. Cover ALL of the following:
+
+## 1. DEFINITIONAL CONTROL
+How can ${side} define key terms in the motion to maximize their advantage? What definitions seem reasonable but tilt the round? What words in the motion are ambiguous and exploitable?
+
+## 2. SEMANTIC TRICKS
+Are there words in the motion that can be interpreted multiple ways? Can you narrow or broaden the motion's scope through careful reading? Are there "hidden" actors, timeframes, or conditions you can define favorably?
+
+## 3. FRAMING TRAPS
+What framework can you set up that sounds neutral but structurally favors your side? How do you define the burden of proof to make the other side's job harder? What metric of success can you establish that your arguments naturally win under?
+
+## 4. STRATEGIC CONCESSIONS
+What should you concede early to look reasonable while actually giving up nothing? What arguments sound important but are actually irrelevant under your framework? How do you make the opposition waste time on arguments that don't matter?
+
+## 5. DOUBLE BINDS
+Can you construct a choice for the opposition where both options help you? What common opp responses actually prove your point if you set up the case correctly?
+
+## 6. TECHNICAL GAME
+What POIs should you prepare to disrupt their flow? What should MG focus on to reframe the round? What should the rebuttal collapse on and why? What voting issues can you plant early that pay off in the final speech?
+
+## 7. ROUND CONTROL MAP
+A brief strategic playbook: what happens in each speech, what the other side likely does, and how you respond to stay two moves ahead.
+
+Be specific and concrete. Name the exact words, phrases, and strategic moves. This is a masterclass in legitimate gamesmanship.`;
+    } else {
+      sysPrompt = buildSystemPrompt(depth, format);
+      userPrompt = genMode === 'case'
+        ? buildCasePrompt(motion, activeBg, side, format, depth)
+        : buildTightblockPrompt(motion, activeBg, side, format, depth);
     }
 
-    const sysPrompt = buildSystemPrompt(depth, format);
-    const userPrompt = genMode === 'case'
-      ? buildCasePrompt(motion, activeBg, side, format, depth)
-      : buildTightblockPrompt(motion, activeBg, side, format, depth);
-
-    const expectedWords = depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600;
+    const expectedWords = genMode === 'sneaky' ? 1500 : (depth === 'competition' ? 1800 : depth === 'standard' ? 1200 : 600);
 
     const throttle = createStreamThrottle((text) => {
       setOutput(text);
@@ -2809,6 +3527,17 @@ Think about: Does Opp have ground? Can they run a counter-case? Are the caveats 
         whiteSpace:'nowrap',
       }}, tightness.level === 'fair' ? '\u2705 Fair Case' : tightness.level === 'a bit tight' ? '\u26A0\uFE0F A Bit Tight' : tightness.level === 'very tight' ? '\u{1F6A8} Very Tight' : '\u{1F6A8} Likely Tight'),
       React.createElement('span',{style:{fontSize:'.85rem',color:'#a8b8cc'}}, tightness.explanation)
+    ),
+
+    // Sneaky Strategies — only after a case/tightblock has been generated
+    output && !streaming && !loading && mode !== 'sneaky' && React.createElement('div',{
+      style:{display:'flex',justifyContent:'center',marginTop:12}
+    },
+      React.createElement('button',{
+        className:'btn btn-purple',
+        onClick:()=>{ generateCase('sneaky'); },
+        disabled:loading,
+      }, 'Sneaky Strategies')
     ),
 
     // Save Case bar — appears after generation
@@ -4267,7 +4996,6 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
     (output || mapData) && el('div',{className:'argmap-tab-toggle'},
       el('button',{className:view==='map'?'active':'',onClick:()=>setView('map')},t('vision.argMap','Argument Map')),
       el('button',{className:view==='text'?'active':'',onClick:()=>setView('text')},t('vision.textAnalysis','Text Analysis')),
-      el('button',{className:view==='mindmap'?'active':'',onClick:()=>setView('mindmap')},t('vision.mindMap','Mind Map')),
     ),
 
     // Map loading state
@@ -4288,8 +5016,6 @@ Be specific to the motion. Arguments should be real strategic angles a competiti
 
     // Argument Map
     view === 'map' && mapData && el(ArgumentMap, {mapData:mapData}),
-    // Mind Map radial tree
-    view === 'mindmap' && (mapData || output) && el(MindMapView, {caseResult: mapData, motion: motion}),
 
     // Map placeholder when no API
     view === 'map' && !mapData && !mapLoading && output && el('div',{
@@ -4467,16 +5193,22 @@ function Philosophy() {
   const [loading, setLoading] = useState(false);
   const [exploreMode, setExploreMode] = useState('deep-dive');
 
+  // size: 3=core debate thinkers, 2=commonly cited, 1=niche/specialized
   const philosophers = [
-    'Kant','Mill','Rawls','Nozick','Marx','Foucault','Nietzsche',
-    'Aristotle','Hegel','Sartre','de Beauvoir','Nagarjuna','Fanon',
-    'Hobbes','Locke','Hume','Wittgenstein','Arendt','Butler',
-    'Sen','Nussbaum','Habermas','Gramsci','Camus','Kierkegaard',
-    'Baudrillard','Deleuze','Derrida','Zizek','Debord','Levinas',
-    'Agamben','Spivak','Said','hooks','Mbembe','Badiou',
-    'Machiavelli','Rousseau','Bentham','Popper','Kuhn','Rorty',
-    'Chomsky','Dewey','James','Peirce','Confucius','Laozi',
-    'Plato','Epicurus','Epictetus','Marcus Aurelius','Aquinas','Spinoza'
+    {name:'Kant',size:3},{name:'Mill',size:3},{name:'Rawls',size:3},{name:'Foucault',size:3},
+    {name:'Aristotle',size:3},{name:'Nietzsche',size:3},{name:'Marx',size:3},{name:'Hobbes',size:3},
+    {name:'Locke',size:3},{name:'Plato',size:3},{name:'Bentham',size:2},{name:'Rousseau',size:2},
+    {name:'Hegel',size:2},{name:'Nozick',size:2},{name:'Sartre',size:2},{name:'Machiavelli',size:2},
+    {name:'Hume',size:2},{name:'Arendt',size:2},{name:'de Beauvoir',size:2},{name:'Camus',size:2},
+    {name:'Wittgenstein',size:2},{name:'Habermas',size:2},{name:'Sen',size:2},{name:'Nussbaum',size:2},
+    {name:'Butler',size:2},{name:'Chomsky',size:2},{name:'Derrida',size:2},{name:'Kierkegaard',size:2},
+    {name:'Fanon',size:2},{name:'Zizek',size:2},{name:'Said',size:2},{name:'hooks',size:2},
+    {name:'Gramsci',size:1},{name:'Nagarjuna',size:1},{name:'Baudrillard',size:1},{name:'Deleuze',size:1},
+    {name:'Debord',size:1},{name:'Levinas',size:1},{name:'Agamben',size:1},{name:'Spivak',size:1},
+    {name:'Mbembe',size:1},{name:'Badiou',size:1},{name:'Popper',size:2},{name:'Kuhn',size:1},
+    {name:'Rorty',size:1},{name:'Dewey',size:1},{name:'James',size:1},{name:'Peirce',size:1},
+    {name:'Confucius',size:2},{name:'Laozi',size:1},{name:'Epicurus',size:1},{name:'Epictetus',size:1},
+    {name:'Marcus Aurelius',size:2},{name:'Aquinas',size:2},{name:'Spinoza',size:1},
   ];
 
   const modes = {
@@ -4619,10 +5351,10 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
     React.createElement('div',{className:'chips'},
       philosophers.map(p =>
         React.createElement('button',{
-          key:p,
-          className:'chip'+(philosopher===p?' active':''),
-          onClick:()=>setPhilosopher(p)
-        },p)
+          key:p.name,
+          className:'chip chip-size-'+p.size+(philosopher===p.name?' active':''),
+          onClick:()=>setPhilosopher(p.name)
+        },p.name)
       )
     ),
     React.createElement('div',{style:{marginTop:16}},
@@ -4962,7 +5694,7 @@ Rules:
   // Feedback view
   return el('div', {className:'panel panel-expanded'},
     el('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}},
-      el('span', {style:{color:'#fbbf24',fontWeight:700,fontSize:'.9rem',letterSpacing:'1px',textTransform:'uppercase'}}, 'Case Review — ' + comments.length + ' comments'),
+      el('span', {style:{color:'#fbbf24',fontWeight:700,fontSize:'.9rem',letterSpacing:'1px',textTransform:'uppercase'}}, 'Case Review \u2014 ' + comments.length + ' comments'),
       el('div', {style:{display:'flex',gap:10}},
         el('button', {className:'btn btn-ghost', onClick:() => {
           // Copy current case text
@@ -7283,6 +8015,75 @@ function Analytics({ user, team }) {
     ),
     loading && el('div',{style:{textAlign:'center',color:'#64748b',padding:20}},'Loading analytics...'),
     !loading && logs.length === 0 && el('div',{style:{textAlign:'center',color:'#64748b',padding:40,background:'#ffffff04',borderRadius:12}},'No usage data yet. Start using tools to see analytics here.'),
+    // Debater thinking analysis
+    el(DebaterProfile, { logs, topFeatures, team }),
+  );
+}
+
+function DebaterProfile({ logs, topFeatures, team }) {
+  const el = React.createElement;
+  const [analysis, setAnalysis] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const analyze = async () => {
+    setLoading(true);
+    const featureSummary = topFeatures.map(([f,c]) => f + ': ' + c + ' uses').join(', ');
+    const totalRequests = logs.length;
+    const sysPrompt = `You are an elite debate coach who can read a debater's habits and thinking patterns from their tool usage data. You are perceptive, honest, and constructive. You identify thinking patterns, strengths, blind spots, and growth areas.
+
+Format your response with these sections using markdown:
+## Your Debater Profile
+A 2-3 sentence summary of what kind of debater they are based on their patterns.
+
+## Thinking Strengths
+3-4 specific strengths you can infer from their usage (e.g. heavy feedback usage = self-critical, heavy philosophy = framework-oriented)
+
+## Blind Spots
+2-3 areas they might be neglecting based on what they DON'T use or use less.
+
+## Growth Recommendations
+3-4 specific, actionable suggestions for how to become a more well-rounded debater.
+
+## Debater Archetype
+Give them a fun, memorable archetype name (e.g. "The Philosopher King", "The War Room Strategist", "The Case Machine") with a one-line description.
+
+Be specific and insightful. Don't be generic. Use the actual data to drive your analysis.`;
+
+    const userPrompt = `Here is this debater's usage data from Devil's Advocate:
+
+Total requests: ${totalRequests}
+Feature breakdown: ${featureSummary}
+Plan: ${team?.plan || 'unknown'}
+Team size: ${team?.memberCount || 1}
+
+Based on these usage patterns, analyze how this person thinks as a debater. What are their tendencies, strengths, and blind spots?`;
+
+    try {
+      let result = '';
+      await callClaude(sysPrompt, userPrompt, (text) => { result = text; setAnalysis(text); }, { thinkBudget: 4000, maxTokens: 4000 });
+      setAnalysis(result);
+    } catch(e) {
+      setAnalysis('Error generating analysis: ' + e.message);
+    }
+    setLoading(false);
+  };
+
+  return el('div', {style:{marginTop:28,padding:24,background:'linear-gradient(145deg,#0e1620,#121c2c)',border:'1px solid #ffffff10',borderRadius:14}},
+    el('h3', {style:{color:'#c084fc',fontSize:'1rem',fontWeight:700,marginBottom:8}}, 'Debater Thinking Profile'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.85rem',marginBottom:16}}, 'Get AI-powered analysis of how you think as a debater based on your usage patterns.'),
+    !analysis && el('button', {
+      className:'btn btn-purple',
+      onClick: analyze,
+      disabled: loading || logs.length < 3,
+    }, loading
+      ? el('span', null, el('span',{className:'spinner'}), ' Analyzing your patterns...')
+      : 'How Do I Think as a Debater?'
+    ),
+    logs.length < 3 && !analysis && el('p', {style:{color:'#64748b',fontSize:'.78rem',marginTop:8}}, 'Use at least 3 features to unlock this analysis.'),
+    analysis && el('div', {className:'output', style:{marginTop:16,padding:20,maxHeight:'none',minHeight:0,fontSize:'.88rem'}},
+      el('div', {dangerouslySetInnerHTML:{__html:cleanOutput(analysis, true)}}),
+    ),
+    analysis && el('button', {className:'btn btn-secondary', style:{marginTop:12}, onClick:() => { setAnalysis(null); }}, 'Reset'),
   );
 }
 
@@ -7296,7 +8097,7 @@ function WhyAPDA() {
   const el = React.createElement;
   return el('div', {className:'apda-explainer'},
     el('button', {className:'apda-toggle', onClick:()=>setOpen(!open)},
-      t('about.title','About DebateOS & Formats'),
+      t('about.title','Debate Makes You Sharper, Faster, Smarter'),
       el('svg', {width:12,height:12,viewBox:'0 0 12 12',fill:'none',style:{transform:open?'rotate(180deg)':'rotate(0deg)'}},
         el('path', {d:'M2 4l4 4 4-4', stroke:'currentColor', strokeWidth:1.5, strokeLinecap:'round', strokeLinejoin:'round'})
       )
@@ -7409,7 +8210,6 @@ const TABS = [
   {id:'divider3',divider:true},
   {id:'team',label:'Team',i18n:'nav.team'},
   {id:'analytics',label:'Analytics',i18n:'nav.analytics'},
-  {id:'resources',label:'Resources',i18n:'nav.resources',href:'https://apda.online/'},
 ];
 
 function App() {
@@ -7428,6 +8228,30 @@ function App() {
   }, [locale]);
   const t = useMemo(() => createT(localeStrings), [localeStrings]);
   const [tab, setTab] = useState('case');
+  const [tabHistory, setTabHistory] = useState([]);
+  const [tabTransition, setTabTransition] = useState('');
+  const navigateTab = useCallback((newTab) => {
+    if (newTab === tab) return;
+    setTabTransition('tab-exit');
+    setTimeout(() => {
+      setTabHistory(prev => [...prev, tab]);
+      setTab(newTab);
+      setTabTransition('tab-enter');
+      setTimeout(() => setTabTransition(''), 350);
+    }, 150);
+  }, [tab]);
+  const goBack = useCallback(() => {
+    if (tabHistory.length === 0) return;
+    setTabTransition('tab-exit');
+    setTimeout(() => {
+      const prev = [...tabHistory];
+      const last = prev.pop();
+      setTabHistory(prev);
+      setTab(last);
+      setTabTransition('tab-enter');
+      setTimeout(() => setTabTransition(''), 350);
+    }, 150);
+  }, [tabHistory]);
   const [savedCases, setSavedCases] = useState(() => loadSavedCases());
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loadedCase, setLoadedCase] = useState(null);
@@ -7483,7 +8307,7 @@ function App() {
 
   const selectCase = useCallback((c) => {
     setLoadedCase(c);
-    setTab('case');
+    navigateTab('case');
   }, []);
 
   const exportCase = useCallback((c) => {
@@ -7517,6 +8341,7 @@ function App() {
   const tabPane = (id, component) =>
     React.createElement('div', {
       key: id,
+      className: tab === id ? ('tab-pane active ' + tabTransition) : 'tab-pane',
       style: { display: tab === id ? 'block' : 'none', width: '100%' }
     }, component);
 
@@ -7527,9 +8352,10 @@ function App() {
     !user && !authLoading && !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)'}},
       React.createElement('div',{style:{background:'#131a27',border:'1px solid #ffffff12',borderRadius:16,padding:'40px 48px',maxWidth:520,width:'90%',textAlign:'center'}},
         React.createElement('h1',{style:{fontSize:'2.2rem',fontWeight:900,color:'#f1f5f9',marginBottom:4}},
-          React.createElement('span',{style:{color:'#ef4444'}},'Debate'),
-          React.createElement('span',{style:{fontWeight:300}},'OS')
+          React.createElement('span',{style:{color:'#ef4444'}},"Devil's "),
+          React.createElement('span',{style:{fontWeight:300}},'Advocate')
         ),
+        React.createElement('p',{style:{color:'#64748b',fontSize:'.72rem',letterSpacing:'1.5px',textTransform:'uppercase',fontWeight:600,marginBottom:8}},'powered by DebateOS'),
         React.createElement('p',{style:{color:'#94a3b8',fontSize:'.9rem',lineHeight:1.6,marginBottom:24}},t('hero.tagline','The AI toolkit for competitive debaters.')),
         // Paid path — sign in
         React.createElement('div',{style:{padding:20,background:'#ef444408',border:'1px solid #ef444425',borderRadius:12,marginBottom:16}},
@@ -7582,7 +8408,7 @@ function App() {
         ),
       )
     ),
-    showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: setTab }),
+    showGuide && React.createElement(WelcomeGuide, { onClose: closeGuide, onNavigate: navigateTab }),
     !showGuide && React.createElement('button',{className:'guide-trigger',onClick:()=>setShowGuide(true),title:'How to use DebateOS'},'?'),
     showAuth && React.createElement(AuthModal, { onSignIn: handleSignIn, onSkip: () => setShowAuth(false) }),
     React.createElement(SavedCasesSidebar, {
@@ -7612,11 +8438,12 @@ function App() {
           ),
       React.createElement('div',{className:'header'},
         React.createElement('h1',{className:'logo'},
-          React.createElement('span',{className:'green'},'Debate'),
-          React.createElement('span',{className:'white'},'OS'),
+          React.createElement('span',{style:{color:'#ef4444',fontWeight:900}},"Devil's "),
+          React.createElement('span',{className:'white'},'Advocate'),
         ),
+        React.createElement('p',{style:{color:'#64748b',fontSize:'.68rem',letterSpacing:'1.5px',textTransform:'uppercase',fontWeight:600,margin:'2px 0 0',textAlign:'center'}},'powered by DebateOS'),
         React.createElement('div',{style:{display:'flex',gap:4,alignItems:'center',justifyContent:'center',background:'var(--badge-row-bg,#ffffff08)',borderRadius:20,padding:'3px 4px',border:'1px solid var(--badge-row-border,#ffffff0c)',width:'fit-content',margin:'8px auto 0'}},
-          team && React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:team.status==='active'||team.status==='trialing'?'#22c55e15':'#f59e0b15',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>setTab('team')},team.plan.toUpperCase()),
+          team && React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:team.status==='active'||team.status==='trialing'?'#22c55e15':'#f59e0b15',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>navigateTab('team')},team.plan.toUpperCase()),
           React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:theme==='light'?'#3b82f612':'#f59e0b12',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'\u2600 Light':'\u263E Dark'),
           // Language selector — matching pill
           React.createElement('span',{style:{position:'relative',display:'inline-flex',alignItems:'center'}},
@@ -7633,11 +8460,6 @@ function App() {
       ),
       // Hero section
       React.createElement('div',{className:'hero'},
-        React.createElement('h2',{className:'hero-title'},
-          t('hero.title1', 'The '),
-          React.createElement('span',{className:'accent'}, t('hero.titleAccent', 'AI toolkit')),
-          t('hero.title2', ' for competitive debaters')
-        ),
         React.createElement('p',{className:'hero-tagline'},
           t('hero.tagline', 'Generate cases, simulate rounds, map arguments, and get judge-level feedback.')
         ),
@@ -7645,6 +8467,13 @@ function App() {
       // Why APDA? explainer card
       React.createElement(WhyAPDA),
       React.createElement('nav',{className:'nav'},
+        React.createElement('button',{
+          className:'nav-btn nav-back',
+          onClick:goBack,
+          disabled:tabHistory.length===0,
+          title:'Go back',
+          style:{opacity:tabHistory.length===0?.3:1,fontSize:'.9rem',padding:'6px 10px',minWidth:36}
+        },'\u2190'),
         TABS.map(tb =>
           tb.divider
             ? React.createElement('div',{key:tb.id,className:'nav-divider'})
@@ -7660,7 +8489,7 @@ function App() {
             : React.createElement('button',{
                 key:tb.id,
                 className:'nav-btn'+(tab===tb.id?' active':''),
-                onClick:()=>setTab(tb.id)
+                onClick:()=>navigateTab(tb.id)
               }, t(tb.i18n, tb.label))
         )
       ),
