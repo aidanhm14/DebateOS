@@ -7687,21 +7687,39 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
 
   if (teamLoading) return el('div', {className:'panel', style:{textAlign:'center',padding:60}}, t('team.loading','Loading...'));
 
-  if (!user) return el('div', {className:'panel', style:{textAlign:'center',padding:60}},
-    el('h2', {style:{fontSize:'1.4rem',color:'#e4e8f0',marginBottom:12}}, t('team.signInTitle','Sign in to manage your team')),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem'}}, t('team.signInDesc','Sign in with Google to create or join a debate team.')),
+  if (!user) return el('div', {className:'panel'},
+    el('h2', {style:{fontSize:'1.6rem',fontWeight:800,color:'#e4e8f0',marginBottom:8,textAlign:'center'}}, 'Choose Your Plan'),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem',textAlign:'center',marginBottom:24}}, 'Sign up free or upgrade for more power and team collaboration.'),
+    el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginBottom:24}},
+      ...[
+        {name:'Free',price:'$0',requests:'10/mo',members:'3 members',highlight:false,desc:'Get started'},
+        {name:'Individual',price:'$5/mo',requests:'300/mo',members:'1 member',highlight:true,desc:'For serious competitors'},
+        {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false,desc:'For clubs and programs'},
+      ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
+        p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},'Most Popular'),
+        el('h3',{style:{color:'#e4e8f0',fontSize:'1.1rem',fontWeight:700,marginBottom:4}},p.name),
+        el('div',{style:{fontSize:'1.5rem',fontWeight:800,color:'#fff',marginBottom:4}},p.price),
+        el('div',{style:{color:'#64748b',fontSize:'.78rem',marginBottom:8}},p.desc),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},p.requests+' requests'),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},p.members),
+        el('div',{style:{color:'#94a3b8',fontSize:'.82rem',lineHeight:1.8}},'All tools included'),
+      ))
+    ),
+    el('div', {style:{textAlign:'center'}},
+      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',marginBottom:12}}, 'Sign in with Google to get started'),
+    ),
   );
 
   if (!team) return el('div', {className:'panel'},
     el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:8}}, t('team.getStarted','Get Started')),
-    el('p', {style:{color:'#94a3b8',fontSize:'.92rem',marginBottom:24}}, t('team.createDesc','Create a team to start using DebateOS. Every team gets a 14-day free trial.')),
+    el('p', {style:{color:'#94a3b8',fontSize:'.92rem',marginBottom:24}}, t('team.createDesc','Create a team to start using Devil\'s Advocate. Free plan includes 10 requests/month.')),
     el('div', {style:{display:'flex',gap:8,marginBottom:16}},
       el('input', {value:teamName, onChange:e=>setTeamName(e.target.value), placeholder:t('team.teamNamePlaceholder','Team name (e.g. Springfield Debate)'), style:{flex:1,padding:'10px 14px',background:'#151d2b',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.9rem',outline:'none'}}),
       el('button', {onClick:createTeam, disabled:actionLoading||!teamName.trim(), style:{padding:'10px 20px',background:'#ef4444',border:'none',borderRadius:8,color:'#fff',fontWeight:600,cursor:'pointer',opacity:actionLoading?.5:1}}, actionLoading?t('team.creating','Creating...'):t('team.createTeam','Create Team')),
     ),
     el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginTop:24}},
       ...[
-        {name:'Trial',price:'Free',requests:'25/mo',members:'3 members',highlight:false},
+        {name:'Free',price:'$0',requests:'10/mo',members:'3 members',highlight:false},
         {name:'Individual',price:'$5/mo',requests:'300/mo',members:'1 member',highlight:true},
         {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false},
       ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
