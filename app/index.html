@@ -733,6 +733,15 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   .forum-compose textarea{min-height:80px}
   .newbie-toc{grid-template-columns:1fr}
   select{min-height:44px;font-size:.92rem}
+  .argmap-container{min-height:400px}
+}
+@media(max-width:380px){
+  .logo{font-size:1.6rem}
+  .hero-title{font-size:1.6rem}
+  .nav-btn{padding:8px 12px;font-size:.68rem}
+  .profile-badge{right:8px;padding:4px 8px}
+  .profile-name{display:none}
+  .panel{padding:16px 12px}
 }
 
 
@@ -7673,6 +7682,10 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
   const [actionLoading, setActionLoading] = useState(false);
 
   const getToken = async () => user ? await user.getIdToken() : null;
+  const errMsg = (err) => 'Error: ' + (err?.message || err?.error || 'Something went wrong');
+
+  // Clear stale messages when team changes
+  useEffect(() => { setMsg(''); }, [team]);
 
   useEffect(() => {
     if (!team) return;
@@ -7697,9 +7710,9 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setMsg('Team created! You have a 14-day free trial.');
+      setMsg('Team created!');
       onTeamCreated(data);
-    } catch (err) { setMsg('Error: ' + err.message); }
+    } catch (err) { setMsg(errMsg(err)); }
     setActionLoading(false);
   };
 
@@ -7718,7 +7731,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       setMsg(data.message); setInviteEmail('');
       const res2 = await fetch('/api/teams/members', { headers: { Authorization: 'Bearer ' + token } });
       if (res2.ok) { const d = await res2.json(); setMembers(d.members || []); }
-    } catch (err) { setMsg('Error: ' + err.message); }
+    } catch (err) { setMsg(errMsg(err)); }
     setActionLoading(false);
   };
 
@@ -7733,7 +7746,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       if (!res.ok) throw new Error(data.error);
       setMembers(prev => prev.filter(m => m.id !== memberId));
       setMsg('Member removed.');
-    } catch (err) { setMsg('Error: ' + err.message); }
+    } catch (err) { setMsg(errMsg(err)); }
   };
 
   const openCheckout = async (plan) => {
@@ -7748,7 +7761,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       window.location.href = data.url;
-    } catch (err) { setMsg('Error: ' + err.message); setActionLoading(false); }
+    } catch (err) { setMsg(errMsg(err)); setActionLoading(false); }
   };
 
   const openPortal = async () => {
@@ -7761,7 +7774,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       window.location.href = data.url;
-    } catch (err) { setMsg('Error: ' + err.message); setActionLoading(false); }
+    } catch (err) { setMsg(errMsg(err)); setActionLoading(false); }
   };
 
   if (teamLoading) return el('div', {className:'panel', style:{textAlign:'center',padding:60}}, t('team.loading','Loading...'));
@@ -7804,8 +7817,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     el('div', {style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:24,flexWrap:'wrap',gap:12}},
       el('div', null,
         el('h2', {style:{fontSize:'1.4rem',fontWeight:800,color:'#e4e8f0',marginBottom:4}}, team.teamName || 'Your Team'),
-        el('span', {style:{fontSize:'.75rem',padding:'3px 10px',borderRadius:20,fontWeight:700,background:planColor+'20',color:planColor,textTransform:'uppercase',letterSpacing:'.5px'}}, team.plan + ' plan'),
-        team.status === 'trialing' && team.trialEndsAt && el('span',{style:{fontSize:'.78rem',color:'#f59e0b',marginLeft:12}}, 'Trial ends ' + new Date(team.trialEndsAt).toLocaleDateString()),
+        el('span', {style:{fontSize:'.75rem',padding:'3px 10px',borderRadius:20,fontWeight:700,background:planColor+'20',color:planColor,textTransform:'uppercase',letterSpacing:'.5px'}}, (team.plan === 'trial' ? 'free' : team.plan) + ' plan'),
       ),
       isOwner && el('button', {onClick:team.stripeSubscriptionId?openPortal:()=>openCheckout('team'), style:{padding:'8px 16px',background:'#ffffff08',border:'1px solid #ffffff15',borderRadius:8,color:'#e2e8f0',fontSize:'.82rem',fontWeight:600,cursor:'pointer'}}, team.stripeSubscriptionId?t('team.manageBilling','Manage Billing'):t('team.upgradePlan','Upgrade Plan')),
     ),
@@ -7824,7 +7836,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
         el('span', {style:{fontSize:'1.1rem'}}, '\u26A1'),
         el('div', {style:{fontWeight:800,color:'#f59e0b',fontSize:'.95rem'}}, t('team.upgradePlan','Upgrade Your Plan')),
       ),
-      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free trial with ' + (team.usageLimit||25) + ' requests/month. Upgrade for more power and team collaboration.'),
+      el('p', {style:{color:'#94a3b8',fontSize:'.85rem',lineHeight:1.6,marginBottom:16}}, 'You\'re on the free plan with ' + (team.usageLimit||25) + ' requests/month. Upgrade for more power and team collaboration.'),
       el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
         el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'14px 16px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:10,color:'#60a5fa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
           el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#3b82f6',marginBottom:2}}, '$5/mo'),
@@ -7901,7 +7913,7 @@ function SharedCases({ user, team }) {
       });
       setMsg('Case shared with your team!');
       setSelectedCase('');
-    } catch (err) { setMsg('Error: ' + err.message); }
+    } catch (err) { setMsg('Error: ' + (err?.message || 'Something went wrong')); }
     setSharing(false);
   };
 
@@ -8472,7 +8484,7 @@ function App() {
         ),
         React.createElement('p',{style:{color:'#64748b',fontSize:'.68rem',letterSpacing:'1.5px',textTransform:'uppercase',fontWeight:600,margin:'2px 0 0',textAlign:'center'}},'powered by DebateOS'),
         React.createElement('div',{style:{display:'flex',gap:4,alignItems:'center',justifyContent:'center',background:'var(--badge-row-bg,#ffffff08)',borderRadius:20,padding:'3px 4px',border:'1px solid var(--badge-row-border,#ffffff0c)',width:'fit-content',margin:'8px auto 0'}},
-          team && React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:team.status==='active'||team.status==='trialing'?'#22c55e15':'#f59e0b15',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>navigateTab('team')},team.plan.toUpperCase()),
+          team && React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:team.status==='active'||team.status==='trialing'?'#22c55e15':'#f59e0b15',color:team.status==='active'||team.status==='trialing'?'#22c55e':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>navigateTab('team')},(team.plan === 'trial' ? 'FREE' : team.plan.toUpperCase())),
           React.createElement('span',{style:{fontSize:'.6rem',padding:'3px 10px',borderRadius:16,fontWeight:600,lineHeight:'18px',background:theme==='light'?'#3b82f612':'#f59e0b12',color:theme==='light'?'#3b82f6':'#f59e0b',cursor:'pointer',letterSpacing:'.5px',transition:'.2s'},onClick:()=>setTheme(theme==='dark'?'light':'dark')},theme==='dark'?'\u2600 Light':'\u263E Dark'),
           // Language selector — matching pill
           React.createElement('span',{style:{position:'relative',display:'inline-flex',alignItems:'center'}},

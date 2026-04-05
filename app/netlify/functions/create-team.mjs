@@ -41,7 +41,7 @@ export default async (request) => {
 
     const db = getDb();
     const now = new Date();
-    const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
+    const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()); // 1 month from now
 
     // Create team document
     const teamRef = db.collection('teams').doc();
@@ -51,10 +51,10 @@ export default async (request) => {
       stripeCustomerId: customer.id,
       stripeSubscriptionId: null,
       plan: 'trial',
-      status: 'trialing',
-      trialEndsAt: trialEnd,
+      status: 'active',
+      trialEndsAt: null,
       currentPeriodStart: now,
-      currentPeriodEnd: trialEnd,
+      currentPeriodEnd: periodEnd,
       usageThisPeriod: 0,
       usageLimit: PLANS.trial.requests,
       memberCount: 1,
@@ -86,9 +86,9 @@ export default async (request) => {
     return jsonResponse({
       id: teamRef.id,
       ...teamData,
-      trialEndsAt: trialEnd.toISOString(),
+      trialEndsAt: null,
       currentPeriodStart: now.toISOString(),
-      currentPeriodEnd: trialEnd.toISOString(),
+      currentPeriodEnd: periodEnd.toISOString(),
     }, 201);
   } catch (err) {
     console.error('create-team error:', err);
