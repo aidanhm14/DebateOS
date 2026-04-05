@@ -1,7 +1,6 @@
 [build]
-  base = "app"
-  publish = "app"
-  functions = "app/netlify/functions"
+  publish = "."
+  functions = "netlify/functions"
 
 [build.environment]
   NETLIFY_SKIP_SECRETS_CHECK = "true"
@@ -9,3 +8,13 @@
 [functions]
   external_node_modules = ["@google-cloud/firestore", "stripe"]
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/app/*"
+  to = "/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/"
+  status = 200
