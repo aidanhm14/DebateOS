@@ -29,9 +29,22 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 .stream-section-0{animation-delay:0s}.stream-section-1{animation-delay:.08s}.stream-section-2{animation-delay:.16s}.stream-section-3{animation-delay:.24s}.stream-section-4{animation-delay:.32s}.stream-section-5{animation-delay:.4s}.stream-section-6{animation-delay:.48s}.stream-section-7{animation-delay:.56s}.stream-section-8{animation-delay:.64s}.stream-section-9{animation-delay:.72s}.case-output ol,.output-box ol,.round-sim-output ol,.philosophy-output ol,.feedback-output ol,.judge-output ol,.casual-output ol{list-style-type:decimal;padding-left:1.5em;margin:0.3em 0}.case-output ol ol,.output-box ol ol,.round-sim-output ol ol,.philosophy-output ol ol,.feedback-output ol ol,.judge-output ol ol,.casual-output ol ol{list-style-type:lower-alpha}.case-output ol ol ol,.output-box ol ol ol,.round-sim-output ol ol ol{list-style-type:lower-roman}.case-output ol ol ol ol,.output-box ol ol ol ol,.round-sim-output ol ol ol ol{list-style-type:decimal}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:#0a0e18;background:radial-gradient(ellipse at 20% 0%,#1a0a0a 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,#0a0f1f 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,#0d1117 0%,#0a0e18 100%)}
 #debate-flow-bg{display:none}
-.bg-debate-side{position:fixed;top:0;bottom:0;width:120px;z-index:0;pointer-events:none;overflow:hidden}
+.bg-debate-side{position:fixed;top:0;bottom:0;width:200px;z-index:0;pointer-events:none;overflow:hidden}
 .bg-debate-left{left:0}
 .bg-debate-right{right:0}
+.bg-debate-side::before,.bg-debate-side::after{content:'';position:absolute;border:1px solid #ffffff06;border-radius:2px;transform:rotate(15deg);animation:geoFloat 20s ease-in-out infinite alternate}
+.bg-debate-left::before{width:120px;height:120px;top:15%;left:-20px;border-color:#ef444410;transform:rotate(25deg) perspective(400px) rotateY(15deg)}
+.bg-debate-left::after{width:80px;height:80px;bottom:25%;left:30px;border-color:#f59e0b08;transform:rotate(-10deg) perspective(300px) rotateX(20deg);animation-delay:-8s}
+.bg-debate-right::before{width:100px;height:100px;top:30%;right:-10px;border-color:#3b82f60a;transform:rotate(-20deg) perspective(400px) rotateY(-15deg);animation-delay:-4s}
+.bg-debate-right::after{width:140px;height:140px;bottom:15%;right:-30px;border-color:#ef444408;transform:rotate(30deg) perspective(500px) rotateX(-10deg) rotateY(25deg);animation-delay:-12s}
+.geo-shape{position:absolute;border:1px solid;opacity:.5;animation:geoFloat 25s ease-in-out infinite alternate}
+.geo-diamond{width:60px;height:60px;top:40%;left:50%;transform:rotate(45deg) perspective(300px) rotateX(15deg);border-color:#ef444412}
+.geo-hex{width:50px;height:50px;top:60%;left:20%;border-radius:12px;transform:rotate(30deg) perspective(400px) rotateY(20deg);border-color:#f59e0b0a;animation-delay:-6s}
+.geo-ring{width:90px;height:90px;top:20%;left:40%;border-radius:50%;border-color:#3b82f60a;border-width:1.5px;animation-delay:-14s}
+.bg-debate-right .geo-diamond{top:55%;left:auto;right:40%;animation-delay:-3s}
+.bg-debate-right .geo-hex{top:75%;left:auto;right:60%;animation-delay:-10s}
+.bg-debate-right .geo-ring{top:35%;left:auto;right:20%;animation-delay:-18s}
+@keyframes geoFloat{0%{transform:rotate(15deg) translateY(0) perspective(400px) rotateY(15deg)}50%{transform:rotate(18deg) translateY(-20px) perspective(400px) rotateY(20deg)}100%{transform:rotate(12deg) translateY(10px) perspective(400px) rotateY(10deg)}}
 
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
@@ -752,6 +765,11 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme .app{background:#f0f4fc!important}
 .light-theme .bg-canvas{background:#f0f4fc!important}
 .light-theme .bg-canvas canvas{display:none!important}
+.light-theme .geo-shape{opacity:.3}
+.light-theme .geo-diamond{border-color:#ef444418!important}
+.light-theme .geo-hex{border-color:#f59e0b15!important}
+.light-theme .geo-ring{border-color:#3b82f615!important}
+.light-theme .bg-debate-side::before,.light-theme .bg-debate-side::after{border-color:#00000008!important}
 .light-theme #debate-flow-bg{background:#f0f4fc!important}
 .light-theme #debate-flow-bg canvas{display:none!important}
 .light-theme .logo{color:#2563eb!important}
@@ -1850,8 +1868,16 @@ function PolyBackground() {
   return el(React.Fragment,null,
     el('div',{className:'bg-canvas'}),
     el('div',{id:'debate-flow-bg'}),
-    el('div',{className:'bg-debate-side bg-debate-left'}),
-    el('div',{className:'bg-debate-side bg-debate-right'})
+    el('div',{className:'bg-debate-side bg-debate-left'},
+      el('div',{className:'geo-shape geo-diamond'}),
+      el('div',{className:'geo-shape geo-hex'}),
+      el('div',{className:'geo-shape geo-ring'})
+    ),
+    el('div',{className:'bg-debate-side bg-debate-right'},
+      el('div',{className:'geo-shape geo-diamond'}),
+      el('div',{className:'geo-shape geo-hex'}),
+      el('div',{className:'geo-shape geo-ring'})
+    )
   );
 }
 
@@ -5424,13 +5450,16 @@ Return ONLY valid JSON in this exact format, no text before or after:
 ]
 
 Rules:
-- Identify 6-10 sections. Mix positive and negative.
+- Identify 10-18 sections based on genuine need. SHORT cases may need fewer; LONG or MESSY cases need more. Scale your comments to match the actual quality of the case. A clean case gets 8-10 focused comments. A sloppy case gets 15+ because there is more to fix.
+- PRIORITIZE BY SEVERITY: Lead with the comments that would lose the round, then structural issues, then polish.
 - Each excerpt must be an EXACT substring of the case text (verbatim, including punctuation)
-- Feedback must be specific and strategic. Name the exact problem and suggest what to do instead.
+- Feedback must be specific and strategic. Name the exact problem, explain WHY it is a problem in a round, and give a concrete rewrite suggestion.
 - At least one comment MUST identify the biggest strategic vulnerability: "If I'm opp, I collapse on THIS."
 - At least one comment MUST flag any section that sounds AI-generated and explain the tell
 - At least one comment MUST evaluate the framework's ability to actually resolve the round
-- At least one comment should be genuinely positive about something that's actually strong
+- At least 2-3 comments should be genuinely positive about things that are actually strong. Good debaters need to know what to PROTECT, not just what to fix.
+- Flag structural problems: arguments that depend on each other, missing counterfactual, no concession strategy, impacts stated but not weighed
+- Flag messy writing: unclear thesis sentences, paragraphs that meander, warrants that start strong and trail off, sub-points that repeat the same idea in different words
 - Order by position in the case (first excerpt appears earliest)
 - Use markdown formatting for readability: **bold** for key terms, ## for section headers`;
 
