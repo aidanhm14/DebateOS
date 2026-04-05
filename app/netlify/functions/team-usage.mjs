@@ -32,6 +32,7 @@ export default async (request) => {
     usageLimit: planLimits.requests,
     memberCount: team.memberCount || 1,
     maxMembers: planLimits.members,
+    stripeSubscriptionId: team.stripeSubscriptionId || null,
     currentPeriodEnd: team.currentPeriodEnd?.toDate?.()?.toISOString()
       || team.currentPeriodEnd || null,
     trialEndsAt: team.trialEndsAt?.toDate?.()?.toISOString()

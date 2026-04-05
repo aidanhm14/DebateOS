@@ -39,22 +39,24 @@ export default async (request) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const siteUrl = process.env.SITE_URL || 'https://debateos1.netlify.app';
 
-  const session = await stripe.checkout.sessions.create({
-    customer: team.stripeCustomerId,
-    mode: 'subscription',
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${siteUrl}?billing=success`,
-    cancel_url: `${siteUrl}?billing=canceled`,
-    subscription_data: {
-      metadata: { teamId: team.id },
-    },
-    ...(team.plan === 'trial' ? { subscription_data: {
-      trial_period_days: 14,
-      metadata: { teamId: team.id },
-    }} : {}),
-  });
+  try {
+    const sessionParams = {
+      customer: team.stripeCustomerId,
+      mode: 'subscription',
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${siteUrl}?billing=success`,
+      cancel_url: `${siteUrl}?billing=canceled`,
+      subscription_data: {
+        metadata: { teamId: team.id },
+      },
+    };
 
-  return jsonResponse({ url: session.url });
+    const session = await stripe.checkout.sessions.create(sessionParams);
+    return jsonResponse({ url: session.url });
+  } catch (err) {
+    console.error('Stripe checkout error:', err);
+    return errorResponse('Stripe error: ' + err.message, 500);
+  }
 };
 
 export const config = {
