@@ -1,0 +1,54 @@
+import { verifyIdToken, extractBearerToken } from './lib/auth.mjs';
+import { getUserTeam } from './lib/firestore.mjs';
+import { corsResponse, jsonResponse, errorResponse } from './lib/response.mjs';
+
+export default async (request) => {
+  if (request.method === 'OPTIONS') return corsResponse();
+  if (request.method !== 'GET') return errorResponse('Method not allowed', 405);
+
+  const token = extractBearerToken(request);
+  if (!token) return errorResponse('Authorization required', 401);
+
+  let decoded;
+  try {
+    decoded = await verifyIdToken(token);
+  } catch (err) {
+    return errorResponse('Invalid token: ' + err.message, 401);
+  }
+
+  const result = await getUserTeam(decoded.sub);
+  if (!result) return errorResponse('No team found', 404);
+
+  const { team } = result;
+
+  try {
+    const { getDb } = await import('./lib/firestore.mjs');
+    const db = getDb();
+    const snap = await db.collection('usage_logs')
+      .where('teamId', '==', team.id)
+      .orderBy('timestamp', 'desc')
+      .limit(200)
+      .get();
+
+    const logs = snap.docs.map(d => {
+      const data = d.data();
+      return {
+        id: d.id,
+        feature: data.feature || 'unknown',
+        userId: data.userId,
+        timestamp: data.timestamp?.toDate?.()?.toISOString() || data.timestamp || null,
+        inputTokens: data.inputTokens || 0,
+        outputTokens: data.outputTokens || 0,
+      };
+    });
+
+    return jsonResponse({ logs });
+  } catch (err) {
+    console.error('team-analytics error:', err);
+    return errorResponse('Server error: ' + err.message, 500);
+  }
+};
+
+export const config = {
+  path: '/api/teams/analytics',
+};

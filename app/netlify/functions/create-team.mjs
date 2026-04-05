@@ -84,11 +84,18 @@ export default async (request) => {
     }, { merge: true });
 
     return jsonResponse({
-      id: teamRef.id,
-      ...teamData,
-      trialEndsAt: null,
-      currentPeriodStart: now.toISOString(),
+      teamId: teamRef.id,
+      teamName: teamName,
+      plan: teamData.plan,
+      status: teamData.status,
+      role: 'owner',
+      usageThisPeriod: 0,
+      usageLimit: teamData.usageLimit,
+      memberCount: 1,
+      maxMembers: teamData.maxMembers,
+      stripeSubscriptionId: null,
       currentPeriodEnd: periodEnd.toISOString(),
+      trialEndsAt: null,
     }, 201);
   } catch (err) {
     console.error('create-team error:', err);
