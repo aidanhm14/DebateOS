@@ -3906,18 +3906,24 @@ function Resolutions() {
     setSpinning(true);
     setBgText(null);
     const pool = active.length > 0 ? active : CATEGORIES;
-    const cat = pool[Math.floor(Math.random()*pool.length)];
-    const motions = RESOLUTIONS_DB[cat];
-    const motion = motions[Math.floor(Math.random()*motions.length)];
+    // Pick 3 unique motions
+    const picked = [];
+    const seen = new Set();
+    while (picked.length < 3) {
+      const cat = pool[Math.floor(Math.random()*pool.length)];
+      const motions = RESOLUTIONS_DB[cat];
+      const m = motions[Math.floor(Math.random()*motions.length)];
+      if (!seen.has(m)) { seen.add(m); picked.push(m); }
+    }
     let count = 0;
     const interval = setInterval(() => {
       const rCat = pool[Math.floor(Math.random()*pool.length)];
       const rMot = RESOLUTIONS_DB[rCat][Math.floor(Math.random()*RESOLUTIONS_DB[rCat].length)];
-      setResult(rMot);
+      setResult([rMot, rMot, rMot]);
       count++;
       if (count > 8) {
         clearInterval(interval);
-        setResult(motion);
+        setResult(picked);
         setSpinning(false);
       }
     }, 120);
@@ -4026,7 +4032,8 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
 4. Note any important caveats or scope limitations a government team should consider (1-2 sentences)
 
 Keep it to 80-150 words. Be specific, use real facts and policies. Do NOT use specific statistics or numbers unless the user provided them — all facts must be common knowledge. Write in the style of a competitive APDA case background section. Use markdown formatting for readability: **bold** for key terms and argument names, ## for main section headers, ### for sub-sections. Use numbered lists and lettered sub-points. Do not use em dashes, en dashes, or hyphens as separators.`;
-      const userPrompt = `Motion: ${result}\n\nWrite the background section.`;
+      const selectedMotion = Array.isArray(result) ? result[result._selected || 0] : result;
+      const userPrompt = `Motion: ${selectedMotion}\n\nWrite the background section.`;
       await callClaude(sysPrompt, userPrompt, (text) => setBgText(text), { thinkBudget: 6000, maxTokens: 4000 });
     } catch(e) {
       setBgText('Error: ' + e.message);
@@ -4131,8 +4138,17 @@ Use markdown formatting for readability: **bold** for key terms and argument nam
           style:{padding:'18px 48px',fontSize:'1.1rem',borderRadius:16}
         }, spinning ? t('motions.rolling','Rolling...') : t('motions.roll','Roll'))
       ),
-      result && el('div',{className:'res-expanded'},
-        el('div',{className:'res-card',style:{marginTop:16}}, result),
+      result && Array.isArray(result) && el('div',{className:'res-expanded'},
+        result.map((m, i) =>
+          el('div',{key:i,className:'res-card',style:{marginTop:i===0?16:10,cursor:'pointer',border:result._selected===i?'1.5px solid #ef4444':'1px solid #ffffff14',transition:'all .2s ease'},onClick:()=>{
+            const r = [...result]; r._selected = i; setResult(r);
+          }},
+            el('div',{style:{display:'flex',alignItems:'center',gap:10}},
+              el('span',{style:{fontSize:'.72rem',fontWeight:700,color:result._selected===i?'#ef4444':'#64748b',background:result._selected===i?'#ef444418':'#ffffff08',padding:'2px 8px',borderRadius:6,flexShrink:0}},'Option '+(i+1)),
+              el('span',null, m)
+            )
+          )
+        ),
         el('div',{className:'res-actions'},
           el('button',{
             className:'btn btn-secondary btn-sm',
