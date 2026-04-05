@@ -8340,7 +8340,7 @@ function App() {
   React.createElement(React.Fragment,null,
     React.createElement(PolyBackground),
     // Auth gate — sign in or use BYOK key
-    !user && !authLoading && !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)'}},
+    !user && !authLoading && !userApiKey && React.createElement('div',{style:{position:'fixed',inset:0,zIndex:9999,background:'rgba(10,15,25,.92)',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(8px)',overflowY:'auto',padding:'20px 0'}},
       React.createElement('div',{style:{background:'#131a27',border:'1px solid #ffffff12',borderRadius:16,padding:'40px 48px',maxWidth:520,width:'90%',textAlign:'center'}},
         React.createElement('h1',{style:{fontSize:'2.2rem',fontWeight:900,color:'#f1f5f9',marginBottom:4}},
           React.createElement('span',{style:{color:'#ef4444'}},"Devil's "),
