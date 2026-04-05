@@ -25,8 +25,9 @@ export default async (request) => {
     return errorResponse('Only the team owner can manage billing', 403);
   }
 
-  const body = await request.json();
-  const planId = body.plan; // "team" or "school"
+  let body;
+  try { body = await request.json(); } catch { return errorResponse('Invalid request body', 400); }
+  const planId = body.plan; // "individual" or "team"
 
   const priceMap = {
     individual: process.env.STRIPE_PRICE_INDIVIDUAL,

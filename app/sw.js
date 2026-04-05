@@ -1,4 +1,4 @@
-const CACHE_NAME = 'debateos-v3';
+const CACHE_NAME = 'debateos-v4';
 
 const APP_SHELL = [
   '/',
@@ -6,7 +6,6 @@ const APP_SHELL = [
   'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js',
 ];
 

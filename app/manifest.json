@@ -1,7 +1,7 @@
 {
-  "name": "DebateOS",
-  "short_name": "DebateOS",
-  "description": "AI-powered debate toolkit for competitive debaters",
+  "name": "Devil's Advocate",
+  "short_name": "Devil's Advocate",
+  "description": "AI-powered debate toolkit — generate cases, simulate rounds, map arguments, get judge-level feedback",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0e18",

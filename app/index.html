@@ -9,10 +9,11 @@
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Devil's Advocate — AI-powered debate toolkit</title>
+<meta name="description" content="Generate debate cases, simulate rounds, map arguments, and get judge-level feedback. The AI toolkit built for competitive parliamentary debaters.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -28,7 +29,6 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 .stream-new{animation:sectionReveal 0.7s cubic-bezier(.16,1,.3,1) both}
 .stream-section-0{animation-delay:0s}.stream-section-1{animation-delay:.08s}.stream-section-2{animation-delay:.16s}.stream-section-3{animation-delay:.24s}.stream-section-4{animation-delay:.32s}.stream-section-5{animation-delay:.4s}.stream-section-6{animation-delay:.48s}.stream-section-7{animation-delay:.56s}.stream-section-8{animation-delay:.64s}.stream-section-9{animation-delay:.72s}.case-output ol,.output-box ol,.round-sim-output ol,.philosophy-output ol,.feedback-output ol,.judge-output ol,.casual-output ol{list-style-type:decimal;padding-left:1.5em;margin:0.3em 0}.case-output ol ol,.output-box ol ol,.round-sim-output ol ol,.philosophy-output ol ol,.feedback-output ol ol,.judge-output ol ol,.casual-output ol ol{list-style-type:lower-alpha}.case-output ol ol ol,.output-box ol ol ol,.round-sim-output ol ol ol{list-style-type:lower-roman}.case-output ol ol ol ol,.output-box ol ol ol ol,.round-sim-output ol ol ol ol{list-style-type:decimal}.case-output,.output-box,.round-sim-output,.philosophy-output,.feedback-output,.judge-output,.casual-output{line-height:1.75;letter-spacing:0.01em;word-spacing:0.04em} /* ── Background ──────────────────────────────── */
 .bg-canvas{position:fixed;inset:0;z-index:0;background:#0a0e18;background:radial-gradient(ellipse at 20% 0%,#1a0a0a 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,#0a0f1f 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,#0d1117 0%,#0a0e18 100%)}
-#debate-flow-bg{display:none}
 .bg-debate-side{position:fixed;top:0;bottom:0;width:200px;z-index:0;pointer-events:none;overflow:hidden}
 .bg-debate-left{left:0}
 .bg-debate-right{right:0}
@@ -770,8 +770,6 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme .geo-hex{border-color:#f59e0b15!important}
 .light-theme .geo-ring{border-color:#3b82f615!important}
 .light-theme .bg-debate-side::before,.light-theme .bg-debate-side::after{border-color:#00000008!important}
-.light-theme #debate-flow-bg{background:#f0f4fc!important}
-.light-theme #debate-flow-bg canvas{display:none!important}
 .light-theme .logo{color:#2563eb!important}
 .light-theme .subtitle{color:#6b7fa0!important}
 .light-theme .nav-btn{background:transparent!important;color:#64748b!important;border-color:transparent!important}
@@ -1725,82 +1723,8 @@ const JUDGE_TAGS = ['STRONG WARRANT','DROPPED ARG','GOOD TURN','NEW IN REBUTTAL'
    never demanding attention, always rewarding it.
    ═══════════════════════════════════════════════════ */
 
-let _p5Instance = null;
-
-function initDialecticalFlow() {
-  if (_p5Instance) return;
-  const container = document.getElementById('debate-flow-bg');
-  if (!container) return;
-
-  _p5Instance = new p5(function(p) {
-    /* ── Minimalist Config ─────────────────── */
-    const BG = [10, 14, 24];
-    const ORB_COUNT = 4;
-    let orbs = [];
-    let w, h;
-
-    class Orb {
-      constructor() {
-        this.reset();
-      }
-      reset() {
-        this.x = Math.random() * (w || window.innerWidth);
-        this.y = Math.random() * (h || window.innerHeight);
-        this.r = 150 + Math.random() * 300;
-        this.vx = (Math.random() - 0.5) * 0.15;
-        this.vy = (Math.random() - 0.5) * 0.12;
-        const palettes = [[239,68,68],[59,130,246],[251,191,36],[139,92,246]];
-        this.col = palettes[Math.floor(Math.random() * palettes.length)];
-        this.alpha = 8 + Math.random() * 12;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < -this.r || this.x > w + this.r) this.vx *= -1;
-        if (this.y < -this.r || this.y > h + this.r) this.vy *= -1;
-      }
-      draw() {
-        p.noStroke();
-        for (let i = 3; i >= 0; i--) {
-          const t = i / 3;
-          const size = this.r * (0.4 + t * 0.6);
-          p.fill(this.col[0], this.col[1], this.col[2], this.alpha * (1 - t * 0.7));
-          p.ellipse(this.x, this.y, size, size);
-        }
-      }
-    }
-
-    /* ── Setup ───────────────────────────────── */
-    p.setup = function() {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      const canvas = p.createCanvas(w, h);
-      canvas.parent(container);
-      p.pixelDensity(1);
-      p.background(BG[0], BG[1], BG[2]);
-      for (let i = 0; i < ORB_COUNT; i++) {
-        orbs.push(new Orb());
-      }
-      p.frameRate(30);
-    };
-
-    /* ── Draw loop ───────────────────────────── */
-    p.draw = function() {
-      p.background(BG[0], BG[1], BG[2]);
-      for (let i = 0; i < orbs.length; i++) {
-        orbs[i].update();
-        orbs[i].draw();
-      }
-    };
-
-    /* ── Resize ──────────────────────────────── */
-    p.windowResized = function() {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      p.resizeCanvas(w, h);
-    };
-  });
-}
+// p5 canvas removed — using CSS background instead
+function initDialecticalFlow() {}
 
 /* ═══════════════════════════════════════════════════
    i18n — INTERNATIONALIZATION INFRASTRUCTURE
@@ -1862,12 +1786,9 @@ function PolyBackground() {
   const el = React.createElement;
   useEffect(() => {
     // Small delay to ensure DOM is ready
-    const t = setTimeout(initDialecticalFlow, 100);
-    return () => clearTimeout(t);
   }, []);
   return el(React.Fragment,null,
     el('div',{className:'bg-canvas'}),
-    el('div',{id:'debate-flow-bg'}),
     el('div',{className:'bg-debate-side bg-debate-left'},
       el('div',{className:'geo-shape geo-diamond'}),
       el('div',{className:'geo-shape geo-hex'}),
@@ -2164,11 +2085,11 @@ function incAnonUsage() { try { localStorage.setItem('debateos-anon-usage', Stri
 
 async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   // Enforce 5-case limit for anonymous users (no account)
-  if (!__getAuthToken) {
+  const _isAnon = !__getAuthToken;
+  if (_isAnon) {
     if (getAnonUsage() >= ANON_LIMIT) {
       throw new Error('You\'ve used your ' + ANON_LIMIT + ' free generations. Sign up for a free account to get 10 requests/month, or upgrade for more.');
     }
-    incAnonUsage();
   }
 
   const thinkBudget = opts.thinkBudget || 10000;
@@ -2387,7 +2308,8 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
   }
 
   if (onProgress) onProgress({ phase: 'done', percent: 100 });
-  // Strip any markdown bold/italic that slipped through despite prompt instructions
+  // Count anonymous usage only on success
+  if (_isAnon) incAnonUsage();
   return fullText;
 }
 
@@ -5530,13 +5452,14 @@ Rules:
     setLoading(false);
   };
 
-  const handleReply = async (commentId) => {
-    if (!replyText.trim() || revising) return;
+  const handleReply = async (commentId, directText) => {
+    const text = directText || replyText;
+    if (!text.trim() || revising) return;
     const comment = comments.find(c => c.id === commentId);
     if (!comment) return;
 
     setRevising(true);
-    const userReply = replyText.trim();
+    const userReply = text.trim();
     setReplyText('');
 
     // Add user reply to comment
@@ -5705,7 +5628,7 @@ Rules:
               // Quick revision buttons when active
               activeComment === c.id && el('div', {style:{display:'flex',gap:6,flexWrap:'wrap',marginTop:6,marginLeft:12}},
                 ['Make More Specific','Add Examples','Strengthen Warrants','Make More Aggressive','Restructure'].map(action =>
-                  el('button', {key:action, onClick:()=>{setReplyText(action);setTimeout(()=>handleReply(c.id),50);}, disabled:revising, style:{padding:'5px 10px',background:'#ffffff06',border:'1px solid #ffffff12',borderRadius:6,color:'#94a3b8',fontSize:'.72rem',cursor:'pointer',transition:'.15s',fontFamily:'inherit'}}, action)
+                  el('button', {key:action, onClick:()=>handleReply(c.id, action), disabled:revising, style:{padding:'5px 10px',background:'#ffffff06',border:'1px solid #ffffff12',borderRadius:6,color:'#94a3b8',fontSize:'.72rem',cursor:'pointer',transition:'.15s',fontFamily:'inherit'}}, action)
                 )
               ),
               // Reply input when active
