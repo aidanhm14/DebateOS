@@ -1,6 +1,7 @@
 [build]
-  publish = "."
-  functions = "netlify/functions"
+  base = "app"
+  publish = "app"
+  functions = "app/netlify/functions"
 
 [build.environment]
   NETLIFY_SKIP_SECRETS_CHECK = "true"
