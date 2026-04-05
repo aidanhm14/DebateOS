@@ -824,6 +824,17 @@ html{background:#0a0e18}body.light-theme,body.light-theme~*{background:#f0f4fc!i
 .light-theme .auth-overlay{background:#f0f4fcee!important}
 .light-theme .auth-modal{background:#fff!important;border-color:#e2e8f0!important}
 .light-theme .revision-sidebar{background:#f8fafc!important;border-color:#e2e8f0!important}
+.light-theme .fb-case{background:#fff!important;color:#1e293b!important;border-color:#e2e8f0!important}
+.light-theme .fb-sidebar{background:#f8fafc!important;border-color:#e2e8f0!important}
+.light-theme .fb-sidebar-header{color:#1e293b!important;border-color:#e2e8f0!important}
+.light-theme .fb-comment{background:#fff!important;border-color:#e2e8f0!important;color:#1e293b!important}
+.light-theme .fb-comment.active{border-color:#3b82f6!important}
+.light-theme .fb-comment-excerpt{color:#64748b!important}
+.light-theme .fb-comment-text{color:#334155!important}
+.light-theme .fb-highlight{background:#fef3c7!important;border-color:#fcd34d!important}
+.light-theme .fb-highlight.active{background:#fde68a!important;border-color:#f59e0b!important}
+.light-theme .fb-reply-box{background:#f8fafc!important;border-color:#e2e8f0!important}
+.light-theme .fb-reply-box textarea{background:#fff!important;color:#1e293b!important;border-color:#cbd5e1!important}
 .light-theme .revision-header{color:#1a1a2e!important}
 .light-theme .revision-body{color:#475569!important}
 .light-theme .argmap-container{background:linear-gradient(145deg,#f8fafc,#f0f4fc)!important;border-color:#e2e8f0!important}
@@ -2158,7 +2169,6 @@ async function callClaude(systemPrompt, userPrompt, onChunk, opts = {}) {
     }
     if (response.status === 401 || response.status === 403) throw new Error('Authentication error — the API key may be invalid or expired. Contact the site admin.');
     if (response.status >= 500) throw new Error('The AI service is temporarily down. Try again in a minute.');
-    if (!navigator.onLine) throw new Error('You appear to be offline. Check your internet connection and try again.');
     throw new Error(`Something went wrong (${response.status}). ${err ? err.substring(0, 120) : 'Please try again.'}`);
   }
 
@@ -5481,25 +5491,28 @@ Rules:
       const newCaseText = caseText.substring(0, comment.startIdx) + revised + caseText.substring(comment.endIdx);
       setCaseText(newCaseText);
 
-      // Add AI reply
-      setComments(prev => prev.map(c => c.id === commentId
-        ? {...c, replies: [...c.replies, {role:'ai', text:'Section revised. Re-analyze to see updated feedback.'}], excerpt: revised, endIdx: comment.startIdx + revised.length}
-        : c
-      ));
+      // Shift indices for all comments after the revised one
+      const delta = revised.length - comment.excerpt.length;
+      const updatedComments = comments.map(c => {
+        if (c.id === commentId) {
+          return {...c, replies: [...c.replies, {role:'ai', text:'Section revised. Re-analyze to see updated feedback.'}], excerpt: revised, endIdx: comment.startIdx + revised.length};
+        }
+        if (c.startIdx > comment.endIdx) {
+          return {...c, startIdx: c.startIdx + delta, endIdx: c.endIdx + delta};
+        }
+        return c;
+      });
+      setComments(updatedComments);
 
-      // Re-segment with updated text
+      // Re-segment with updated text and corrected indices
       const newSegs = [];
       let cursor = 0;
-      const updatedComments = comments.map(c => c.id === commentId
-        ? {...c, excerpt: revised, endIdx: comment.startIdx + revised.length}
-        : c
-      );
       updatedComments.forEach(c => {
         if (c.startIdx > cursor) {
           newSegs.push({ text: newCaseText.substring(cursor, c.startIdx) });
         }
-        newSegs.push({ text: newCaseText.substring(c.startIdx, c.startIdx + c.excerpt.length), commentId: c.id });
-        cursor = c.startIdx + c.excerpt.length;
+        newSegs.push({ text: newCaseText.substring(c.startIdx, c.endIdx), commentId: c.id });
+        cursor = c.endIdx;
       });
       if (cursor < newCaseText.length) {
         newSegs.push({ text: newCaseText.substring(cursor) });
@@ -7582,7 +7595,7 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     navigator.clipboard.writeText(referralLink).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    });
+    }).catch(() => setMsg('Failed to copy. Try selecting the link manually.'));
   };
 
   const shareViaEmail = (email) => {
@@ -7693,8 +7706,8 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
     el('div', {style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16,marginBottom:24}},
       ...[
         {name:'Free',price:'$0',requests:'10/mo',members:'3 members',highlight:false,desc:'Get started'},
-        {name:'Individual',price:'$5/mo',requests:'300/mo',members:'1 member',highlight:true,desc:'For serious competitors'},
-        {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'50 members',highlight:false,desc:'For clubs and programs'},
+        {name:'Individual',price:'$5/mo',requests:'300/mo',members:'14 days free',highlight:true,desc:'For serious competitors'},
+        {name:'Team',price:'$30/mo',requests:'2,000/mo',members:'14 days free',highlight:false,desc:'For clubs and programs'},
       ].map(p => el('div',{key:p.name,style:{padding:24,background:p.highlight?'#ef444412':'#ffffff06',border:'1px solid '+(p.highlight?'#ef444440':'#ffffff10'),borderRadius:12,textAlign:'center'}},
         p.highlight && el('div',{style:{fontSize:'.7rem',fontWeight:700,color:'#ef4444',textTransform:'uppercase',letterSpacing:1,marginBottom:8}},'Most Popular'),
         el('h3',{style:{color:'#e4e8f0',fontSize:'1.1rem',fontWeight:700,marginBottom:4}},p.name),
@@ -7766,12 +7779,12 @@ function TeamDashboard({ user, team, teamLoading, onTeamCreated }) {
       el('div', {style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}},
         el('button', {onClick:()=>openCheckout('individual'),disabled:actionLoading,style:{padding:'14px 16px',background:'#3b82f615',border:'1px solid #3b82f640',borderRadius:10,color:'#60a5fa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s'}},
           el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#3b82f6',marginBottom:2}}, '$5/mo'),
-          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Individual \u2022 300 requests'),
+          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Individual \u2022 300 requests \u2022 14 days free'),
         ),
         el('button', {onClick:()=>openCheckout('team'),disabled:actionLoading,style:{padding:'14px 16px',background:'#8b5cf615',border:'1px solid #8b5cf640',borderRadius:10,color:'#a78bfa',fontWeight:700,cursor:'pointer',fontSize:'.85rem',transition:'.2s',position:'relative'}},
           el('div', {style:{position:'absolute',top:-8,right:12,fontSize:'.6rem',fontWeight:700,color:'#fff',background:'#8b5cf6',padding:'2px 8px',borderRadius:10,letterSpacing:'.5px',textTransform:'uppercase'}}, 'Popular'),
           el('div', {style:{fontSize:'1.2rem',fontWeight:800,color:'#8b5cf6',marginBottom:2}}, '$30/mo'),
-          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Team \u2022 2,000 requests \u2022 50 members'),
+          el('div', {style:{fontSize:'.72rem',color:'#94a3b8',fontWeight:400}}, 'Team \u2022 2,000 requests \u2022 14 days free'),
         ),
       ),
     ),
@@ -8238,7 +8251,7 @@ function UsageBanner({ team }) {
   return el('div', {style:{marginTop:8}}, ...parts);
 }
 
-function AdBanner({ team }) {
+function AdBanner({ team, onNavigate }) {
   const el = React.createElement;
   // Hide for paid users
   if (team && team.plan !== 'trial') return null;
@@ -8246,11 +8259,11 @@ function AdBanner({ team }) {
   if (dismissed) return null;
 
   const ads = [
-    { text: 'Upgrade to Individual for 300 requests/month', cta: 'Upgrade', color: '#3b82f6', action: 'upgrade' },
-    { text: 'Get unlimited case revisions + style customization', cta: 'Go Pro', color: '#8b5cf6', action: 'upgrade' },
-    { text: 'Join 100+ debaters using Devil\'s Advocate', cta: 'Share', color: '#f59e0b', action: 'share' },
+    { text: 'Upgrade to Individual \u2014 300 requests/month + 14 days free', cta: 'Upgrade', color: '#3b82f6', action: 'upgrade' },
+    { text: 'Go Pro \u2014 style customization + unlimited revisions + 14 days free', cta: 'Go Pro', color: '#8b5cf6', action: 'upgrade' },
+    { text: 'Join debaters using Devil\'s Advocate to win rounds', cta: 'Share', color: '#f59e0b', action: 'share' },
   ];
-  const ad = ads[Math.floor(Date.now() / 60000) % ads.length]; // rotates every minute
+  const ad = ads[Math.floor(Date.now() / 60000) % ads.length];
 
   return el('div', {style:{
     maxWidth:900,width:'94%',margin:'8px auto 0',padding:'8px 16px',
@@ -8260,6 +8273,7 @@ function AdBanner({ team }) {
   }},
     el('span', {style:{color:'#94a3b8',fontSize:'.78rem',flex:1}}, ad.text),
     el('button', {onClick:()=>{
+      if (ad.action === 'upgrade' && onNavigate) { onNavigate('team'); setDismissed(true); }
       if (ad.action === 'share') { navigator.clipboard && navigator.clipboard.writeText(window.location.origin); setDismissed(true); }
     }, style:{padding:'4px 14px',background:ad.color+'18',border:'1px solid '+ad.color+'35',borderRadius:6,color:ad.color,fontWeight:600,cursor:'pointer',fontSize:'.75rem',whiteSpace:'nowrap',fontFamily:'inherit'}}, ad.cta),
     el('button', {onClick:()=>setDismissed(true), style:{background:'none',border:'none',color:'#64748b',cursor:'pointer',fontSize:'.8rem',padding:'2px 6px'}}, '\u2715'),
@@ -8573,7 +8587,7 @@ function App() {
         )
       ),
       React.createElement(UsageBanner, { team: team }),
-      React.createElement(AdBanner, { team: team }),
+      React.createElement(AdBanner, { team: team, onNavigate: navigateTab }),
       // All tabs rendered but only active one visible — preserves state across switches
       tabPane('case', React.createElement(CaseGenerator, { onSave: saveCase, loadedCase: loadedCase, onClearLoaded: () => setLoadedCase(null) })),
       tabPane('simulator', React.createElement(RoundSimulator)),
