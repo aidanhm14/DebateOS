@@ -17,7 +17,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"><style>
 /* ── Reset & Base ─────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;width:100%;overflow-x:hidden}
@@ -37,7 +37,7 @@ body{font-family:'Lexend','Segoe UI',system-ui,-apple-system,sans-serif;-webkit-
 /* ── App Shell ────────────────────────────────── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;width:100%}
 .header{text-align:center;padding:28px 20px 0}
-.logo{font-size:4rem;font-weight:900;letter-spacing:-2px;line-height:1;display:flex;align-items:center;justify-content:center;gap:3px}
+.logo{font-family:'Unbounded',sans-serif;font-size:3.6rem;font-weight:900;letter-spacing:-1px;line-height:1;display:flex;align-items:center;justify-content:center;gap:2px}
 .logo .green{color:#ef4444;text-shadow:0 0 30px #ef444425}
 .logo .white{color:#fff;font-weight:300;letter-spacing:1px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
 .subtitle{display:none}
@@ -1709,143 +1709,40 @@ function initDialecticalFlow() {
   if (!container) return;
 
   _p5Instance = new p5(function(p) {
-    /* ── Config ──────────────────────────────── */
-    const COUNT = 180;
-    const TRAIL_LEN = 18;
-    const BASE_SPEED = 0.02;
-    const NOISE_SCALE = 0.0012;
-    const FADE = 6;
-    const CONNECTION_DIST = 110;
+    /* ── Minimalist Config ─────────────────── */
     const BG = [10, 14, 24];
-
-    let particles = [];
-    let time = 0;
+    const ORB_COUNT = 4;
+    let orbs = [];
     let w, h;
-    let mx = -9999, my = -9999, mActive = false;
 
-    /* ── Nebula nodes: slow-drifting glow sources ─ */
-    let nebulae = [];
-    const NEBULA_COUNT = 5;
-
-    /* ── Colors ──────────────────────────────── */
-    const GOV_COLS = [
-      [59, 130, 246],  // blue
-      [96, 165, 250],  // lighter blue
-      [37, 99, 235],   // deeper blue
-    ];
-    const OPP_COLS = [
-      [239, 68, 68],   // red
-      [248, 113, 113], // lighter red
-      [220, 38, 38],   // deeper red
-    ];
-    const CLASH_COL = [251, 191, 36]; // gold
-
-    /* ── Particle class ─────────────────────── */
-    class Particle {
-      constructor(side) {
-        this.side = side;
-        this.col = side === 0
-          ? GOV_COLS[Math.floor(Math.random() * GOV_COLS.length)]
-          : OPP_COLS[Math.floor(Math.random() * OPP_COLS.length)];
-        this.trail = [];
-        this.thickness = 0.6 + Math.random() * 1.2;
-        this.reset(true);
+    class Orb {
+      constructor() {
+        this.reset();
       }
-      reset(init) {
-        this.x = init ? p.random(w) : (this.side === 0 ? p.random(-40, w * 0.3) : p.random(w * 0.7, w + 40));
-        this.y = p.random(h);
-        this.vx = 0;
-        this.vy = 0;
-        this.age = 0;
-        this.maxAge = p.random(500, 1400);
-        this.trail = [];
-        this.noiseOff = p.random(10000);
+      reset() {
+        this.x = Math.random() * (w || window.innerWidth);
+        this.y = Math.random() * (h || window.innerHeight);
+        this.r = 150 + Math.random() * 300;
+        this.vx = (Math.random() - 0.5) * 0.15;
+        this.vy = (Math.random() - 0.5) * 0.12;
+        const palettes = [[239,68,68],[59,130,246],[251,191,36],[139,92,246]];
+        this.col = palettes[Math.floor(Math.random() * palettes.length)];
+        this.alpha = 8 + Math.random() * 12;
       }
       update() {
-        const nx = this.x * NOISE_SCALE;
-        const ny = this.y * NOISE_SCALE;
-        const nt = time * 0.0000075;
-        // Layered noise for organic movement
-        const a1 = p.noise(nx + this.noiseOff, ny, nt) * p.TWO_PI * 2;
-        const a2 = p.noise(nx * 2.5 + 300, ny * 2.5, nt * 1.5) * p.TWO_PI;
-        const angle = a1 + a2 * 0.3;
-        const dir = this.side === 0 ? 1 : -1;
-        const speed = BASE_SPEED + p.noise(this.noiseOff, time * 0.00004) * 0.01;
-        this.vx += Math.cos(angle) * speed * dir * 0.25;
-        this.vy += Math.sin(angle) * speed * 0.4;
-        // Mouse attraction
-        if (mActive) {
-          const dx = mx - this.x, dy = my - this.y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 250 && d > 1) {
-            const f = 0.12 * (1 - d / 250);
-            this.vx += (dx / d) * f;
-            this.vy += (dy / d) * f;
-          }
-        }
-        this.vx *= 0.985;
-        this.vy *= 0.985;
-        // Cap max velocity for gentle movement
-        const maxV = 0.8;
-        if (this.vx > maxV) this.vx = maxV; if (this.vx < -maxV) this.vx = -maxV;
-        if (this.vy > maxV) this.vy = maxV; if (this.vy < -maxV) this.vy = -maxV;
-        this.trail.push({ x: this.x, y: this.y });
-        if (this.trail.length > TRAIL_LEN) this.trail.shift();
         this.x += this.vx;
         this.y += this.vy;
-        this.age++;
-        if (this.age > this.maxAge || this.x < -60 || this.x > w + 60 || this.y < -60 || this.y > h + 60) {
-          this.reset(false);
-        }
+        if (this.x < -this.r || this.x > w + this.r) this.vx *= -1;
+        if (this.y < -this.r || this.y > h + this.r) this.vy *= -1;
       }
       draw() {
-        const life = this.age / this.maxAge;
-        const fade = Math.min(life * 6, 1) * Math.min((1 - life) * 4, 1);
-        if (this.trail.length < 2) return;
-        p.noFill();
-        for (let i = 1; i < this.trail.length; i++) {
-          const t = i / this.trail.length;
-          const alpha = t * fade * 0.45;
-          p.stroke(this.col[0], this.col[1], this.col[2], alpha * 255);
-          p.strokeWeight(this.thickness * t);
-          p.line(this.trail[i - 1].x, this.trail[i - 1].y, this.trail[i].x, this.trail[i].y);
-        }
-        // Bright head
-        const ha = fade * 0.7;
-        p.stroke(this.col[0], this.col[1], this.col[2], ha * 255);
-        p.strokeWeight(this.thickness * 1.5);
-        p.point(this.x, this.y);
-      }
-    }
-
-    /* ── Nebula class ────────────────────────── */
-    class Nebula {
-      constructor() {
-        this.x = p.random(w);
-        this.y = p.random(h);
-        this.r = p.random(150, 350);
-        this.seed = p.random(10000);
-        this.isClash = Math.random() < 0.3;
-        this.col = this.isClash ? CLASH_COL : (Math.random() < 0.5 ? GOV_COLS[0] : OPP_COLS[0]);
-      }
-      draw() {
-        const drift = 40;
-        const dx = p.noise(this.seed, time * 0.00003) * drift - drift / 2;
-        const dy = p.noise(this.seed + 500, time * 0.00003) * drift - drift / 2;
-        const pulse = 0.8 + p.noise(this.seed + 1000, time * 0.00006) * 0.4;
-        const cx = this.x + dx;
-        const cy = this.y + dy;
-        const r = this.r * pulse;
         p.noStroke();
-        // Outer halo
-        p.fill(this.col[0], this.col[1], this.col[2], 2);
-        p.ellipse(cx, cy, r * 2, r * 2);
-        // Inner glow
-        p.fill(this.col[0], this.col[1], this.col[2], 4);
-        p.ellipse(cx, cy, r, r);
-        // Core
-        p.fill(this.col[0], this.col[1], this.col[2], 7);
-        p.ellipse(cx, cy, r * 0.3, r * 0.3);
+        for (let i = 3; i >= 0; i--) {
+          const t = i / 3;
+          const size = this.r * (0.4 + t * 0.6);
+          p.fill(this.col[0], this.col[1], this.col[2], this.alpha * (1 - t * 0.7));
+          p.ellipse(this.x, this.y, size, size);
+        }
       }
     }
 
@@ -1857,75 +1754,26 @@ function initDialecticalFlow() {
       canvas.parent(container);
       p.pixelDensity(1);
       p.background(BG[0], BG[1], BG[2]);
-      p.noiseSeed(42);
-      for (let i = 0; i < COUNT; i++) {
-        particles.push(new Particle(i < COUNT / 2 ? 0 : 1));
+      for (let i = 0; i < ORB_COUNT; i++) {
+        orbs.push(new Orb());
       }
-      for (let i = 0; i < NEBULA_COUNT; i++) {
-        nebulae.push(new Nebula());
-      }
+      p.frameRate(30);
     };
 
     /* ── Draw loop ───────────────────────────── */
     p.draw = function() {
-      // Fade
-      p.noStroke();
-      p.fill(BG[0], BG[1], BG[2], FADE);
-      p.rect(0, 0, w, h);
-      time++;
-
-      // Nebulae (behind particles)
-      for (let n = 0; n < nebulae.length; n++) {
-        nebulae[n].draw();
-      }
-
-      // Update and draw particles
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-      }
-
-      // Connection lines between close particles (every other frame for perf)
-      if (p.frameCount % 2 === 0) {
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            if (particles[i].side === particles[j].side) continue; // only cross-side connections
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const d = dx * dx + dy * dy;
-            if (d < CONNECTION_DIST * CONNECTION_DIST) {
-              const dist = Math.sqrt(d);
-              const alpha = (1 - dist / CONNECTION_DIST) * 0.08;
-              p.stroke(CLASH_COL[0], CLASH_COL[1], CLASH_COL[2], alpha * 255);
-              p.strokeWeight(0.5);
-              p.line(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
-            }
-          }
-        }
-      }
-
-      // Ambient star field
-      if (p.frameCount % 5 === 0) {
-        for (let s = 0; s < 2; s++) {
-          p.stroke(255, 255, 255, p.random(4, 14));
-          p.strokeWeight(p.random(0.3, 1.0));
-          p.point(p.random(w), p.random(h));
-        }
+      p.background(BG[0], BG[1], BG[2]);
+      for (let i = 0; i < orbs.length; i++) {
+        orbs[i].update();
+        orbs[i].draw();
       }
     };
-
-    /* ── Mouse tracking ──────────────────────── */
-    document.addEventListener('mousemove', function(e) {
-      mx = e.clientX; my = e.clientY; mActive = true;
-    });
-    document.addEventListener('mouseleave', function() { mActive = false; });
 
     /* ── Resize ──────────────────────────────── */
     p.windowResized = function() {
       w = window.innerWidth;
       h = window.innerHeight;
       p.resizeCanvas(w, h);
-      p.background(BG[0], BG[1], BG[2]);
     };
   });
 }
