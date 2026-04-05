@@ -32,12 +32,16 @@ export default async (request) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const siteUrl = process.env.SITE_URL || 'https://debateos1.netlify.app';
 
-  const session = await stripe.billingPortal.sessions.create({
-    customer: team.stripeCustomerId,
-    return_url: siteUrl,
-  });
-
-  return jsonResponse({ url: session.url });
+  try {
+    const session = await stripe.billingPortal.sessions.create({
+      customer: team.stripeCustomerId,
+      return_url: siteUrl,
+    });
+    return jsonResponse({ url: session.url });
+  } catch (err) {
+    console.error('Billing portal error:', err);
+    return errorResponse('Billing error: ' + err.message, 500);
+  }
 };
 
 export const config = {

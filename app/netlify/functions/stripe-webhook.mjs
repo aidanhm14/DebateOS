@@ -45,7 +45,7 @@ export default async (request) => {
         await db.collection('teams').doc(teamId).update({
           stripeSubscriptionId: subscriptionId,
           plan,
-          status: subscription.status === 'trialing' ? 'trialing' : 'active',
+          status: mapStripeStatus(subscription.status),
           usageLimit: PLANS[plan].requests,
           maxMembers: PLANS[plan].members,
           currentPeriodStart: new Date(subscription.current_period_start * 1000),
@@ -69,6 +69,7 @@ export default async (request) => {
 
         const teamRef = db.collection('teams').doc(teamId);
         const teamDoc = await teamRef.get();
+        if (!teamDoc.exists) { console.error('Team not found:', teamId); break; }
         const teamData = teamDoc.data();
 
         // Reset usage if new billing period
@@ -184,7 +185,8 @@ function getPlanFromPrice(priceId) {
 
   if (priceId === individualPrice) return 'individual';
   if (priceId === teamPrice) return 'team';
-  return 'individual'; // default fallback
+  console.warn('Unknown price ID:', priceId, '— defaulting to individual');
+  return 'individual';
 }
 
 /**
